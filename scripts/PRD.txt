@@ -1,0 +1,52 @@
+# Product Requirements Document: Sąsiedzka Wypożyczalnia Narzędzi (ToolShare)
+
+**1. Tytuł projektu:**
+ToolShare - Sąsiedzka Wypożyczalnia Narzędzi
+
+**2. Cel i uzasadnienie:**
+Stworzenie prostej, przejrzystej i estetycznej strony internetowej typu "one-page" dla lokalnej, sąsiedzkiej inicjatywy wynajmu narzędzi budowlanych. Strona ma na celu w łatwy sposób prezentować dostępne narzędzia, dane kontaktowe oraz lokalizację, ułatwiając sąsiadom dostęp do potrzebnego sprzętu bez konieczności jego zakupu. Projekt ma charakter niekomercyjny.
+
+**3. Główne funkcjonalności i sekcje (Key Features):**
+
+*   **3.1. Strona typu One-Page:** Cała zawartość zostanie umieszczona na jednej, przewijanej stronie, co zapewni prostotę i szybkość nawigacji.
+
+*   **3.2. Sekcja "Hero":**
+    *   **Cel:** Przyciągnięcie uwagi użytkownika i szybkie przedstawienie idei strony.
+    *   **Zawartość:**
+        *   Chwytliwe hasło, np. "Potrzebne narzędzia? Pożycz od sąsiada!".
+        *   Krótki opis inicjatywy.
+        *   Przycisk wzywający do akcji (CTA), np. "Zobacz dostępne narzędzia", który płynnie przewinie stronę do sekcji z ofertą.
+        *   Tło nawiązujące do tematyki (narzędzia, drewno), zgodne z załączoną kolorystyką.
+
+*   **3.3. Sekcja "Dlaczego My?" (Why Us?):**
+    *   **Cel:** Przedstawienie korzyści płynących z korzystania z wypożyczalni.
+    *   **Zawartość:** Cztery kafelki z ikonami i krótkimi opisami, wzorowane na zrzucie ekranu:
+        *   **Szeroki Wybór:** Dostęp do różnorodnych narzędzi.
+        *   **Dostępne Ceny:** Atrakcyjne, sąsiedzkie warunki.
+        *   **Wygodny Dostęp:** Łatwość odbioru i zwrotu.
+        *   **Gwarancja Jakości:** Regularnie serwisowany i sprawdzany sprzęt.
+
+*   **3.4. Sekcja "Nasze Narzędzia" (Oferta):**
+    *   **Cel:** Prezentacja dostępnych narzędzi.
+    *   **Wymaganie kluczowe:** Ta sekcja musi być **bardzo łatwa do modyfikacji**. Nowe narzędzia (nazwa, opis, zdjęcie) powinny być dodawane poprzez edycję prostego pliku lub fragmentu kodu (np. tablicy obiektów w pliku JavaScript), bez potrzeby zmiany struktury HTML.
+    *   **Początkowa lista narzędzi:** Wiertarka udarowa, Betoniarka, Piła ukośnica.
+
+*   **3.5. Sekcja "Kontakt i Lokalizacja":**
+    *   **Cel:** Umożliwienie kontaktu i wskazanie miejsca odbioru narzędzi.
+    *   **Zawartość:**
+        *   Dane kontaktowe (numer telefonu, adres e-mail).
+        *   Interaktywna mapa (np. osadzona z Google Maps) wskazująca lokalizację.
+
+**4. Wymagania techniczne:**
+
+*   **Technologie:** HTML5, CSS3, JavaScript (ES6+). Bez backendu, bez bazy danych, bez systemów logowania i rejestracji.
+*   **Design i UX:**
+    *   **Kolorystyka:** Zgodna z załączonym zrzutem ekranu – odcienie beżu/kremu jako tło, ciemna, czytelna czcionka oraz akcenty pomarańczowe dla przycisków i ważnych elementów.
+    *   **Responsywność:** Strona musi poprawnie wyświetlać się na urządzeniach mobilnych (smartfony) i desktopowych.
+    *   **Font:** Czysty, nowoczesny font bezszeryfowy.
+
+**5. Kryteria sukcesu:**
+*   Strona jest w pełni funkcjonalna i opublikowana.
+*   Wszystkie opisane sekcje są zaimplementowane i działają zgodnie z założeniami.
+*   Dodawanie/usuwanie narzędzi z oferty jest możliwe poprzez edycję jednego pliku `script.js` i nie wymaga zaawansowanej wiedzy technicznej.
+*   Wygląd strony jest spójny z dostarczonym wzorem graficznym. 

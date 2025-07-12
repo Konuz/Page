@@ -727,6 +727,7 @@ function initScrollAnimations() {
     // Znajdź wszystkie karty na stronie, które powinny być animowane
     const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
     const contactSection = document.querySelector('#contact');
+    const contactItems = document.querySelectorAll('.contact-details, .contact-map');
     const heroSection = document.querySelector('.hero-section');
 
     // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart
@@ -735,9 +736,11 @@ function initScrollAnimations() {
         gsap.set(card, { opacity: 0, y: 20 });
     });
 
-    if (contactSection) {
-        contactSection.classList.add('scroll-reveal');
-    }
+    // Dodaj animacje dla elementów kontaktu
+    contactItems.forEach(item => {
+        item.classList.add('stagger-item');
+        gsap.set(item, { opacity: 0, y: 30 });
+    });
 
     // Intersection Observer dla animacji
     const observerOptions = {
@@ -750,19 +753,15 @@ function initScrollAnimations() {
             if (entry.isIntersecting) {
                 const target = entry.target;
 
-                if (target.classList.contains('scroll-reveal')) {
-                    // Animacja dla pojedynczych sekcji jak "Kontakt"
-                    gsap.to(target, { opacity: 1, duration: 1.5, ease: 'power2.out' });
-                    target.classList.add('revealed');
-                } else {
-                    // Animacja dla kontenerów z elementami .stagger-item
-                    const items = target.querySelectorAll('.stagger-item');
+                // Animacja dla kontenerów z elementami .stagger-item (w tym kontakt)
+                const items = target.querySelectorAll('.stagger-item');
+                if (items.length > 0) {
                     gsap.to(items, {
                         opacity: 1,
                         y: 0,
                         duration: 1.2,
                         ease: 'power2.out',
-                        stagger: 0 // Ustawiamy stagger na 0 dla synchronicznej animacji
+                        stagger: target.id === 'contact' ? 0.3 : 0 // Stagger dla kontaktu
                     });
                     items.forEach(item => item.classList.add('animate'));
                 }
@@ -773,17 +772,13 @@ function initScrollAnimations() {
     }, observerOptions);
 
     // Obserwuj wszystkie relevantne kontenery siatki na dowolnej stronie
-    const gridsToObserve = document.querySelectorAll('.features-grid, #tools-grid, #subcategory-grid');
+    const gridsToObserve = document.querySelectorAll('.features-grid, #tools-grid, #subcategory-grid, #contact');
     
     gridsToObserve.forEach(grid => {
         if (grid) {
             observer.observe(grid);
         }
     });
-
-    if (contactSection) {
-        observer.observe(contactSection);
-    }
 
     // Animacja hero section przy załadowaniu strony
     if (heroSection) {

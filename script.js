@@ -1,5 +1,24 @@
 console.log('Skrypt załadowany!');
 
+// Funkcja zapobiegająca polskim sierotkom
+function fixPolishOrphans(text) {
+    // Lista polskich sierótek (krótkie słowa, które nie powinny być na końcu linii)
+    const orphans = ['i', 'a', 'o', 'u', 'w', 'z', 'na', 'do', 'od', 'po', 'za', 'ze', 'że', 'we', 'dla'];
+    
+    let result = text;
+    orphans.forEach(orphan => {
+        // Zamień spację przed sierotką na niełamliwą spację
+        const regex = new RegExp(`\\s(${orphan})\\s`, 'gi');
+        result = result.replace(regex, `&nbsp;$1 `);
+        
+        // Obsługa końca zdania
+        const regexEnd = new RegExp(`\\s(${orphan})$`, 'gi');
+        result = result.replace(regexEnd, `&nbsp;$1`);
+    });
+    
+    return result;
+}
+
 async function fetchData() {
     try {
         const response = await fetch('data.json');
@@ -270,7 +289,7 @@ function populateMobileMenuCategories(toolCatalog) {
         const link = document.createElement('a');
         link.href = '#';
         link.className = 'mobile-menu-link has-submenu';
-        link.textContent = category.category;
+        link.innerHTML = fixPolishOrphans(category.category);
         link.setAttribute('data-category', category.category);
         
         link.addEventListener('click', (e) => {
@@ -290,7 +309,7 @@ function populateMobileMenuSubcategories(category) {
     
     if (!subcategoriesList || !categoryTitle) return;
 
-    categoryTitle.textContent = category.category;
+    categoryTitle.innerHTML = fixPolishOrphans(category.category);
     subcategoriesList.innerHTML = '';
 
     category.subcategories.forEach(subcategory => {
@@ -347,7 +366,7 @@ function renderNavigationCategories(toolCatalog) {
     toolCatalog.forEach(category => {
         const link = document.createElement('a');
         link.href = `category.html?category=${encodeURIComponent(category.category)}`;
-        link.textContent = category.category;
+        link.innerHTML = fixPolishOrphans(category.category);
         link.setAttribute('role', 'menuitem');
         navContainer.appendChild(link);
     });
@@ -377,7 +396,7 @@ function renderCategories(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'category-card-title';
-        titleWrapper.innerHTML = `<h3>${category.category}</h3>`;
+        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(category.category)}</h3>`;
 
         cardLink.appendChild(imageWrapper);
         cardLink.appendChild(titleWrapper);
@@ -442,7 +461,7 @@ function renderSubcategories(toolCatalog) {
         return;
     }
 
-    titleElement.textContent = category.category;
+    titleElement.innerHTML = fixPolishOrphans(category.category);
     
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -453,7 +472,7 @@ function renderSubcategories(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySpan = document.createElement('span');
-    categorySpan.textContent = category.category;
+    categorySpan.innerHTML = fixPolishOrphans(category.category);
     breadcrumbContainer.appendChild(categorySpan);
 
     // Page content
@@ -533,7 +552,7 @@ function renderTools(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'tool-card-title';
-        titleWrapper.innerHTML = `<h3>${tool.name}</h3>`;
+        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(tool.name)}</h3>`;
 
         toolCard.appendChild(imageWrapper);
         toolCard.appendChild(titleWrapper);
@@ -797,4 +816,23 @@ function initScrollAnimations() {
             ease: 'power2.out'
         });
     }
+}
+
+
+// Zastosuj poprawki do wszystkich tytułów po załadowaniu treści
+function applyPolishTypography() {
+    const titles = document.querySelectorAll('.category-card-title h3, .tool-card-title h3, .dropdown-content a, .breadcrumb span:last-of-type, .mobile-menu-link, .mobile-menu-title');
+    
+    titles.forEach(title => {
+        if (title.textContent) {
+            title.innerHTML = fixPolishOrphans(title.textContent);
+        }
+    });
+}
+
+// Dodaj obsługę sierótek do istniejącego kodu inicjalizacyjnego
+// Będzie wywoływane po renderowaniu kart kategorii
+function addPolishTypographyToCards() {
+    // Opóźnienie dla pewności, że wszystkie elementy są już renderowane
+    setTimeout(applyPolishTypography, 100);
 } 

@@ -290,6 +290,16 @@ section {
 .mobile-menu-title {
     /* Zapobieganie łamaniu krótkich polskich słów (sierotki) */
     text-rendering: optimizeLegibility;
+    /* Wyłącz automatyczne dzielenie dla krótkich słów */
+    word-break: keep-all;
+    line-break: strict;
+}
+
+/* Specjalna reguła dla polskich spójników i przyimków */
+.category-card-title h3::after,
+.tool-card-title h3::after {
+    content: '';
+    /* Dodaj JavaScript hook dla obsługi polskich sierótek */
 }
 
 /* Why Us Section */

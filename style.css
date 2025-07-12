@@ -290,9 +290,10 @@ section {
 .mobile-menu-title {
     /* Zapobieganie łamaniu krótkich polskich słów (sierotki) */
     text-rendering: optimizeLegibility;
-    /* Wyłącz automatyczne dzielenie dla krótkich słów */
-    word-break: keep-all;
-    line-break: strict;
+    /* Szanuj niełamliwe spacje i hyphenation */
+    word-break: normal;
+    line-break: auto;
+    white-space: normal;
 }
 
 /* Specjalna reguła dla polskich spójników i przyimków */
@@ -438,7 +439,8 @@ section {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
+    /* word-break: break-word; - usuń to żeby uszanować &nbsp; */
+    word-break: normal;
 }
 
 .status-badge {
@@ -641,7 +643,8 @@ section {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
+    /* word-break: break-word; - usuń to żeby uszanować &nbsp; */
+    word-break: normal;
 }
 
 .subcategory-card {
@@ -820,7 +823,6 @@ section {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .dropdown-content a:hover {
@@ -910,7 +912,6 @@ section {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .breadcrumb .separator {
@@ -1369,7 +1370,6 @@ body.subpage main {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .mobile-menu-list {
@@ -1400,7 +1400,6 @@ body.subpage main {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .mobile-menu-link:hover {
@@ -1620,7 +1619,6 @@ body.subpage main {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .dropdown-content a:hover {
@@ -1710,7 +1708,6 @@ body.subpage main {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 .breadcrumb .separator {

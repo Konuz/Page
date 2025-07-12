@@ -61,7 +61,7 @@
         ]
     },
     {
-        "category": "Sprzęt budowlany i ogrodniczy",
+        "category": "Sprzęt budowlany&nbsp;i ogrodniczy",
         "image": "images/betoniarka.webp",
         "subcategories": [
             { "name": "Betoniarki", "tools": [

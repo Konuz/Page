@@ -281,6 +281,17 @@ section {
     color: white;
 }
 
+/* Zasady typograficzne dla polskiego tekstu - zapobieganie sierotkom */
+.category-card-title h3,
+.tool-card-title h3,
+.dropdown-content a,
+.breadcrumb span:last-of-type,
+.mobile-menu-link,
+.mobile-menu-title {
+    /* Zapobieganie łamaniu krótkich polskich słów (sierotki) */
+    text-rendering: optimizeLegibility;
+}
+
 /* Why Us Section */
 .features-grid {
     display: grid;

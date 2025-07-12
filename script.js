@@ -2,20 +2,27 @@ console.log('Skrypt załadowany!');
 
 // Funkcja zapobiegająca polskim sierotkom
 function fixPolishOrphans(text) {
+    console.log('Przetwarzanie tekstu:', text);
+    
     // Lista polskich sierótek (krótkie słowa, które nie powinny być na końcu linii)
     const orphans = ['i', 'a', 'o', 'u', 'w', 'z', 'na', 'do', 'od', 'po', 'za', 'ze', 'że', 'we', 'dla'];
     
     let result = text;
     orphans.forEach(orphan => {
-        // Zamień spację przed sierotką na niełamliwą spację
-        const regex = new RegExp(`\\s(${orphan})\\s`, 'gi');
-        result = result.replace(regex, `&nbsp;$1 `);
+        // Stwórz wzorzec do wyszukiwania spacji przed sierotką
+        const pattern = `\\s(${orphan})(?=\\s|$)`;
+        const regex = new RegExp(pattern, 'gi');
+        const beforeReplace = result;
         
-        // Obsługa końca zdania
-        const regexEnd = new RegExp(`\\s(${orphan})$`, 'gi');
-        result = result.replace(regexEnd, `&nbsp;$1`);
+        // Zamień spację przed sierotką na niełamliwą spację
+        result = result.replace(regex, `&nbsp;$1`);
+        
+        if (beforeReplace !== result) {
+            console.log(`Zamieniono dla "${orphan}": "${beforeReplace}" -> "${result}"`);
+        }
     });
     
+    console.log('Wynik:', result);
     return result;
 }
 

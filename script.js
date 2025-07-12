@@ -15,6 +15,14 @@ function fixPolishOrphans(text) {
         result = result.replace(regex, `&nbsp;$1`);
     });
     
+    // Dodatkowe zabezpieczenie - dodaj <span> z nowrap dla ostatnich dwóch słów
+    const words = result.split(' ');
+    if (words.length >= 2) {
+        const lastTwo = words.slice(-2).join('&nbsp;');
+        const beginning = words.slice(0, -2).join(' ');
+        result = beginning ? `${beginning} <span style="white-space: nowrap;">${lastTwo}</span>` : `<span style="white-space: nowrap;">${lastTwo}</span>`;
+    }
+    
     return result;
 }
 

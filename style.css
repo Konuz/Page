@@ -640,12 +640,12 @@ section {
     color: white;
     margin: 0;
     font-size: 1.5rem;
-    /* Zasady typograficzne dla polskiego tekstu */
+    /* Zasady typograficzne dla polskiego tekstu - pozwól na zawijanie ale szanuj &nbsp; */
     hyphens: none;
     overflow-wrap: normal;
     word-break: keep-all;
-    /* Wymuszenie braku łamania linii w tytułach kategorii */
-    white-space: nowrap;
+    white-space: normal;
+    line-height: 1.3;
 }
 
 /* Responsive dla bardzo małych ekranów */

@@ -1,6 +1,6 @@
 [
     {
-        "category": "Elektronarzędzia i narzędzia ręczne",
+        "category": "Elektronarzędzia <span style='white-space: nowrap;'>i narzędzia</span> ręczne",
         "image": "images/pila.webp",
         "subcategories": [
             { "name": "Wkrętarki", "tools": [
@@ -61,7 +61,7 @@
         ]
     },
     {
-        "category": "Sprzęt budowlany i ogrodniczy",
+        "category": "Sprzęt <span style='white-space: nowrap;'>budowlany i</span> ogrodniczy",
         "image": "images/betoniarka.webp",
         "subcategories": [
             { "name": "Betoniarki", "tools": [

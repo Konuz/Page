@@ -277,7 +277,7 @@ function populateMobileMenuCategories(toolCatalog) {
         const link = document.createElement('a');
         link.href = '#';
         link.className = 'mobile-menu-link has-submenu';
-        link.innerHTML = fixPolishOrphans(category.category);
+        link.innerHTML = category.category;
         link.setAttribute('data-category', category.category);
         
         link.addEventListener('click', (e) => {
@@ -297,7 +297,7 @@ function populateMobileMenuSubcategories(category) {
     
     if (!subcategoriesList || !categoryTitle) return;
 
-    categoryTitle.innerHTML = fixPolishOrphans(category.category);
+    categoryTitle.innerHTML = category.category;
     subcategoriesList.innerHTML = '';
 
     category.subcategories.forEach(subcategory => {
@@ -354,7 +354,7 @@ function renderNavigationCategories(toolCatalog) {
     toolCatalog.forEach(category => {
         const link = document.createElement('a');
         link.href = `category.html?category=${encodeURIComponent(category.category)}`;
-        link.innerHTML = fixPolishOrphans(category.category);
+        link.innerHTML = category.category;
         link.setAttribute('role', 'menuitem');
         navContainer.appendChild(link);
     });
@@ -384,7 +384,7 @@ function renderCategories(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'category-card-title';
-        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(category.category)}</h3>`;
+        titleWrapper.innerHTML = `<h3>${category.category}</h3>`;
 
         cardLink.appendChild(imageWrapper);
         cardLink.appendChild(titleWrapper);
@@ -449,7 +449,7 @@ function renderSubcategories(toolCatalog) {
         return;
     }
 
-    titleElement.innerHTML = fixPolishOrphans(category.category);
+    titleElement.innerHTML = category.category;
     
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -460,7 +460,7 @@ function renderSubcategories(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySpan = document.createElement('span');
-    categorySpan.innerHTML = fixPolishOrphans(category.category);
+    categorySpan.innerHTML = category.category;
     breadcrumbContainer.appendChild(categorySpan);
 
     // Page content
@@ -540,7 +540,7 @@ function renderTools(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'tool-card-title';
-        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(tool.name)}</h3>`;
+        titleWrapper.innerHTML = `<h3>${tool.name}</h3>`;
 
         toolCard.appendChild(imageWrapper);
         toolCard.appendChild(titleWrapper);

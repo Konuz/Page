@@ -1,0 +1,96 @@
+[
+    {
+        "category": "Elektronarzędzia i narzędzia ręczne",
+        "image": "images/pila.webp",
+        "subcategories": [
+            { "name": "Wkrętarki", "tools": [
+                { "id": "wkretarka-graphite", "name": "Wkrętarka Graphite", "description": "Opis wkrętarki Graphite.", "image": "images/wkretarka_graphite.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "wkretarka-ryobi", "name": "Wkrętarka Ryobi", "description": "Opis wkrętarki Ryobi.", "image": "images/wkretarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Wyrzynarki", "tools": [
+                { "id": "wyrzynarka-mcalister", "name": "Wyrzynarka McAlister", "description": "Opis wyrzynarki McAlister.", "image": "images/wyrzynarka_macallister.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Pilarki", "tools": [
+                { "id": "pila-bosch-gts-254", "name": "Piła stołowa Bosch", "description": "Opis piły stołowej Bosch.", "image": "images/pila_stolowa_Bosch.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pilarka-einhell-te-cs-18", "name": "Elektryczna pilarka Einhell", "description": "Opis pilarki Einhell.", "image": "images/pilarka_einhell_te_cs_18.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna", "description": "Opis piły łańcuchowej.", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Młotowiertarki", "tools": [
+                { "id": "mlotowiertarka-ryobi", "name": "Młotowiertarka Ryobi", "description": "Opis młotowiertarki Ryobi.", "image": "images/mlotowiertarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "mlotowiertarka-mcalister", "name": "Młotowiertarka McAlister", "description": "Opis młotowiertarki McAlister.", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "mlotowiertarka-bosch", "name": "Młotowiertarka Bosch", "description": "Opis młotowiertarki Bosch.", "image": "images/mlotowiertarka_bosch.webp", "enabled": false, "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Frezarki", "tools": [
+                { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "description": "Opis frezarki DeWalt.", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Bruzdownice", "tools": [
+                { "id": "bruzdownica", "name": "Bruzdownica", "description": "Opis bruzdownicy.", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] }
+        ]
+    },
+    {
+        "category": "Narzędzia pomiarowe",
+        "image": "images/laser_bosch_pll_360.webp",
+        "subcategories": [
+            { "name": "Poziomice", "tools": [
+                { "id": "poziomice-krótkie", "name": "Poziomice krótkie", "description": "Opis poziomic krótkich.", "image": "images/poziomice.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "poziomice-długie", "name": "Poziomice długie", "description": "Opis poziomic długich.", "image": "images/poziomice.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Łaty budowlane", "tools": [
+                { "id": "lata-budowlana-3m", "name": "Łata budowlana 3 m", "description": "Opis łaty budowlanej.", "image": "images/dalmierz_laserowy_pro.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Dalmierze i lasery", "tools": [
+                { "id": "dalmierz-laserowy", "name": "Dalmierz laserowy Pro", "description": "Opis dalmierza laserowego.", "image": "images/dalmierz_laserowy_pro.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "laser-bosch-pll-360", "name": "Laser Bosch", "description": "Opis lasera Bosch.", "image": "images/laser_bosch_pll_360.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Tachimetry", "tools": [
+                { "id": "tachimetr-dtm-624r", "name": "Tachimetr DTM 624R", "description": "Opis tachimetru.", "image": "images/tachimetr_dtm_624r.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] }
+        ]
+    },
+    {
+        "category": "Mycie i sprzątanie",
+        "image": "images/karcher_k5.webp",
+        "subcategories": [
+            { "name": "Myjki ciśnieniowe", "tools": [
+                { "id": "karcher-k5", "name": "Karcher K5", "description": "Opis myjki Karcher K5.", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Odkurzacze", "tools": [
+                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "description": "Opis odkurzacza Karcher.", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] }
+        ]
+    },
+    {
+        "category": "Maszyny budowlane i ogrodnicze",
+        "image": "images/betoniarka.webp",
+        "subcategories": [
+            { "name": "Betoniarki", "tools": [
+                { 
+                    "id": "betoniarka-180",
+                    "name": "Betoniarka 180 litrów na 230V", 
+                    "description": "Solidna i wydajna betoniarka o pojemności 180 litrów, zasilana standardowym napięciem 230V. Idealna na średnie i większe budowy, zapewnia szybkie i dokładne mieszanie zaprawy. Wyposażona w solidne koła ułatwiające transport.",
+                    "image": "images/betoniarka.webp", 
+                    "pricing": {
+                        "1-3 Dni": 45,
+                        "4-7 Dni": 40,
+                        "Sobota + Niedziela": 67.5,
+                        "Kaucja *": 200
+                    }
+                }
+            ] },
+            { "name": "Areatory", "tools": [
+                { "id": "areator-reczny", "name": "Areator ręczny", "description": "Opis areatora ręcznego.", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] }
+        ]
+    },
+    {
+        "category": "Drabiny i sprzęt pomocniczy",
+        "image": "images/drabina_3czesciowa.webp",
+        "subcategories": [
+            { "name": "Drabiny", "tools": [
+                { "id": "drabina-3-czesciowa", "name": "Drabina 3-częściowa", "description": "Opis drabiny 3-częściowej.", "image": "images/drabina_3czesciowa.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "drabina-1m", "name": "Drabina 1 m", "description": "Opis drabiny 1m.", "image": "images/drabina.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] }
+        ]
+    }
+] 

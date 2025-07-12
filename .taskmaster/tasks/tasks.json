@@ -9,20 +9,20 @@
         "testStrategy": "Verify repository creation and directory structure. Test initial HTML template loads in browser.",
         "priority": "medium",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
         "id": 2,
         "title": "Design and Implement Responsive Layout",
-        "description": "Design and implement a responsive layout for the one-page website, ensuring compatibility with mobile and desktop devices.",
-        "details": "Use CSS Grid and Flexbox for layout. Implement a mobile-first approach. Use media queries to adapt layout for different screen sizes. Choose a clean, modern sans-serif font (e.g., 'Inter', 'Roboto', or 'Open Sans'). Apply color scheme: beige/cream background, dark text, orange accents for buttons and highlights. Ensure all sections are visually distinct but cohesive. Use CSS variables for easy theme management.",
-        "testStrategy": "Test layout on multiple devices and screen sizes using browser developer tools and real devices. Check for visual consistency and readability.",
-        "priority": "medium",
+        "description": "Design and implement a responsive layout for the one-page website, ensuring compatibility with mobile and desktop devices. The basic HTML structure and global CSS styles have been completed, including the page skeleton (header, sections, footer), global styles, color palette, and foundational responsiveness.",
+        "status": "done",
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "priority": "medium",
+        "details": "Use CSS Grid and Flexbox for layout. Implement a mobile-first approach. Use media queries to adapt layout for different screen sizes. Choose a clean, modern sans-serif font (e.g., 'Inter', 'Roboto', or 'Open Sans'). Apply color scheme: beige/cream background, dark text, orange accents for buttons and highlights. Ensure all sections are visually distinct but cohesive. Use CSS variables for easy theme management. Build upon the existing foundation of the index.html skeleton and style.css global styles and responsiveness to enhance layout and visual polish.",
+        "testStrategy": "Test layout on multiple devices and screen sizes using browser developer tools and real devices. Check for visual consistency, readability, and smooth responsiveness. Verify that the existing global styles and structure integrate well with new layout enhancements.",
         "subtasks": []
       },
       {
@@ -35,7 +35,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -48,7 +48,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -61,7 +61,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -69,7 +69,7 @@
             "description": "Create a JavaScript array where each element is an object representing a tool, including properties such as name, description, and any relevant metadata.",
             "dependencies": [],
             "details": "Ensure the array is structured for easy iteration and manipulation, following best practices for object arrays in JavaScript.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -80,7 +80,7 @@
               1
             ],
             "details": "Use JavaScript to create and insert elements into the DOM based on the current state of the tools array.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -91,7 +91,7 @@
               2
             ],
             "details": "Ensure the cards are responsive and visually appealing, using classes or inline styles as appropriate.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -102,7 +102,7 @@
               2
             ],
             "details": "Ensure that the UI updates in real time as tools are added or removed from the array.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -113,7 +113,7 @@
               4
             ],
             "details": "Test with various scenarios, such as adding duplicate tools or removing all tools, to ensure robustness.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -128,7 +128,7 @@
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -146,7 +146,7 @@
           5,
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -154,7 +154,7 @@
             "description": "Convert existing images to modern formats like WebP and AVIF to reduce file size and improve loading speed without sacrificing quality.",
             "dependencies": [],
             "details": "Identify all images used on the site. Use tools or scripts to convert images to WebP and AVIF formats. Update image references in the code to use these optimized formats, leveraging the <picture> element and srcset for responsive delivery.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -165,7 +165,7 @@
               1
             ],
             "details": "Use the native loading=\"lazy\" attribute for images where supported, and implement a JavaScript-based lazy loading solution (e.g., using Intersection Observer API) for broader compatibility. Ensure all image tags are updated accordingly.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -176,7 +176,7 @@
               1
             ],
             "details": "Review all image elements and provide meaningful alt text. For complex images or interactive elements, add ARIA roles and labels as needed to meet WCAG 2.1 accessibility standards.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -187,7 +187,7 @@
               3
             ],
             "details": "Use tools like WAVE, aXe, or Lighthouse to audit color contrast ratios (minimum 4.5:1 for normal text) and other accessibility issues. Adjust CSS and markup as needed to resolve any identified problems.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -200,7 +200,7 @@
               4
             ],
             "details": "Use tools such as BrowserStack or LambdaTest to test the site in Chrome, Firefox, Safari, Edge, and on mobile devices. Check for layout, image format support, and accessibility issues.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -211,7 +211,7 @@
               5
             ],
             "details": "Use the <picture> element to provide JPEG/PNG fallbacks for browsers that do not support WebP/AVIF. Add polyfills or alternative scripts for lazy loading and ARIA features where necessary. Test to ensure graceful degradation.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -232,7 +232,7 @@
           6,
           7
         ],
-        "status": "pending",
+        "status": "cancelled",
         "subtasks": [
           {
             "id": 1,
@@ -240,7 +240,7 @@
             "description": "Examine every section of the project to ensure content, design, and functionality are consistent throughout. Identify and document any discrepancies or areas needing alignment.",
             "dependencies": [],
             "details": "Check for uniformity in terminology, formatting, navigation, and visual elements. Confirm that all sections adhere to project guidelines and standards.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -251,7 +251,7 @@
               1
             ],
             "details": "Ensure that all user interactions trigger the expected outcomes. Document any bugs or usability issues for resolution.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -262,7 +262,7 @@
               2
             ],
             "details": "Use automated frameworks (e.g., Selenium, Cypress) and manual testing to simulate real user scenarios, ensuring compatibility and identifying cross-platform issues.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -288,11 +288,187 @@
             "testStrategy": ""
           }
         ]
+      },
+      {
+        "id": 9,
+        "title": "Refactor 'Our Tools' Section into Multi-Level Categorized Catalog",
+        "description": "Transform the existing flat tools list into a hierarchical, multi-page catalog with categories, subcategories, and tool detail pages, updating navigation and data structures accordingly.",
+        "details": "1. Redesign the tools data structure in script.js to support a hierarchy: categories, subcategories, and tools. Example structure: [{ category: 'Elektronarzędzia...', subcategories: [{ name: 'Wkrętarki', tools: [...] }, ...] }, ...].\n2. Replace the single tools section with a homepage view that displays main categories as clickable cards or links.\n3. For each category, create a dedicated page (or dynamic view if using client-side routing) listing its subcategories. Each subcategory should link to its own page displaying the relevant tools.\n4. Update the navigation bar: convert the 'Narzędzia' link into a dropdown menu listing all main categories. Ensure dropdown is accessible and works on mobile (consider touch and keyboard navigation best practices[1][5]).\n5. Implement client-side routing (using hash-based or history API) or generate separate HTML files for each category/subcategory page, ensuring smooth navigation and back/forward browser support.\n6. Ensure all new pages and navigation elements are fully responsive and visually consistent with the existing theme.\n7. Refactor and modularize JavaScript to handle rendering of categories, subcategories, and tool lists dynamically based on the new data structure.\n8. Update any smooth scrolling or CTA logic to accommodate the new multi-page/catalog structure.",
+        "testStrategy": "- Verify that the homepage displays all main categories as intended.\n- Test navigation: clicking a category in the navbar dropdown or homepage leads to the correct category page; clicking a subcategory leads to the correct tool list.\n- Confirm that the navigation dropdown is accessible and usable on both desktop and mobile devices.\n- Check that the new data structure in script.js correctly renders all categories, subcategories, and tools, and that adding/removing items updates the UI without manual HTML changes.\n- Ensure all new pages/views are fully responsive and match the site's design.\n- Test browser navigation (back/forward) and direct linking to category/subcategory pages.\n- Validate that all interactive elements (dropdown, links) work as expected across devices and browsers.",
+        "status": "in-progress",
+        "dependencies": [
+          2,
+          5
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analyze Current 'Our Tools' Section and Data Structure",
+            "description": "Review the existing implementation of the 'Our Tools' section, including its data structure, UI, and navigation logic.",
+            "dependencies": [],
+            "details": "Document current data models, UI components, and navigation flows to identify areas requiring change.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Redesign Data Structure for Hierarchical Organization",
+            "description": "Create a new data model that supports categories and subcategories for tools, enabling hierarchical representation.",
+            "dependencies": [
+              1
+            ],
+            "details": "Define JSON or object schema to represent categories, subcategories, and tools, ensuring scalability and clarity.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Category and Subcategory Views",
+            "description": "Develop UI components to display tools grouped by category and subcategory, supporting dynamic rendering based on the new data structure.",
+            "dependencies": [
+              2
+            ],
+            "details": "Ensure components can render nested categories and allow users to drill down into subcategories.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Update Navigation Logic for Hierarchical Browsing",
+            "description": "Refactor navigation to support hierarchical browsing through categories and subcategories, including breadcrumbs or similar aids.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure users can easily navigate between levels and return to previous views.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Enhance Accessibility and Mobile Navigation Support",
+            "description": "Update navigation and UI components to meet accessibility standards (ARIA, keyboard navigation) and optimize for mobile devices.",
+            "dependencies": [
+              4
+            ],
+            "details": "Test with screen readers and on various device sizes to ensure usability for all users.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Integrate Client-Side Routing or Multi-Page Generation",
+            "description": "Implement client-side routing (e.g., React Router) or static multi-page generation to enable deep linking and browser navigation for categories and tools.",
+            "dependencies": [
+              5
+            ],
+            "details": "Ensure URLs reflect the current view and support direct access/bookmarking.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Ensure Responsive Design for All Views",
+            "description": "Apply responsive design principles to all components, ensuring the 'Our Tools' section works seamlessly across devices and screen sizes.",
+            "dependencies": [],
+            "details": "Use CSS media queries and flexible layouts to adapt to different resolutions.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 8,
+            "title": "Modularize JavaScript for Dynamic Rendering",
+            "description": "Refactor JavaScript code into modular components/functions to handle dynamic rendering of hierarchical data and navigation.",
+            "dependencies": [],
+            "details": "Promote code reuse, maintainability, and separation of concerns.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 9,
+            "title": "Update Smooth Scrolling and CTA Logic",
+            "description": "Refactor smooth scrolling and call-to-action (CTA) logic to work with the new hierarchical structure and navigation.",
+            "dependencies": [],
+            "details": "Ensure smooth transitions and correct CTA targeting across all navigation paths.",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 10,
+            "title": "Comprehensive Testing for Navigation, Responsiveness, and Data-Driven UI",
+            "description": "Develop and execute tests covering navigation flows, responsive layouts, accessibility, and dynamic UI updates based on data changes.",
+            "dependencies": [],
+            "details": "Include unit, integration, and end-to-end tests; involve QA team for thorough validation.",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Implement SEO Improvements",
+        "description": "Implement key SEO improvements to increase the website's visibility in search results. The main areas for improvement are meta tags, structured data (Schema.org), and optimizing subpage titles.",
+        "status": "pending",
+        "dependencies": [
+          7,
+          9
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Meta Tags (Descriptions)",
+            "description": "Add a static meta 'description' tag to the main page (index.html) and implement dynamic generation of meta descriptions for category, subcategory, and tool pages in the script.js file.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 2,
+            "title": "Implement Structured Data (Schema.org)",
+            "description": "Implement Schema.org structured data to help search engines better understand the page content and enable rich snippets. The main schemas to implement are LocalBusiness, Product, and BreadcrumbList.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 3,
+            "title": "Optimize Subpage Titles",
+            "description": "Implement dynamic generation of the <title> tag for subpages (categories, tools) to make them more descriptive and SEO-friendly, e.g., 'Tool Name - ToolShare Rentals'.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 4,
+            "title": "Add LocalBusiness Schema",
+            "description": "Add a JSON-LD script with the LocalBusiness schema to all pages, including key business information: name, address, phone, opening hours, and logo.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 5,
+            "title": "Add Product Schema for Tools",
+            "description": "On the tool details page (tool.html), dynamically generate a JSON-LD script with the Product schema, including the tool's name, description, image, and price offers.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          },
+          {
+            "id": 6,
+            "title": "Add BreadcrumbList Schema for Navigation",
+            "description": "Implement dynamic generation of a JSON-LD script with the BreadcrumbList schema on subpages to reflect the navigation structure and improve its visibility in Google.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 10
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-07-02T19:49:42.142Z",
-      "updated": "2025-07-02T19:49:42.142Z",
+      "updated": "2025-07-10T22:51:45.199Z",
       "description": "Tasks for master context"
     }
   }

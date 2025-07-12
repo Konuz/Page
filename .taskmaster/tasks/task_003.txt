@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Implement Hero Section with CTA
+# Status: done
+# Dependencies: 2
+# Priority: medium
+# Description: Create the Hero section with a catchy headline, brief description, and a call-to-action button that scrolls to the tools section.
+# Details:
+Add a Hero section at the top of the page. Include a headline (e.g., 'Potrzebne narzędzia? Pożycz od sąsiada!'), a short description of the initiative, and a CTA button ('Zobacz dostępne narzędzia'). Style the background with a relevant image or illustration (tools, wood). Use JavaScript to implement smooth scrolling to the tools section when the CTA is clicked.
+
+# Test Strategy:
+Verify Hero section displays correctly. Test CTA button scrolls smoothly to the tools section.

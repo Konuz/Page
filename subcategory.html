@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToolShare - Sąsiedzka Wypożyczalnia Narzędzi</title>
+    <title>Podkategoria - ToolShare</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔨</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,15 +21,12 @@
                 <div class="nav-links">
                     <a href="index.html" class="nav-link" id="start-link">Start</a>
                     <div class="dropdown">
-                        <a href="#tools" class="dropbtn">
-                            Narzędzia
-                            <i class="fas fa-chevron-down breadcrumb-arrow"></i>
-                        </a>
+                        <a href="index.html#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
                         <div class="dropdown-content" id="nav-categories">
                             <!-- Kategorie będą wstawiane tutaj przez JS -->
                         </div>
                     </div>
-                    <a href="#contact">Kontakt</a>
+                    <a href="index.html#contact">Kontakt</a>
                 </div>
                 <div class="nav-actions">
                     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Przełącz motyw">
@@ -95,80 +92,15 @@
         </div>
     </div>
 
-    <header class="hero-section" id="hero">
-        <div class="container">
-            <h1>Potrzebne narzędzia? Nie szukaj już dalej!</h1>
-            <p>Szybki i łatwy dostęp do narzędzi, których potrzebujesz, bez konieczności kupowania.</p>
-            <a href="#tools" class="btn btn-primary">Zobacz dostępne narzędzia</a>
-        </div>
-    </header>
-
     <main>
-        <section id="why-us" class="section">
+        <section class="content-section">
             <div class="container">
-                <h2>Dlaczego my?</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <i class="fas fa-toolbox feature-icon"></i>
-                        <h3>Szeroki Wybór</h3>
-                        <p>Od wiertarek po betoniarki - mamy wszystko, czego potrzebujesz do swojego projektu.</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-tag feature-icon"></i>
-                        <h3>Dostępne Ceny</h3>
-                        <p>Oferujemy konkurencyjne ceny i elastyczne warunki, idealne dla niedużych, domowych projektów.</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-map-marker-alt feature-icon"></i>
-                        <h3>Wygodny Dostęp</h3>
-                        <p>Jesteśmy blisko Ciebie. Sprawdź mapę i wpadnij po potrzebny sprzęt bez zbędnych formalności.</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                        <h3>Gwarancja Jakości</h3>
-                        <p>Wszystkie nasze narzędzia są regularnie sprawdzane, aby zapewnić bezpieczeństwo.</p>
-                    </div>
+                <div class="breadcrumb">
+                    <!-- Ścieżka nawigacyjna będzie budowana dynamicznie przez JavaScript -->
                 </div>
-            </div>
-        </section>
-
-        <section id="tools" class="tools-section">
-            <div class="container">
-                <h2>Nasze narzędzia</h2>
+                <h1 id="subcategory-title">Nazwa Podkategorii</h1>
                 <div id="tools-grid" class="tools-grid">
-                    <!-- Narzędzia będą dynamicznie wstawiane tutaj przez JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <div class="container">
-                <h2>Kontakt</h2>
-                <div class="contact-grid">
-                    <div class="contact-details">
-                        <h3>Odezwij się!</h3>
-                        <p>Masz pytania? Potrzebujesz narzędzia, którego nie ma na liście? Jesteśmy do Twojej dyspozycji.</p>
-                        <ul>
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    ul. Sportowa 9, 55-003 Chrząstawa Wielka<br>
-                                    <small class="address-clarification-subtext">(na przeciwko szkoły)</small>
-                                </div>
-                            </li>
-                            <li><i class="fas fa-phone"></i> +48 123 456 789</li>
-                            <li><i class="fas fa-envelope"></i> kontakt@toolshare.pl</li>
-                        </ul>
-                    </div>
-                    <div class="contact-map">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2516.425880496159!2d17.291459890888145!3d51.093840529775164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTHCsDA1JzM3LjgiTiAxN8KwMTcnMjkuMyJF!5e0!3m2!1spl!2spl"
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
+                    <!-- Narzędzia z podkategorii będą wstawiane tutaj -->
                 </div>
             </div>
         </section>
@@ -187,10 +119,6 @@
             </div>
         </div>
     </footer>
-
-    <a href="#" id="scrollToTopBtn" class="scroll-to-top" title="Przewiń do góry">
-        <i class="fas fa-arrow-up"></i>
-    </a>
 
     <script src="script.js"></script>
 </body>

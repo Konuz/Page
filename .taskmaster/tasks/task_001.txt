@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Setup Project Repository and Initial Structure
+# Status: done
+# Dependencies: None
+# Priority: medium
+# Description: Initialize a new project repository with a basic structure for a static one-page website using HTML5, CSS3, and JavaScript (ES6+).
+# Details:
+Create a new repository on GitHub or similar platform. Set up the following directory structure: /index.html, /css/style.css, /js/script.js, /images/. Initialize with a basic HTML5 template. Use modern tooling like Vite (v5.x) for fast development and hot reloading, or stick to vanilla JS if preferred. Add a .gitignore file to exclude node_modules and other unnecessary files.
+
+# Test Strategy:
+Verify repository creation and directory structure. Test initial HTML template loads in browser.

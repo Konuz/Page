@@ -1,0 +1,58 @@
+# Task ID: 10
+# Title: Implement Key SEO Improvements: Meta Tags, Structured Data, and Title Optimization
+# Status: pending
+# Dependencies: 7, 9
+# Priority: high
+# Description: Enhance the website's SEO by updating meta tags, implementing Schema.org structured data, and optimizing page titles across all subpages to improve search engine visibility.
+# Details:
+1. Audit all existing pages and subpages to identify missing or suboptimal meta tags (title, description, canonical, robots).
+2. For each page, write concise, keyword-rich meta titles and descriptions tailored to the page content and target audience.
+3. Implement Schema.org structured data using JSON-LD format, focusing on relevant types such as WebSite, WebPage, LocalBusiness, Product, or BreadcrumbList as appropriate for each page. Place the JSON-LD scripts in the <head> section for maximum effectiveness. Use schema markup generators or manual coding as needed, and ensure no duplication with existing automated plugins or scripts[1][2][3].
+4. Optimize all page titles (in <title> tags and visible headings) for clarity, keyword relevance, and uniqueness, ensuring they accurately reflect the content of each subpage.
+5. Validate structured data using Google's Structured Data Testing Tool and check meta tags with browser developer tools.
+6. After implementation, submit updated pages to Google Search Console for reindexing and monitor for any SEO issues[1].
+
+# Test Strategy:
+- Use browser developer tools to verify that meta tags (title, description, canonical, robots) are present, unique, and correctly formatted on every page.
+- Validate JSON-LD structured data with Google's Structured Data Testing Tool to ensure correct implementation and no errors.
+- Check that page titles and visible headings are optimized and match the intended keywords for each subpage.
+- Use Google Search Console to confirm that updated pages are indexed and that there are no structured data or meta tag errors reported.
+- Monitor search engine rankings and visibility for improvements post-implementation.
+
+# Subtasks:
+## 1. Implementacja Meta Tagów (Opisów) [pending]
+### Dependencies: None
+### Description: Dodaj statyczny meta tag 'description' do strony głównej (index.html) oraz zaimplementuj dynamiczne generowanie meta opisów dla stron kategorii, podkategorii i narzędzi w pliku script.js.
+### Details:
+
+
+## 2. Wdrożenie Danych Strukturalnych (Schema.org) [pending]
+### Dependencies: None
+### Description: Wdróż dane strukturalne Schema.org, aby pomóc wyszukiwarkom lepiej zrozumieć treść strony i umożliwić wyświetlanie wyników rozszerzonych (rich snippets). Główne schematy do wdrożenia to LocalBusiness, Product i BreadcrumbList.
+### Details:
+
+
+## 3. Optymalizacja Tytułów Podstron [pending]
+### Dependencies: None
+### Description: Zaimplementuj dynamiczne generowanie tagu <title> dla podstron (kategorie, narzędzia), aby były bardziej opisowe i przyjazne dla SEO, np. 'Nazwa Narzędzia - ToolShare Wypożyczalnia'.
+### Details:
+
+
+## 4. Dodaj schemat LocalBusiness dla firmy [pending]
+### Dependencies: None
+### Description: Dodaj skrypt JSON-LD ze schematem LocalBusiness do wszystkich stron, zawierający kluczowe informacje o firmie: nazwa, adres, telefon, godziny otwarcia i logo.
+### Details:
+
+
+## 5. Dodaj schemat Product dla narzędzi [pending]
+### Dependencies: None
+### Description: Na stronie szczegółów narzędzia (tool.html) dynamicznie generuj skrypt JSON-LD ze schematem Product, zawierający nazwę narzędzia, opis, obraz oraz oferty cenowe (offers).
+### Details:
+
+
+## 6. Dodaj schemat BreadcrumbList dla nawigacji [pending]
+### Dependencies: None
+### Description: Zaimplementuj dynamiczne generowanie skryptu JSON-LD ze schematem BreadcrumbList na podstronach, aby odzwierciedlić strukturę nawigacji i poprawić jej widoczność w Google.
+### Details:
+
+

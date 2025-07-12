@@ -80,6 +80,9 @@
             ] },
             { "name": "Areatory", "tools": [
                 { "id": "areator-reczny", "name": "Areator ręczny", "description": "Opis areatora ręcznego.", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Młoty", "tools": [
+                { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "description": "Opis młota wyburzeniowego 5kg.", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },

@@ -460,7 +460,7 @@ function renderSubcategories(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySpan = document.createElement('span');
-    categorySpan.innerHTML = category.category;
+    categorySpan.textContent = stripHtmlTags(category.category);
     breadcrumbContainer.appendChild(categorySpan);
 
     // Page content
@@ -505,7 +505,7 @@ function renderTools(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
     
     const categorySiblings = toolCatalog.filter(c => c.category !== category.category);
-    const categoryCrumb = createInteractiveBreadcrumb(category.category, `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
+    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
     breadcrumbContainer.appendChild(categoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
 
@@ -587,7 +587,7 @@ function renderToolDetails(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySiblings = toolCatalog.filter(c => c.category !== category.category);
-    const categoryCrumb = createInteractiveBreadcrumb(category.category, `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
+    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
     breadcrumbContainer.appendChild(categoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
     
@@ -818,4 +818,12 @@ function applyPolishTypography() {
 function addPolishTypographyToCards() {
     // Opóźnienie dla pewności, że wszystkie elementy są już renderowane
     setTimeout(applyPolishTypography, 100);
+} 
+
+// Dodaj funkcję pomocniczą do usuwania tagów HTML z nazw kategorii
+function stripHtmlTags(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.innerHTML = str;
+    return div.textContent || div.innerText || '';
 } 

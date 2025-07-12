@@ -414,6 +414,10 @@ section {
     margin: 0;
     font-size: 1.5rem;
     color: white;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .status-badge {
@@ -613,6 +617,10 @@ section {
     color: white;
     margin: 0;
     font-size: 1.5rem;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .subcategory-card {
@@ -788,6 +796,10 @@ section {
     margin: 4px;
     border-radius: 6px;
     transition: background-color 0.2s ease;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .dropdown-content a:hover {
@@ -874,6 +886,10 @@ section {
 .breadcrumb span:last-of-type {
     color: var(--text-color);
     font-weight: 500;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .breadcrumb .separator {
@@ -1329,6 +1345,10 @@ body.subpage main {
     color: var(--text-color);
     margin-top: 12px;
     font-family: var(--font-family);
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .mobile-menu-list {
@@ -1356,6 +1376,10 @@ body.subpage main {
     box-shadow: 
         5px 5px 10px var(--neumorphic-dark-shadow),
         -5px -5px 10px var(--neumorphic-light-shadow);
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .mobile-menu-link:hover {
@@ -1572,6 +1596,10 @@ body.subpage main {
     margin: 4px;
     border-radius: 6px;
     transition: background-color 0.2s ease;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .dropdown-content a:hover {
@@ -1658,6 +1686,10 @@ body.subpage main {
 .breadcrumb span:last-of-type {
     color: var(--text-color);
     font-weight: 500;
+    /* Zasady typograficzne dla polskiego tekstu */
+    hyphens: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .breadcrumb .separator {

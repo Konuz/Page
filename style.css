@@ -303,6 +303,7 @@ section {
     text-rendering: optimizeLegibility;
     /* Szanuj niełamliwe spacje i hyphenation */
     word-break: normal;
+    text-wrap: balance;
     line-break: auto;
     white-space: normal;
 }
@@ -312,6 +313,13 @@ section {
 .tool-card-title h3::after {
     content: '';
     /* Dodaj JavaScript hook dla obsługi polskich sierótek */
+}
+
+/* Globalna reguła dla wszystkich tekstów - zapobieganie sierotkom */
+h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
+    text-wrap: balance;
+    word-break: keep-all;
+    hyphens: none;
 }
 
 /* Why Us Section */
@@ -452,6 +460,7 @@ section {
     overflow-wrap: break-word;
     /* word-break: break-word; - usuń to żeby uszanować &nbsp; */
     word-break: normal;
+    text-wrap: balance;
 }
 
 .status-badge {
@@ -658,6 +667,7 @@ section {
     line-height: 1.4;
     /* Proste zasady - pozwól na łamanie ale szanuj &nbsp; */
     word-break: normal;
+    text-wrap: balance;
     overflow-wrap: break-word;
     hyphens: none;
 }

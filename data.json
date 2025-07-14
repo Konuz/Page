@@ -12,8 +12,12 @@
             ] },
             { "name": "Pilarki", "tools": [
                 { "id": "pila-bosch-gts-254", "name": "Piła stołowa Bosch", "image": "images/pila_stolowa_Bosch.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "pilarka-einhell-te-cs-18", "name": "Elektryczna pilarka Einhell", "image": "images/pilarka_einhell_te_cs_18.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "pilarka-einhell-te-cs-18", "name": "Pilarka Einhell", "image": "images/pilarka_einhell_te_cs_18.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pilarka-parkside", "name": "Pilarka Parkside", "image": "images/pilarka_parkside.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Piły łańcuchowe", "tools": [
+                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "mini-pila-ferm", "name": "Mini piła łańcuchowa Ferm", "image": "images/mini_pila_ferm.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Młotowiertarki", "tools": [
                 { "id": "mlotowiertarka-ryobi", "name": "Młotowiertarka Ryobi", "image": "images/mlotowiertarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
@@ -87,6 +91,14 @@
             ] },
             { "name": "Młoty", "tools": [
                 { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Łopaty i szpadle", "tools": [
+                { "id": "szpadel-fiskars", "name": "Szpadel Fiskars", "image": "images/szpadel_fiskars.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "szpadel-drenarski", "name": "Szpadel drenarski", "image": "images/szpadel_drenarski.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "noz-do-darni", "name": "Nóż do darni", "image": "images/noz_do_darni.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Siewniki", "tools": [
+                { "id": "siewnik-reczny", "name": "Siewnik ręczny", "image": "images/siewnik_reczny.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },

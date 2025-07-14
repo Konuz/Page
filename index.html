@@ -41,11 +41,14 @@
                     <a href="#contact">Kontakt</a>
                 </div>
                 <div class="nav-actions">
+                    <button id="search-toggle" class="search-toggle-btn" aria-label="Wyszukaj narzędzia">
+                        <i class="fas fa-search"></i>
+                    </button>
                     <button id="theme-toggle" class="theme-toggle-btn" aria-label="Przełącz motyw">
                         <i class="fas fa-sun"></i>
                         <i class="fas fa-moon"></i>
                     </button>
-                    <a href="#" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/michal.unknown" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
                     <div class="hamburger">
                         <span class="bar"></span>
                         <span class="bar"></span>
@@ -55,6 +58,20 @@
             </div>
         </div>
     </nav>
+
+    <!-- Search Bar -->
+    <div id="search-container" class="search-container hidden">
+        <div class="search-wrapper">
+            <div class="search-input-group">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Wyszukaj narzędzia..." autocomplete="off">
+                <button id="search-close" class="search-close" aria-label="Zamknij wyszukiwanie">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
 
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
@@ -200,6 +217,17 @@
     <a href="#" id="scrollToTopBtn" class="scroll-to-top" title="Przewiń do góry">
         <i class="fas fa-arrow-up"></i>
     </a>
+
+    <!-- Cookie Popup -->
+    <div id="cookie-popup" class="cookie-popup">
+        <div class="cookie-popup-content">
+            <p>Ta strona używa plików cookie. Kontynuując przeglądanie, wyrażasz zgodę na ich użycie.</p>
+            <div class="cookie-popup-buttons">
+                <button id="accept-cookies">Akceptuj</button>
+                <button id="reject-cookies">Odrzuć</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

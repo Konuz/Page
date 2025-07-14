@@ -97,6 +97,9 @@
             { "name": "Drabiny", "tools": [
                 { "id": "drabina-3-czesciowa", "name": "Drabina 3-częściowa", "image": "images/drabina_3czesciowa.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
                 { "id": "drabina-1m", "name": "Drabina 1 m", "image": "images/drabina.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Taczki", "tools": [
+                { "id": "taczka-budowlana", "name": "Taczki budowlane", "image": "images/taczka.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     }

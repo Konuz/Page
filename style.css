@@ -812,7 +812,7 @@ section {
     display: block;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: var(--border-radius);
@@ -825,8 +825,9 @@ section {
 
 .dropdown-content a {
     color: black;
-    padding: 10px 14px;
+    padding: 10px 40px 10px 14px;
     text-decoration: none;
+    white-space: normal;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -867,7 +868,7 @@ section {
     left: 100%;
     top: -1px; /* Adjust for border */
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: var(--border-radius);
@@ -880,7 +881,7 @@ section {
 
 .sub-dropdown-content a {
     color: black;
-    padding: 10px 14px;
+    padding: 10px 40px 10px 14px;
     text-decoration: none;
     display: block;
     text-align: left;
@@ -954,7 +955,7 @@ section {
     top: 100%;
     left: 0;
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 10;
     border-radius: var(--border-radius);
@@ -1172,7 +1173,7 @@ section {
     left: 100%;
     top: -1px; /* Adjust for border */
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: var(--border-radius);
@@ -1608,7 +1609,7 @@ body.subpage main {
     display: block;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: var(--border-radius);
@@ -1621,8 +1622,9 @@ body.subpage main {
 
 .dropdown-content a {
     color: black;
-    padding: 10px 14px;
+    padding: 10px 40px 10px 14px;
     text-decoration: none;
+    white-space: normal;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1663,7 +1665,7 @@ body.subpage main {
     left: 100%;
     top: -1px; /* Adjust for border */
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: var(--border-radius);
@@ -1676,7 +1678,7 @@ body.subpage main {
 
 .sub-dropdown-content a {
     color: black;
-    padding: 10px 14px;
+    padding: 10px 40px 10px 14px;
     text-decoration: none;
     display: block;
     text-align: left;
@@ -1750,7 +1752,7 @@ body.subpage main {
     top: 100%;
     left: 0;
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 280px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 10;
     border-radius: var(--border-radius);
@@ -2011,6 +2013,10 @@ body.subpage main {
     font-size: 1.35rem !important;
     line-height: 1.3 !important;
   }
+}
+
+.nowrap {
+    white-space: normal;
 }
 
 /* --- Tool Page Specific Styles --- */

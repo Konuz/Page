@@ -278,7 +278,7 @@ function populateMobileMenuCategories(toolCatalog) {
         const link = document.createElement('a');
         link.href = '#';
         link.className = 'mobile-menu-link has-submenu';
-        link.innerHTML = category.category;
+        link.textContent = stripHtmlTags(category.category);
         link.setAttribute('data-category', category.category);
         
         link.addEventListener('click', (e) => {
@@ -298,7 +298,7 @@ function populateMobileMenuSubcategories(category) {
     
     if (!subcategoriesList || !categoryTitle) return;
 
-    categoryTitle.innerHTML = category.category;
+    categoryTitle.textContent = stripHtmlTags(category.category);
     subcategoriesList.innerHTML = '';
 
     category.subcategories.forEach(subcategory => {
@@ -355,7 +355,7 @@ function renderNavigationCategories(toolCatalog) {
     toolCatalog.forEach(category => {
         const link = document.createElement('a');
         link.href = `category.html?category=${encodeURIComponent(category.category)}`;
-        link.innerHTML = category.category;
+        link.textContent = stripHtmlTags(category.category);
         link.setAttribute('role', 'menuitem');
         navContainer.appendChild(link);
     });
@@ -385,7 +385,7 @@ function renderCategories(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'category-card-title';
-        titleWrapper.innerHTML = `<h3>${category.category}</h3>`;
+        titleWrapper.innerHTML = `<h3>${stripHtmlTags(category.category)}</h3>`;
 
         cardLink.appendChild(imageWrapper);
         cardLink.appendChild(titleWrapper);
@@ -450,7 +450,7 @@ function renderSubcategories(toolCatalog) {
         return;
     }
 
-    titleElement.innerHTML = category.category;
+    titleElement.textContent = stripHtmlTags(category.category);
     
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -678,7 +678,7 @@ function initializeDropdown(toolCatalog) {
         const categoryLink = document.createElement('a');
         categoryLink.href = `category.html?category=${encodeURIComponent(category.category)}`;
         categoryLink.innerHTML = `
-            ${category.category}
+            ${stripHtmlTags(category.category)}
             <i class="fas fa-chevron-right" style="font-size: 0.8em;"></i>
         `;
         
@@ -991,7 +991,7 @@ function initializeSearch(toolCatalog) {
                     <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy">
                     <div class="search-result-info">
                         <div class="search-result-title">${highlightedName}</div>
-                        <div class="search-result-category">${result.category} › ${result.subcategory}</div>
+                        <div class="search-result-category">${stripHtmlTags(result.category)} › ${result.subcategory}</div>
                     </div>
                 </div>
             `;

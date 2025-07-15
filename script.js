@@ -836,26 +836,10 @@ function initializeSearch(toolCatalog) {
     const searchClose = document.getElementById('search-close');
     const searchResults = document.getElementById('search-results');
     
-    console.log('Search elements:', { searchToggle, searchContainer, searchInput, searchClose, searchResults });
-    
-    if (!searchToggle) {
-        console.error('Search toggle button not found!');
+    if (!searchToggle || !searchContainer || !searchInput || !searchClose || !searchResults) {
+        console.log('Search elements not found on this page - skipping initialization');
         return;
     }
-    
-    if (!searchContainer || !searchInput || !searchClose || !searchResults) {
-        console.error('Missing search elements:', { searchContainer, searchInput, searchClose, searchResults });
-        return;
-    }
-    
-    // Sprawdź czy przycisk jest widoczny
-    const computedStyle = window.getComputedStyle(searchToggle);
-    console.log('Button styles:', {
-        display: computedStyle.display,
-        visibility: computedStyle.visibility,
-        opacity: computedStyle.opacity,
-        transform: computedStyle.transform
-    });
     
     let isSearchOpen = false;
     let selectedIndex = -1;

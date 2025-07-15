@@ -829,6 +829,228 @@ function stripHtmlTags(str) {
     return div.textContent || div.innerText || '';
 }
 
+function initializeSearch(toolCatalog) {
+    const searchToggle = document.getElementById('search-toggle');
+    const searchContainer = document.getElementById('search-container');
+    const searchInput = document.getElementById('search-input');
+    const searchClose = document.getElementById('search-close');
+    const searchResults = document.getElementById('search-results');
+    
+    if (!searchToggle || !searchContainer || !searchInput || !searchClose || !searchResults) return;
+    
+    let isSearchOpen = false;
+    let selectedIndex = -1;
+    let searchResultItems = [];
+    
+    // Animacja otwierania wyszukiwania
+    searchToggle.addEventListener('click', () => {
+        if (!isSearchOpen) {
+            openSearch();
+        }
+    });
+    
+    // Zamykanie wyszukiwania
+    searchClose.addEventListener('click', () => {
+        closeSearch();
+    });
+    
+    // Zamykanie przy kliknięciu Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isSearchOpen) {
+            closeSearch();
+        }
+        
+        // Nawigacja strzałkami w wynikach
+        if (isSearchOpen && searchResultItems.length > 0) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, searchResultItems.length - 1);
+                updateSelection();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection();
+            } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                e.preventDefault();
+                searchResultItems[selectedIndex].click();
+            }
+        }
+    });
+    
+    // Wyszukiwanie w czasie rzeczywistym
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(e.target.value.trim(), toolCatalog);
+        }, 150);
+    });
+    
+    function openSearch() {
+        isSearchOpen = true;
+        
+        // Animacja przycisku - przekształcenie w kulkę
+        gsap.to(searchToggle, {
+            scale: 0,
+            rotation: 180,
+            duration: 0.3,
+            ease: 'power2.out',
+            onComplete: () => {
+                // Po zwinięciu przycisku, pokaż pasek wyszukiwania
+                searchContainer.classList.remove('hidden');
+                searchContainer.classList.add('active');
+                
+                // Animacja rozwijania paska w lewo
+                gsap.fromTo(searchContainer, {
+                    opacity: 0,
+                    y: -20
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: 'back.out(1.7)',
+                    onComplete: () => {
+                        searchInput.focus();
+                    }
+                });
+            }
+        });
+    }
+    
+    function closeSearch() {
+        isSearchOpen = false;
+        selectedIndex = -1;
+        searchInput.value = '';
+        searchResults.classList.remove('active');
+        searchResults.innerHTML = '';
+        
+        // Animacja zamykania paska
+        gsap.to(searchContainer, {
+            opacity: 0,
+            y: -20,
+            duration: 0.3,
+            ease: 'power2.out',
+            onComplete: () => {
+                searchContainer.classList.add('hidden');
+                searchContainer.classList.remove('active');
+                
+                // Przywróć przycisk wyszukiwania
+                gsap.to(searchToggle, {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.3,
+                    ease: 'back.out(1.7)'
+                });
+            }
+        });
+    }
+    
+    function performSearch(query, toolCatalog) {
+        if (!query || query.length < 2) {
+            searchResults.classList.remove('active');
+            searchResults.innerHTML = '';
+            searchResultItems = [];
+            selectedIndex = -1;
+            return;
+        }
+        
+        const results = [];
+        const queryLower = query.toLowerCase();
+        
+        // Przeszukaj wszystkie narzędzia
+        toolCatalog.forEach(category => {
+            category.subcategories.forEach(subcategory => {
+                subcategory.tools
+                    .filter(tool => tool.enabled !== false)
+                    .forEach(tool => {
+                        const nameMatch = tool.name.toLowerCase().includes(queryLower);
+                        const descMatch = tool.description && tool.description.toLowerCase().includes(queryLower);
+                        const categoryMatch = category.category.toLowerCase().includes(queryLower);
+                        const subcategoryMatch = subcategory.name.toLowerCase().includes(queryLower);
+                        
+                        if (nameMatch || descMatch || categoryMatch || subcategoryMatch) {
+                            results.push({
+                                tool,
+                                category: category.category,
+                                subcategory: subcategory.name,
+                                matchType: nameMatch ? 'name' : descMatch ? 'description' : 'category'
+                            });
+                        }
+                    });
+            });
+        });
+        
+        displaySearchResults(results, query);
+    }
+    
+    function displaySearchResults(results, query) {
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-no-results">Nie znaleziono narzędzi dla tej frazy</div>';
+            searchResults.classList.add('active');
+            searchResultItems = [];
+            selectedIndex = -1;
+            return;
+        }
+        
+        // Sortuj wyniki - najpierw dopasowania w nazwie, potem w opisie, na końcu w kategoriach
+        results.sort((a, b) => {
+            const order = { 'name': 0, 'description': 1, 'category': 2 };
+            return order[a.matchType] - order[b.matchType];
+        });
+        
+        searchResults.innerHTML = results.map(result => {
+            const highlightedName = highlightText(result.tool.name, query);
+            return `
+                <div class="search-result-item" data-tool-id="${result.tool.id}">
+                    <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy">
+                    <div class="search-result-info">
+                        <div class="search-result-title">${highlightedName}</div>
+                        <div class="search-result-category">${result.category} › ${result.subcategory}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        searchResults.classList.add('active');
+        
+        // Dodaj event listenery do wyników
+        searchResultItems = searchResults.querySelectorAll('.search-result-item');
+        searchResultItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const toolId = item.getAttribute('data-tool-id');
+                window.location.href = `tool.html?toolId=${toolId}`;
+            });
+            
+            item.addEventListener('mouseenter', () => {
+                selectedIndex = index;
+                updateSelection();
+            });
+        });
+        
+        selectedIndex = -1;
+    }
+    
+    function highlightText(text, query) {
+        if (!query) return text;
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        return text.replace(regex, '<span class="search-highlight">$1</span>');
+    }
+    
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    function updateSelection() {
+        searchResultItems.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add('highlighted');
+            } else {
+                item.classList.remove('highlighted');
+            }
+        });
+    }
+}
+
 // Cookie Popup
 document.addEventListener('DOMContentLoaded', function() {
     const cookiePopup = document.getElementById('cookie-popup');

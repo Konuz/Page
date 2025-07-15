@@ -845,6 +845,92 @@ function initializeSearch(toolCatalog) {
     let selectedIndex = -1;
     let searchResultItems = [];
     
+    // Funkcje do zarządzania historią wyszukiwań
+    function getSearchHistory() {
+        try {
+            const history = localStorage.getItem('toolshare_search_history');
+            return history ? JSON.parse(history) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+    
+    function saveToSearchHistory(query) {
+        if (!query || query.length < 2) return;
+        
+        try {
+            let history = getSearchHistory();
+            
+            // Usuń jeśli już istnieje
+            history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
+            
+            // Dodaj na początek
+            history.unshift(query);
+            
+            // Ogranicz do 5 ostatnich
+            history = history.slice(0, 5);
+            
+            localStorage.setItem('toolshare_search_history', JSON.stringify(history));
+        } catch (e) {
+            console.error('Error saving search history:', e);
+        }
+    }
+    
+    function showSearchHistory() {
+        const history = getSearchHistory();
+        if (history.length === 0) {
+            searchResults.classList.remove('active');
+            return;
+        }
+        
+        searchResults.innerHTML = `
+            <div class="search-history-header">Ostatnie wyszukiwania</div>
+            ${history.map(query => `
+                <div class="search-history-item" data-query="${escapeHtml(query)}">
+                    <i class="fas fa-history search-history-icon"></i>
+                    <span class="search-history-text">${escapeHtml(query)}</span>
+                </div>
+            `).join('')}
+        `;
+        
+        searchResults.classList.add('active');
+        
+        // Dodaj event listenery do elementów historii
+        const historyItems = searchResults.querySelectorAll('.search-history-item');
+        historyItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const query = item.getAttribute('data-query');
+                searchInput.value = query;
+                performSearch(query, toolCatalog);
+            });
+            
+            item.addEventListener('mouseenter', () => {
+                selectedIndex = index;
+                updateHistorySelection();
+            });
+        });
+        
+        searchResultItems = historyItems;
+        selectedIndex = -1;
+    }
+    
+    function updateHistorySelection() {
+        const historyItems = searchResults.querySelectorAll('.search-history-item');
+        historyItems.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add('highlighted');
+            } else {
+                item.classList.remove('highlighted');
+            }
+        });
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
     // Animacja otwierania wyszukiwania
     searchToggle.addEventListener('click', () => {
         if (!isSearchOpen) {
@@ -869,10 +955,12 @@ function initializeSearch(toolCatalog) {
                 e.preventDefault();
                 selectedIndex = Math.min(selectedIndex + 1, searchResultItems.length - 1);
                 updateSelection();
+                updateHistorySelection();
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 selectedIndex = Math.max(selectedIndex - 1, -1);
                 updateSelection();
+                updateHistorySelection();
             } else if (e.key === 'Enter' && selectedIndex >= 0) {
                 e.preventDefault();
                 searchResultItems[selectedIndex].click();
@@ -880,12 +968,33 @@ function initializeSearch(toolCatalog) {
         }
     });
     
+    // Pokaż historię przy focus na input
+    searchInput.addEventListener('focus', () => {
+        if (!searchInput.value.trim()) {
+            showSearchHistory();
+        }
+    });
+    
+    // Pokaż historię przy kliknięciu w input
+    searchInput.addEventListener('click', () => {
+        if (!searchInput.value.trim()) {
+            showSearchHistory();
+        }
+    });
+    
     // Wyszukiwanie w czasie rzeczywistym
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+        
+        if (query.length === 0) {
+            showSearchHistory();
+            return;
+        }
+        
         searchTimeout = setTimeout(() => {
-            performSearch(e.target.value.trim(), toolCatalog);
+            performSearch(query, toolCatalog);
         }, 150);
     });
     
@@ -907,6 +1016,10 @@ function initializeSearch(toolCatalog) {
             ease: 'back.out(1.7)',
             onComplete: () => {
                 searchInput.focus();
+                // Pokaż historię jeśli input jest pusty
+                if (!searchInput.value.trim()) {
+                    showSearchHistory();
+                }
             }
         });
     }
@@ -939,6 +1052,9 @@ function initializeSearch(toolCatalog) {
             selectedIndex = -1;
             return;
         }
+        
+        // Zapisz do historii wyszukiwań
+        saveToSearchHistory(query);
         
         const results = [];
         const queryLower = query.toLowerCase();

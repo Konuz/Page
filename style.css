@@ -2444,6 +2444,48 @@ body.subpage main {
     border-radius: 3px;
 }
 
+/* Search history */
+.search-history-header {
+    padding: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.search-history-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.search-history-item:last-child {
+    border-bottom: none;
+}
+
+.search-history-item:hover,
+.search-history-item.highlighted {
+    background: var(--hover-color);
+}
+
+.search-history-icon {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    width: 16px;
+    text-align: center;
+}
+
+.search-history-text {
+    flex: 1;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
 @media (max-width: 768px) {
     .search-container {
         padding: 0 0.5rem;

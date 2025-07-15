@@ -1033,7 +1033,7 @@ function initializeSearch(toolCatalog) {
         }, {
             opacity: 1,
             y: 0,
-            duration: 0.4,
+            duration: 0.28,
             ease: 'back.out(1.7)',
             onComplete: () => {
                 searchInput.focus();
@@ -1056,7 +1056,7 @@ function initializeSearch(toolCatalog) {
         gsap.to(searchContainer, {
             opacity: 0,
             y: -20,
-            duration: 0.3,
+            duration: 0.21,
             ease: 'power2.out',
             onComplete: () => {
                 searchContainer.classList.add('hidden');

@@ -989,13 +989,6 @@ function initializeSearch(toolCatalog) {
         }
     });
     
-    // Pokaż historię przy focus na input
-    searchInput.addEventListener('focus', () => {
-        if (!searchInput.value.trim()) {
-            showSearchHistory();
-        }
-    });
-    
     // Pokaż historię przy kliknięciu w input
     searchInput.addEventListener('click', () => {
         if (!searchInput.value.trim()) {
@@ -1026,13 +1019,9 @@ function initializeSearch(toolCatalog) {
         searchContainer.classList.remove('hidden');
         searchContainer.classList.add('active');
         
-        // Focus i historia po zakończeniu animacji CSS
+        // Focus po zakończeniu animacji CSS
         setTimeout(() => {
             searchInput.focus();
-            // Pokaż historię jeśli input jest pusty
-            if (!searchInput.value.trim()) {
-                showSearchHistory();
-            }
         }, 300); // 300ms to match CSS transition
     }
     

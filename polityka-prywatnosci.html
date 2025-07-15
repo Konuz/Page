@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polityka Prywatności i Cookies - ToolShare</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔨</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,15 +19,94 @@
             <div class="nav-right">
                 <div class="nav-links">
                     <a href="index.html" class="nav-link">Start</a>
-                    <a href="index.html#tools">Narzędzia</a>
+                    <div class="dropdown">
+                        <a href="index.html#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
+                        <div class="dropdown-content" id="nav-categories">
+                            <!-- Kategorie będą wstawiane tutaj przez JS -->
+                        </div>
+                    </div>
                     <a href="index.html#contact">Kontakt</a>
                 </div>
                 <div class="nav-actions">
-                    <a href="https://www.facebook.com/michal.unknown" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                    <button id="search-toggle" class="search-toggle-btn" aria-label="Wyszukaj narzędzia">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Przełącz motyw">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="#" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku"><i class="fa-brands fa-facebook-f"></i></a>
+                    <div class="hamburger">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Search Bar -->
+    <div id="search-container" class="search-container hidden">
+        <div class="search-wrapper">
+            <div class="search-input-group">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Wyszukaj narzędzia..." autocomplete="off">
+                <button id="search-close" class="search-close" aria-label="Zamknij wyszukiwanie">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    <div class="mobile-menu-container" id="mobile-menu-container">
+        <!-- Main menu panel -->
+        <div class="mobile-menu-panel active" id="main-menu-panel">
+            <div class="mobile-menu-header">
+                <div class="mobile-menu-title">Menu</div>
+            </div>
+            <ul class="mobile-menu-list">
+                <li class="mobile-menu-item">
+                    <a href="index.html" class="mobile-menu-link">Start</a>
+                </li>
+                <li class="mobile-menu-item">
+                    <a href="#" class="mobile-menu-link has-submenu" data-submenu="tools-menu">Narzędzia</a>
+                </li>
+                <li class="mobile-menu-item">
+                    <a href="index.html#contact" class="mobile-menu-link">Kontakt</a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Tools menu panel -->
+        <div class="mobile-menu-panel" id="tools-menu-panel">
+            <div class="mobile-menu-header">
+                <button class="mobile-menu-back" data-back="main-menu">
+                    <i class="fas fa-arrow-left"></i> Wstecz
+                </button>
+                <div class="mobile-menu-title">Narzędzia</div>
+            </div>
+            <ul class="mobile-menu-list" id="tools-categories-list">
+                <!-- Kategorie będą wstawiane tutaj przez JS -->
+            </ul>
+        </div>
+        
+        <!-- Category menu panel -->
+        <div class="mobile-menu-panel" id="category-menu-panel">
+            <div class="mobile-menu-header">
+                <button class="mobile-menu-back" data-back="tools-menu">
+                    <i class="fas fa-arrow-left"></i> Wstecz
+                </button>
+                <div class="mobile-menu-title" id="category-menu-title">Kategoria</div>
+            </div>
+            <ul class="mobile-menu-list" id="category-subcategories-list">
+                <!-- Podkategorie będą wstawiane tutaj przez JS -->
+            </ul>
+        </div>
+    </div>
 
     <main>
         <section class="section">
@@ -148,5 +228,6 @@
             </div>
         </div>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>

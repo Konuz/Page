@@ -1497,6 +1497,46 @@ body.subpage main {
 }
 
 /* Scrollbar styling dla mobile menu */
+
+/* Stylowanie strony polityki prywatności */
+.privacy-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    text-align: left;
+}
+
+.privacy-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+    color: var(--text-color);
+}
+
+.privacy-content h2:first-child {
+    margin-top: 0;
+}
+
+.privacy-content p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+.privacy-content ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.privacy-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.privacy-content hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+}
 .mobile-menu-panel::-webkit-scrollbar {
     width: 4px;
 }

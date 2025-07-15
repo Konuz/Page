@@ -1022,27 +1022,18 @@ function initializeSearch(toolCatalog) {
     function openSearch() {
         isSearchOpen = true;
         
-        // Bezpośrednio pokaż pasek wyszukiwania
+        // Pokaż pasek wyszukiwania z CSS transition
         searchContainer.classList.remove('hidden');
         searchContainer.classList.add('active');
         
-        // Animacja rozwijania paska
-        gsap.fromTo(searchContainer, {
-            opacity: 0,
-            y: -20
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.3,
-            ease: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            onComplete: () => {
-                searchInput.focus();
-                // Pokaż historię jeśli input jest pusty
-                if (!searchInput.value.trim()) {
-                    showSearchHistory();
-                }
+        // Focus i historia po zakończeniu animacji CSS
+        setTimeout(() => {
+            searchInput.focus();
+            // Pokaż historię jeśli input jest pusty
+            if (!searchInput.value.trim()) {
+                showSearchHistory();
             }
-        });
+        }, 300); // 300ms to match CSS transition
     }
     
     function closeSearch() {
@@ -1052,17 +1043,13 @@ function initializeSearch(toolCatalog) {
         searchResults.classList.remove('active');
         searchResults.innerHTML = '';
         
-        // Animacja zamykania paska
-        gsap.to(searchContainer, {
-            opacity: 0,
-            y: -20,
-            duration: 0.3,
-            ease: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            onComplete: () => {
-                searchContainer.classList.add('hidden');
-                searchContainer.classList.remove('active');
-            }
-        });
+        // Zamknij pasek z CSS transition
+        searchContainer.classList.remove('active');
+        
+        // Ukryj po zakończeniu animacji CSS
+        setTimeout(() => {
+            searchContainer.classList.add('hidden');
+        }, 300); // 300ms to match CSS transition
     }
     
     function performSearch(query, toolCatalog) {

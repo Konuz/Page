@@ -854,7 +854,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .dropdown-content a {
     color: black;
-    padding: 10px 40px 10px 14px;
+    padding: 10px 50px 10px 14px;
     text-decoration: none;
     white-space: normal;
     display: flex;
@@ -910,7 +910,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .sub-dropdown-content a {
     color: black;
-    padding: 10px 40px 10px 14px;
+    padding: 10px 50px 10px 14px;
     text-decoration: none;
     display: block;
     text-align: left;
@@ -1691,7 +1691,7 @@ body.subpage main {
 
 .dropdown-content a {
     color: black;
-    padding: 10px 40px 10px 14px;
+    padding: 10px 50px 10px 14px;
     text-decoration: none;
     white-space: normal;
     display: flex;
@@ -1747,7 +1747,7 @@ body.subpage main {
 
 .sub-dropdown-content a {
     color: black;
-    padding: 10px 40px 10px 14px;
+    padding: 10px 50px 10px 14px;
     text-decoration: none;
     display: block;
     text-align: left;

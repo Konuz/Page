@@ -1,6 +1,6 @@
 [
     {
-        "category": "Elektronarzędzia i&nbsp;narzędzia ręczne",
+        "category": "Elektronarzędzia i narzędzia ręczne",
         "image": "images/pila.webp",
         "subcategories": [
             { "name": "Wkrętarki", "tools": [
@@ -58,7 +58,7 @@
         ]
     },
     {
-        "category": "Mycie i&nbsp;sprzątanie",
+        "category": "Mycie i sprzątanie",
         "image": "images/karcher_k5.webp",
         "subcategories": [
             { "name": "Myjki ciśnieniowe", "tools": [
@@ -70,7 +70,7 @@
         ]
     },
     {
-        "category": "Sprzęt budowlany i&nbsp;ogrodniczy",
+        "category": "Sprzęt budowlany i ogrodniczy",
         "image": "images/betoniarka.webp",
         "subcategories": [
             { "name": "Betoniarki", "tools": [
@@ -92,7 +92,7 @@
             { "name": "Młoty", "tools": [
                 { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
-            { "name": "Łopaty i&nbsp;szpadle", "tools": [
+            { "name": "Łopaty i szpadle", "tools": [
                 { "id": "szpadel-fiskars", "name": "Szpadel Fiskars", "image": "images/szpadel_fiskars.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
                 { "id": "szpadel-drenarski", "name": "Szpadel drenarski", "image": "images/szpadel_drenarski.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
                 { "id": "noz-do-darni", "name": "Nóż do darni", "image": "images/noz_do_darni.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }

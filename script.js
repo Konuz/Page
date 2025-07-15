@@ -2,9 +2,21 @@ console.log('Skrypt załadowany!');
 
 // Funkcja zapobiegająca polskim sierotkom
 function fixPolishOrphans(text) {
-    // Prosta zamiana spacji przed samotnym "i" na niełamliwą spację
-    return text.replace(/\s+i\s+/g, '&nbsp;i ')
-              .replace(/\s+i$/g, '&nbsp;i');
+    if (!text || typeof text !== 'string') return text;
+    
+    // Lista polskich spójników i przyimków, które nie mogą być na końcu linii
+    const orphans = ['i', 'a', 'o', 'u', 'w', 'z', 'ze', 'na', 'do', 'od', 'po', 'za', 'bez', 'pod', 'nad', 'przez', 'dla', 'lub', 'albo', 'czy', 'że', 'bo', 'ale', 'gdy', 'jak'];
+    
+    let result = text;
+    
+    // Dla każdego spójnika/przyimka zastąp spację po nim na &nbsp;
+    orphans.forEach(orphan => {
+        // Wzorzec: początek słowa lub spacja + spójnik + spacja + następny znak (nie biały)
+        const regex = new RegExp(`(^|\\s)(${orphan})\\s+(?=\\S)`, 'gi');
+        result = result.replace(regex, `$1$2&nbsp;`);
+    });
+    
+    return result;
 }
 
 async function fetchData() {
@@ -51,7 +63,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeMobileMenu(toolCatalog);
     initializeSearch(toolCatalog);
     initScrollAnimations();
-    applyTypographyRules();
+    
+    // Zastosuj zasady typografii po wszystkich inicjalizacjach
+    setTimeout(() => {
+        applyTypographyRules();
+    }, 100);
 
     // Scroll-to-top button logic with GSAP
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -128,7 +144,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function applyTypographyRules() {
-    const selectors = '.feature-card p, .tool-info-container p, .hero-section p';
+    // Rozszerzona lista selektorów obejmująca elementy menu
+    const selectors = '.feature-card p, .tool-info-container p, .hero-section p, .mobile-menu-link, .dropdown-content a, .sub-dropdown-content a, .breadcrumb span, .category-card-title h3, .tool-card-title h3, .subcategory-card h3';
     const elements = document.querySelectorAll(selectors);
     const conjunctions = ['i', 'a', 'w', 'z', 'o', 'u', 'oraz', 'albo', 'ale', 'aby', 'gdy', 'że', 'za', 'ze', 'do', 'na', 'po', 'bo', 'aż', 'by', 'czy', 'gdyż', 'iż', 'jak', 'jeśli', 'ni', 'od', 'pod', 'to', 'bez'];
 
@@ -278,7 +295,7 @@ function populateMobileMenuCategories(toolCatalog) {
         const link = document.createElement('a');
         link.href = '#';
         link.className = 'mobile-menu-link has-submenu';
-        link.textContent = stripHtmlTags(category.category);
+        link.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
         link.setAttribute('data-category', category.category);
         
         link.addEventListener('click', (e) => {
@@ -290,6 +307,11 @@ function populateMobileMenuCategories(toolCatalog) {
         listItem.appendChild(link);
         categoriesList.appendChild(listItem);
     });
+    
+    // Zastosuj zasady typografii po stworzeniu menu
+    setTimeout(() => {
+        applyTypographyRules();
+    }, 50);
 }
 
 function populateMobileMenuSubcategories(category) {
@@ -298,7 +320,7 @@ function populateMobileMenuSubcategories(category) {
     
     if (!subcategoriesList || !categoryTitle) return;
 
-    categoryTitle.textContent = stripHtmlTags(category.category);
+    categoryTitle.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
     subcategoriesList.innerHTML = '';
 
     category.subcategories.forEach(subcategory => {
@@ -308,11 +330,16 @@ function populateMobileMenuSubcategories(category) {
         const link = document.createElement('a');
         link.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
         link.className = 'mobile-menu-link';
-        link.textContent = stripHtmlTags(subcategory.name);
+        link.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
         
         listItem.appendChild(link);
         subcategoriesList.appendChild(listItem);
     });
+    
+    // Zastosuj zasady typografii po stworzeniu podmenu
+    setTimeout(() => {
+        applyTypographyRules();
+    }, 50);
 }
 
 function showMobileMenuPanel(panelId, animate = true) {
@@ -385,7 +412,7 @@ function renderCategories(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'category-card-title';
-        titleWrapper.innerHTML = `<h3>${stripHtmlTags(category.category)}</h3>`;
+        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(stripHtmlTags(category.category))}</h3>`;
 
         cardLink.appendChild(imageWrapper);
         cardLink.appendChild(titleWrapper);
@@ -400,7 +427,10 @@ function createInteractiveBreadcrumb(text, linkUrl, siblings, type, parentCatego
 
     const link = document.createElement('a');
     link.href = linkUrl;
-    link.textContent = text;
+    
+    const textSpan = document.createElement('span');
+    textSpan.innerHTML = fixPolishOrphans(text);
+    link.appendChild(textSpan);
     
     const arrow = document.createElement('i');
     arrow.className = 'fas fa-chevron-down breadcrumb-arrow';
@@ -450,7 +480,7 @@ function renderSubcategories(toolCatalog) {
         return;
     }
 
-    titleElement.textContent = stripHtmlTags(category.category);
+    titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
     
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -461,7 +491,7 @@ function renderSubcategories(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySpan = document.createElement('span');
-    categorySpan.textContent = stripHtmlTags(category.category);
+    categorySpan.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
     breadcrumbContainer.appendChild(categorySpan);
 
     // Page content
@@ -470,9 +500,10 @@ function renderSubcategories(toolCatalog) {
         const cardLink = document.createElement('a');
         cardLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`;
         cardLink.className = 'subcategory-card'; 
-        cardLink.innerHTML = `<h3>${stripHtmlTags(sub.name)}</h3>`;
+        cardLink.innerHTML = `<h3>${fixPolishOrphans(stripHtmlTags(sub.name))}</h3>`;
         contentGrid.appendChild(cardLink);
     });
+    
 }
 
 function renderTools(toolCatalog) {
@@ -495,7 +526,7 @@ function renderTools(toolCatalog) {
         return;
     }
 
-    titleElement.textContent = stripHtmlTags(subcategory.name);
+    titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
 
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -511,7 +542,7 @@ function renderTools(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const subcategorySpan = document.createElement('span');
-    subcategorySpan.textContent = stripHtmlTags(subcategory.name);
+    subcategorySpan.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
     breadcrumbContainer.appendChild(subcategorySpan);
 
     // Page content
@@ -541,12 +572,13 @@ function renderTools(toolCatalog) {
 
         const titleWrapper = document.createElement('div');
         titleWrapper.className = 'tool-card-title';
-        titleWrapper.innerHTML = `<h3>${tool.name}</h3>`;
+        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(tool.name)}</h3>`;
 
         toolCard.appendChild(imageWrapper);
         toolCard.appendChild(titleWrapper);
         contentGrid.appendChild(toolCard);
     });
+    
 }
 
 function renderToolDetails(toolCatalog) {
@@ -598,7 +630,7 @@ function renderToolDetails(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const toolSpan = document.createElement('span');
-    toolSpan.textContent = tool.name;
+    toolSpan.innerHTML = fixPolishOrphans(tool.name);
     breadcrumbContainer.appendChild(toolSpan);
 
     // Uzupełnij dane na stronie
@@ -678,7 +710,7 @@ function initializeDropdown(toolCatalog) {
         const categoryLink = document.createElement('a');
         categoryLink.href = `category.html?category=${encodeURIComponent(category.category)}`;
         categoryLink.innerHTML = `
-            ${stripHtmlTags(category.category)}
+            ${fixPolishOrphans(stripHtmlTags(category.category))}
             <i class="fas fa-chevron-right" style="font-size: 0.8em;"></i>
         `;
         
@@ -691,7 +723,7 @@ function initializeDropdown(toolCatalog) {
         category.subcategories.forEach(subcategory => {
             const subcategoryLink = document.createElement('a');
             subcategoryLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
-            subcategoryLink.textContent = stripHtmlTags(subcategory.name);
+            subcategoryLink.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
             subDropdownContent.appendChild(subcategoryLink);
         });
 
@@ -701,6 +733,11 @@ function initializeDropdown(toolCatalog) {
 
         navCategories.appendChild(subDropdownContainer);
     });
+    
+    // Zastosuj zasady typografii po stworzeniu dropdown menu
+    setTimeout(() => {
+        applyTypographyRules();
+    }, 50);
 }
 
 function initializeHamburger() {

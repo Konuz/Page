@@ -884,10 +884,10 @@ function initializeSearch(toolCatalog) {
         }
         
         searchResults.innerHTML = `
-            <div class="search-history-header">Ostatnie wyszukiwania</div>
+            <div class="search-history-header">Ostatnio oglądane narzędzia</div>
             ${history.map(query => `
                 <div class="search-history-item" data-query="${escapeHtml(query)}">
-                    <i class="fas fa-history search-history-icon"></i>
+                    <i class="fas fa-tools search-history-icon"></i>
                     <span class="search-history-text">${escapeHtml(query)}</span>
                 </div>
             `).join('')}
@@ -899,9 +899,9 @@ function initializeSearch(toolCatalog) {
         const historyItems = searchResults.querySelectorAll('.search-history-item');
         historyItems.forEach((item, index) => {
             item.addEventListener('click', () => {
-                const query = item.getAttribute('data-query');
-                searchInput.value = query;
-                performSearch(query, toolCatalog);
+                const toolName = item.getAttribute('data-query');
+                searchInput.value = toolName;
+                performSearch(toolName, toolCatalog);
             });
             
             item.addEventListener('mouseenter', () => {
@@ -1053,9 +1053,6 @@ function initializeSearch(toolCatalog) {
             return;
         }
         
-        // Zapisz do historii wyszukiwań
-        saveToSearchHistory(query);
-        
         const results = [];
         const queryLower = query.toLowerCase();
         
@@ -1120,6 +1117,13 @@ function initializeSearch(toolCatalog) {
         searchResultItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 const toolId = item.getAttribute('data-tool-id');
+                
+                // Znajdź nazwę narzędzia i zapisz do historii
+                const toolResult = results.find(r => r.tool.id === toolId);
+                if (toolResult) {
+                    saveToSearchHistory(toolResult.tool.name);
+                }
+                
                 window.location.href = `tool.html?toolId=${toolId}`;
             });
             

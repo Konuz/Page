@@ -2551,3 +2551,13 @@ body.subpage main {
         padding: 0.4rem 0.8rem;
     }
 }
+
+@media (min-width: 993px) {
+  .dropdown-content a {
+    padding: 10px 20px 10px 14px;
+  }
+  .sub-dropdown .sub-dropdown-content {
+    min-width: 220px;
+    max-width: 260px;
+  }
+}

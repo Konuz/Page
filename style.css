@@ -229,7 +229,7 @@ section {
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
     border-radius: 6px;
     padding: 8px;
     color: var(--text-color);
@@ -238,6 +238,8 @@ section {
     justify-content: center;
     opacity: 1 !important;
     visibility: visible !important;
+    transform: none !important;
+    scale: 1 !important;
 }
 
 .nav-actions .social-icon {

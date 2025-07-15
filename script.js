@@ -892,31 +892,21 @@ function initializeSearch(toolCatalog) {
     function openSearch() {
         isSearchOpen = true;
         
-        // Animacja przycisku - przekształcenie w kulkę
-        gsap.to(searchToggle, {
-            scale: 0.7,
-            rotation: 180,
-            borderRadius: '50%',
-            duration: 0.3,
-            ease: 'power2.out',
+        // Bezpośrednio pokaż pasek wyszukiwania
+        searchContainer.classList.remove('hidden');
+        searchContainer.classList.add('active');
+        
+        // Animacja rozwijania paska
+        gsap.fromTo(searchContainer, {
+            opacity: 0,
+            y: -20
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'back.out(1.7)',
             onComplete: () => {
-                // Po animacji przycisku, pokaż pasek wyszukiwania
-                searchContainer.classList.remove('hidden');
-                searchContainer.classList.add('active');
-                
-                // Animacja rozwijania paska w lewo
-                gsap.fromTo(searchContainer, {
-                    opacity: 0,
-                    y: -20
-                }, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.4,
-                    ease: 'back.out(1.7)',
-                    onComplete: () => {
-                        searchInput.focus();
-                    }
-                });
+                searchInput.focus();
             }
         });
     }
@@ -937,15 +927,6 @@ function initializeSearch(toolCatalog) {
             onComplete: () => {
                 searchContainer.classList.add('hidden');
                 searchContainer.classList.remove('active');
-                
-                // Przywróć przycisk wyszukiwania
-                gsap.to(searchToggle, {
-                    scale: 1,
-                    rotation: 0,
-                    borderRadius: '8px',
-                    duration: 0.3,
-                    ease: 'back.out(1.7)'
-                });
             }
         });
     }

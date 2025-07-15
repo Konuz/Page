@@ -891,12 +891,13 @@ function initializeSearch(toolCatalog) {
         
         // Animacja przycisku - przekształcenie w kulkę
         gsap.to(searchToggle, {
-            scale: 0,
+            scale: 0.7,
             rotation: 180,
+            borderRadius: '50%',
             duration: 0.3,
             ease: 'power2.out',
             onComplete: () => {
-                // Po zwinięciu przycisku, pokaż pasek wyszukiwania
+                // Po animacji przycisku, pokaż pasek wyszukiwania
                 searchContainer.classList.remove('hidden');
                 searchContainer.classList.add('active');
                 
@@ -938,6 +939,7 @@ function initializeSearch(toolCatalog) {
                 gsap.to(searchToggle, {
                     scale: 1,
                     rotation: 0,
+                    borderRadius: '8px',
                     duration: 0.3,
                     ease: 'back.out(1.7)'
                 });

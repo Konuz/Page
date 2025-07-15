@@ -1033,8 +1033,8 @@ function initializeSearch(toolCatalog) {
         }, {
             opacity: 1,
             y: 0,
-            duration: 0.28,
-            ease: 'back.out(1.7)',
+            duration: 0.3,
+            ease: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             onComplete: () => {
                 searchInput.focus();
                 // Pokaż historię jeśli input jest pusty
@@ -1056,8 +1056,8 @@ function initializeSearch(toolCatalog) {
         gsap.to(searchContainer, {
             opacity: 0,
             y: -20,
-            duration: 0.21,
-            ease: 'power2.out',
+            duration: 0.3,
+            ease: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             onComplete: () => {
                 searchContainer.classList.add('hidden');
                 searchContainer.classList.remove('active');

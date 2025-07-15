@@ -876,6 +876,15 @@ function initializeSearch(toolCatalog) {
         }
     }
     
+    function clearSearchHistory() {
+        try {
+            localStorage.removeItem('toolshare_search_history');
+            showSearchHistory(); // Odśwież widok historii
+        } catch (e) {
+            console.error('Error clearing search history:', e);
+        }
+    }
+    
     function showSearchHistory() {
         const history = getSearchHistory();
         if (history.length === 0) {
@@ -891,6 +900,9 @@ function initializeSearch(toolCatalog) {
                     <span class="search-history-text">${escapeHtml(query)}</span>
                 </div>
             `).join('')}
+            <div class="search-history-footer">
+                <button class="clear-history-btn">Wyczyść historię</button>
+            </div>
         `;
         
         searchResults.classList.add('active');
@@ -909,6 +921,15 @@ function initializeSearch(toolCatalog) {
                 updateHistorySelection();
             });
         });
+        
+        // Dodaj event listener dla przycisku czyszczenia historii
+        const clearBtn = searchResults.querySelector('.clear-history-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Zapobiegnij zamknięciu wyszukiwania
+                clearSearchHistory();
+            });
+        }
         
         searchResultItems = historyItems;
         selectedIndex = -1;

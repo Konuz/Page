@@ -308,7 +308,7 @@ function populateMobileMenuSubcategories(category) {
         const link = document.createElement('a');
         link.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
         link.className = 'mobile-menu-link';
-        link.textContent = subcategory.name;
+        link.textContent = stripHtmlTags(subcategory.name);
         
         listItem.appendChild(link);
         subcategoriesList.appendChild(listItem);
@@ -470,7 +470,7 @@ function renderSubcategories(toolCatalog) {
         const cardLink = document.createElement('a');
         cardLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`;
         cardLink.className = 'subcategory-card'; 
-        cardLink.innerHTML = `<h3>${sub.name}</h3>`;
+        cardLink.innerHTML = `<h3>${stripHtmlTags(sub.name)}</h3>`;
         contentGrid.appendChild(cardLink);
     });
 }
@@ -495,7 +495,7 @@ function renderTools(toolCatalog) {
         return;
     }
 
-    titleElement.textContent = subcategory.name;
+    titleElement.textContent = stripHtmlTags(subcategory.name);
 
     // Breadcrumb rendering
     breadcrumbContainer.innerHTML = '';
@@ -511,7 +511,7 @@ function renderTools(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
 
     const subcategorySpan = document.createElement('span');
-    subcategorySpan.textContent = subcategory.name;
+    subcategorySpan.textContent = stripHtmlTags(subcategory.name);
     breadcrumbContainer.appendChild(subcategorySpan);
 
     // Page content
@@ -593,7 +593,7 @@ function renderToolDetails(toolCatalog) {
     breadcrumbContainer.appendChild(createSeparator());
     
     const subcategorySiblings = category.subcategories.filter(s => s.name !== subcategory.name);
-    const subcategoryCrumb = createInteractiveBreadcrumb(subcategory.name, `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`, subcategorySiblings, 'subcategory', category.category);
+    const subcategoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(subcategory.name), `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`, subcategorySiblings, 'subcategory', category.category);
     breadcrumbContainer.appendChild(subcategoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
 
@@ -691,7 +691,7 @@ function initializeDropdown(toolCatalog) {
         category.subcategories.forEach(subcategory => {
             const subcategoryLink = document.createElement('a');
             subcategoryLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
-            subcategoryLink.textContent = subcategory.name;
+            subcategoryLink.textContent = stripHtmlTags(subcategory.name);
             subDropdownContent.appendChild(subcategoryLink);
         });
 
@@ -991,7 +991,7 @@ function initializeSearch(toolCatalog) {
                     <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy">
                     <div class="search-result-info">
                         <div class="search-result-title">${highlightedName}</div>
-                        <div class="search-result-category">${stripHtmlTags(result.category)} › ${result.subcategory}</div>
+                        <div class="search-result-category">${stripHtmlTags(result.category)} › ${stripHtmlTags(result.subcategory)}</div>
                     </div>
                 </div>
             `;

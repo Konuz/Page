@@ -65,7 +65,7 @@
                 { "id": "karcher-k5", "name": "Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Odkurzacze", "tools": [
-                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/karcher_nt_451.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },

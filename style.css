@@ -52,6 +52,9 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -1295,10 +1298,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 main {
     padding-top: 80px; /* Zmniejszony ogólny padding, by dać kontrolę sekcjom */
+    flex: 1;
 }
 
 body.subpage main {
     padding-top: 80px; /* Ujednolicenie dla podstron */
+    flex: 1;
 }
 
 /* Mobile Menu System */

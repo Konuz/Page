@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kategorie - ToolShare</title>
+    <title>O nas - ToolShare</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <script>
+        // Optymalizacja wydajności mobile - passive touch event listeners
+        (function() {
+            if ('addEventListener' in window) {
+                window.addEventListener('touchstart', function(){}, { passive: true });
+                window.addEventListener('touchmove', function(){}, { passive: true });
+            }
+        })();
+    </script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔨</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +30,10 @@
                 <div class="nav-links">
                     <a href="index.html" class="nav-link" id="start-link">Start</a>
                     <div class="dropdown">
-                        <a href="index.html#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
+                        <a href="index.html#tools" class="dropbtn">
+                            Narzędzia
+                            <i class="fas fa-chevron-down breadcrumb-arrow"></i>
+                        </a>
                         <div class="dropdown-content" id="nav-categories">
                             <!-- Kategorie będą wstawiane tutaj przez JS -->
                         </div>
@@ -36,7 +48,7 @@
                         <i class="fas fa-sun"></i>
                         <i class="fas fa-moon"></i>
                     </button>
-                    <a href="#" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/michal.unknown" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
                     <div class="hamburger">
                         <span class="bar"></span>
                         <span class="bar"></span>
@@ -110,14 +122,31 @@
     </div>
 
     <main>
-        <section class="content-section">
+        <section class="section">
             <div class="container">
                 <div class="breadcrumb">
-                    <!-- Ścieżka nawigacyjna będzie budowana dynamicznie przez JavaScript -->
+                    <a href="index.html">Start</a>
+                    <span class="breadcrumb-separator">></span>
+                    <span class="breadcrumb-current">O nas</span>
                 </div>
-                <h1 id="category-title">Nazwa Kategorii</h1>
-                <div id="subcategory-grid" class="tools-grid">
-                    <!-- Podkategorie będą dynamicznie wstawiane tutaj -->
+                <h1 id="about-us-title">O nas</h1>
+                
+                <div class="privacy-content">
+                    <p>Jesteśmy młodą, lokalną wypożyczalnią sprzętu budowlanego i ogrodniczego działającą na terenie gminy Czernica – z siedzibą w Chrząstawie Wielkiej. Powstaliśmy z myślą o tych, którzy cenią sobie dobry kontakt, uczciwe warunki i elastyczność, której trudno szukać w dużych firmach.</p>
+                    
+                    <p>Co nas wyróżnia? Przede wszystkim atrakcyjne, konkurencyjne ceny – płacisz tylko za to, czego faktycznie potrzebujesz. Dzięki lokalnemu charakterowi możemy zaoferować indywidualne podejście, szybki kontakt i dogodne godziny odbioru oraz zwrotu sprzętu, także poza standardowymi godzinami.</p>
+                    
+                    <p>Naszą ofertę tworzymy z myślą o realnych potrzebach użytkowników – bez zbędnych formalności, bez ukrytych kosztów. Każde urządzenie jest sprawdzone, gotowe do pracy i dobrze przygotowane technicznie.</p>
+                    
+                    <p>Działamy lokalnie – znamy potrzeby mieszkańców gminy, wiemy, jak ważny jest czas i dostępność na już. Dlatego stawiamy na szybką reakcję, minimum formalności i maksimum wygody.</p>
+                    
+                    <p>W naszej ofercie znajdziesz m.in.: elektronarzędzia, odkurzacze przemysłowe, piły, szlifierki, narzędzia ogrodnicze i budowlane – a lista stale się powiększa. Rozwijamy się razem z Tobą – Twoje potrzeby wpływają na kierunek, w którym rośniemy!</p>
+                    
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
                 </div>
             </div>
         </section>
@@ -137,6 +166,21 @@
         </div>
     </footer>
 
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top" title="Przewiń do góry">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Cookie Popup -->
+    <div id="cookie-popup" class="cookie-popup">
+        <div class="cookie-popup-content">
+            <p>Ta strona używa plików cookie. Kontynuując przeglądanie, wyrażasz zgodę na ich użycie.</p>
+            <div class="cookie-popup-buttons">
+                <button id="accept-cookies">Akceptuj</button>
+                <button id="reject-cookies">Odrzuć</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

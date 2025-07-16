@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderTools(toolCatalog);
     } else if (document.getElementById('tool-details-section')) {
         renderToolDetails(toolCatalog);
+    } else if (document.getElementById('about-us-title')) {
+        // Strona "O nas" nie wymaga specjalnego renderowania
+        console.log('Router -> About us page');
     } else {
         console.log('Router -> No match found for page.');
     }

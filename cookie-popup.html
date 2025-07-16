@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okno cookies</title>
+    <style>
+        .cookie-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            max-width: 350px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            z-index: 1000;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .cookie-popup.hidden {
+            opacity: 0;
+            transform: translateY(100px);
+            pointer-events: none;
+        }
+
+        .cookie-popup-content p {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .cookie-popup-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cookie-popup button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .cookie-popup button:hover {
+            background: #2980b9;
+        }
+
+        .cookie-popup button#reject-cookies {
+            background: #95a5a6;
+        }
+
+        .cookie-popup button#reject-cookies:hover {
+            background: #7f8c8d;
+        }
+
+        @media (max-width: 480px) {
+            .cookie-popup {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            
+            .cookie-popup-buttons {
+                flex-direction: column;
+            }
+            
+            .cookie-popup button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cookie-popup" class="cookie-popup">
+        <div class="cookie-popup-content">
+            <p>Ta strona używa plików cookie. Kontynuując przeglądanie, wyrażasz zgodę na ich użycie.</p>
+            <div class="cookie-popup-buttons">
+                <button id="accept-cookies">Akceptuj</button>
+                <button id="reject-cookies">Odrzuć</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookiePopup = document.getElementById('cookie-popup');
+            const acceptBtn = document.getElementById('accept-cookies');
+            const rejectBtn = document.getElementById('reject-cookies');
+
+            // TESTOWANIE: Usuń tę linię w produkcji
+            // localStorage.removeItem('cookieConsent');
+
+            // Sprawdź czy użytkownik już podjął decyzję
+            if (localStorage.getItem('cookieConsent')) {
+                cookiePopup.classList.add('hidden');
+            }
+
+            // Funkcja zamykania popup
+            function hidePopup() {
+                cookiePopup.classList.add('hidden');
+                setTimeout(() => {
+                    cookiePopup.style.display = 'none';
+                }, 300);
+            }
+
+            // Akceptacja cookies
+            acceptBtn.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'accepted');
+                hidePopup();
+                console.log('Cookies zostały zaakceptowane');
+            });
+
+            // Odrzucenie cookies
+            rejectBtn.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'rejected');
+                hidePopup();
+                console.log('Cookies zostały odrzucone');
+            });
+        });
+    </script>
+</body>
+</html>

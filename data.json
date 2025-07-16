@@ -27,7 +27,7 @@
                 { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Bruzdownice", "tools": [
-                { "id": "bruzdownica", "name": "Bruzdownica", "image": "images/pila.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "bruzdownica", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Ukośnice", "tools": [
                 { "id": "ukosnica-metabo", "name": "Ukośnica Metabo", "image": "images/ukosnica_metabo.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }

@@ -1,5 +1,81 @@
 console.log('Skrypt załadowany!');
 
+// Kompleksowa obsługa błędów CORS - głównie dla środowiska deweloperskiego
+(function() {
+    'use strict';
+    
+    // Sprawdź czy to środowisko deweloperskie
+    const isDevelopment = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.protocol === 'file:' ||
+                         window.location.hostname.includes('192.168.');
+    
+    console.log('🔧 Środowisko:', isDevelopment ? 'Development (HTTP)' : 'Production (HTTPS)');
+    console.log('ℹ️ Informacja: Błędy CORS iframe Google Maps są normalne i nie wpływają na funkcjonalność mapy');
+    console.log('📚 Źródło: Same-Origin Policy to zabezpieczenie przeglądarek - nie błąd w kodzie');
+    
+    // Lista wzorców błędów do ignorowania
+    const ignoredErrors = [
+        'cross-origin frame',
+        'SecurityError',
+        'Blocked a frame with origin',
+        'Permission denied to access property',
+        'Failed to read a named property',
+        'Script error',
+        'Non-Error promise rejection captured',
+        'ResizeObserver loop limit exceeded'
+    ];
+    
+    // Obsługa błędów globalnych
+    window.addEventListener('error', function(event) {
+        const message = event.message || '';
+        const filename = event.filename || '';
+        
+        // Sprawdź czy to błąd CORS lub związany z zewnętrznymi skryptami
+        if (ignoredErrors.some(pattern => message.includes(pattern)) ||
+            filename.includes('google') ||
+            filename.includes('maps') ||
+            filename.includes('all.iife.js') ||
+            filename.includes('cdnjs.cloudflare.com')) {
+            
+            console.log('🔇 Ignorowany błąd CORS/external:', {
+                message: message.substring(0, 100),
+                filename: filename,
+                source: 'iframe/external',
+                protocol: window.location.protocol,
+                hostname: window.location.hostname,
+                note: 'Ten błąd prawdopodobnie zniknie na hostingu HTTPS'
+            });
+            
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    // Obsługa nieprzechwyconych promise rejections
+    window.addEventListener('unhandledrejection', function(event) {
+        const reason = event.reason || '';
+        const reasonStr = reason.toString ? reason.toString() : String(reason);
+        
+        if (ignoredErrors.some(pattern => reasonStr.includes(pattern))) {
+            console.log('🔇 Ignorowany promise rejection:', reasonStr.substring(0, 100));
+            event.preventDefault();
+            return false;
+        }
+    });
+    
+    // Przywróć oryginalne console.error z filtrowaniem
+    const originalError = console.error;
+    console.error = function(...args) {
+        const message = args.join(' ');
+        if (!ignoredErrors.some(pattern => message.includes(pattern))) {
+            originalError.apply(console, args);
+        }
+    };
+    
+})();
+
 // Funkcja zapobiegająca polskim sierotkom
 function fixPolishOrphans(text) {
     if (!text || typeof text !== 'string') return text;

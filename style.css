@@ -216,7 +216,7 @@ section {
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.75rem;
     order: 1;
 }
 
@@ -1072,7 +1072,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
     .nav-actions {
         margin-left: auto;
-        gap: 2rem;
+        gap: 1.75rem;
         order: 0; /* Reset order for mobile */
     }
 
@@ -1911,7 +1911,7 @@ body.subpage main {
 
     .nav-actions {
         margin-left: auto;
-        gap: 2rem;
+        gap: 1.75rem;
         order: 0; /* Reset order for mobile */
     }
 

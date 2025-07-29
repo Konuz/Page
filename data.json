@@ -8,32 +8,32 @@
                 { "id": "wkretarka-ryobi", "name": "Wkrętarka Ryobi", "image": "images/wkretarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Wyrzynarki", "tools": [
-                { "id": "wyrzynarka-mcalister", "name": "Wyrzynarka McAlister", "image": "images/wyrzynarka_macallister.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "wyrzynarka-macallister", "name": "Wyrzynarka MacAllister", "image": "images/wyrzynarka_macallister.webp", "pricing": {"1-3 Dni": 40, "4-7 Dni": 30, "Sobota + Niedziela": 70, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Pilarki", "tools": [
-                { "id": "pila-bosch-gts-254", "name": "Piła stołowa Bosch", "image": "images/pila_stolowa_Bosch.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pila-bosch-gts-254", "name": "Piła stołowa Bosch", "image": "images/pila_stolowa_Bosch.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": "Dodaj cenę"} },
                 { "id": "pilarka-einhell-te-cs-18", "name": "Pilarka Einhell", "image": "images/pilarka_einhell_te_cs_18.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
                 { "id": "pilarka-parkside", "name": "Pilarka Parkside", "image": "images/pilarka_parkside.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Piły łańcuchowe", "tools": [
-                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna NAC", "image": "images/pila_elektryczna_NAC_CE20_40_OS_H.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna NAC", "image": "images/pila_elektryczna_NAC_CE20_40_OS_H.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 35, "Kaucja *": "Dodaj cenę"} },
                 { "id": "mini-pila-ferm", "name": "Mini piła łańcuchowa Ferm", "image": "images/mini_pila_ferm.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Młotowiertarki", "tools": [
                 { "id": "mlotowiertarka-ryobi", "name": "Młotowiertarka Ryobi", "image": "images/mlotowiertarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "mlotowiertarka-mcalister", "name": "Młotowiertarka McAlister", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "mlotowiertarka-mcalister", "name": "Młotowiertarka McAlister", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 50, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Frezarki", "tools": [
-                { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 80, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Bruzdownice", "tools": [
-                { "id": "bruzdownica", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "bruzdownica", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 55, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Ukośnice", "tools": [
-                { "id": "ukosnica-metabo", "name": "Ukośnica Metabo", "image": "images/ukosnica_metabo.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "ukosnica-metabo", "name": "Ukośnica Metabo", "image": "images/ukosnica_metabo.webp", "pricing": {"1-3 Dni": 60, "4-7 Dni": 50, "Sobota + Niedziela": 100, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Szlifierki", "tools": [
-                { "id": "szlifierka-metabo", "name": "Szlifierka Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "szlifierka-metabo", "name": "Szlifierka Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": 35, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },
@@ -42,17 +42,17 @@
         "image": "images/laser_bosch_pll_360.webp",
         "subcategories": [
             { "name": "Poziomice", "tools": [
-                { "id": "poziomice-tradycyjne", "name": "Poziomice tradycyjne", "image": "images/poziomice.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "poziomice-tradycyjne", "name": "Poziomice tradycyjne", "image": "images/poziomice.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 20, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Łaty budowlane", "tools": [
-                { "id": "lata-budowlana-3m", "name": "Łata budowlana 3 m", "image": "images/lata_budowlana_3m.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "lata-budowlana-3m", "name": "Łata budowlana 3 m", "image": "images/lata_budowlana_3m.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 30, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Dalmierze i lasery", "tools": [
-                { "id": "dalmierz-laserowy", "name": "Dalmierz laserowy Pro", "image": "images/dalmierz_laserowy_pro.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "laser-bosch-pll-360", "name": "Laser Bosch", "image": "images/laser_bosch_pll_360.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "dalmierz-laserowy", "name": "Dalmierz laserowy Pro", "image": "images/dalmierz_laserowy_pro.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": "Dodaj cenę"} },
+                { "id": "laser-bosch-pll-360", "name": "Laser Bosch", "image": "images/laser_bosch_pll_360.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Tachimetry", "tools": [
-                { "id": "tachimetr-dtm-624r", "name": "Tachimetr DTM 624R", "image": "images/tachimetr_dtm_624r.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "tachimetr-dtm-624r", "name": "Tachimetr DTM 624R", "image": "images/tachimetr_dtm_624r.webp", "pricing": {"1-3 Dni": 250, "4-7 Dni": 200, "Sobota + Niedziela": 450, "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },
@@ -61,10 +61,10 @@
         "image": "images/karcher_k5.webp",
         "subcategories": [
             { "name": "Myjki ciśnieniowe", "tools": [
-                { "id": "karcher-k5", "name": "Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "karcher-k5", "name": "Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Odkurzacze", "tools": [
-                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/karcher_nt_451.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/karcher_nt_451.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 85, "Kaucja *": "Dodaj cenę"} },
                 { "id": "odkurzacz-pioracy", "name": "Odkurzacz piorący", "image": "images/odkurzacz_pioracy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
@@ -74,23 +74,13 @@
         "image": "images/betoniarka.webp",
         "subcategories": [
             { "name": "Betoniarki", "tools": [
-                { 
-                    "id": "betoniarka-180",
-                    "name": "Betoniarka 180 litrów na 230V",
-                    "image": "images/betoniarka.webp", 
-                    "pricing": {
-                        "1-3 Dni": 45,
-                        "4-7 Dni": 40,
-                        "Sobota + Niedziela": 67.5,
-                        "Kaucja *": 200
-                    }
-                }
+                { "id": "betoniarka-180", "name": "Betoniarka 180 litrów na 230V", "image": "images/betoniarka.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": 200} }
             ] },
             { "name": "Aeratory", "tools": [
-                { "id": "aerator-reczny", "name": "Aerator ręczny", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "aerator-reczny", "name": "Aerator ręczny", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 35, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Młoty", "tools": [
-                { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Łopaty i szpadle", "tools": [
                 { "id": "szpadel-fiskars", "name": "Szpadel Fiskars", "image": "images/szpadel_fiskars.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
@@ -98,7 +88,7 @@
                 { "id": "noz-do-darni", "name": "Nóż do darni", "image": "images/noz_do_darni.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Siewniki", "tools": [
-                { "id": "siewnik-reczny", "name": "Siewnik ręczny", "image": "images/siewnik_reczny.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "siewnik-reczny", "name": "Siewnik ręczny", "image": "images/siewnik_reczny.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 15, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Grille", "tools": [
                 { "id": "grill-gazowy-landmann", "name": "Grill gazowy Landmann", "image": "images/grill_gazowy_triton_max.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
@@ -116,8 +106,8 @@
         "image": "images/drabina_3czesciowa.webp",
         "subcategories": [
             { "name": "Drabiny", "tools": [
-                { "id": "drabina-3-czesciowa", "name": "Drabina 3-częściowa", "image": "images/drabina_3czesciowa.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "drabina-1m", "name": "Drabina 1 m", "image": "images/drabina.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "drabina-3-czesciowa", "name": "Drabina 3-częściowa", "image": "images/drabina_3czesciowa.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 55, "Kaucja *": "Dodaj cenę"} },
+                { "id": "drabina-1m", "name": "Drabina 1 m", "image": "images/drabina.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 12, "Sobota + Niedziela": 25, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Taczki", "tools": [
                 { "id": "taczka-budowlana", "name": "Taczki budowlane", "image": "images/taczka.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
@@ -129,7 +119,7 @@
         "image": "images/box_dachowy_travel_400_Volvo.webp",
         "subcategories": [
             { "name": "Bagażnik dachowy", "tools": [
-                { "id": "box-dachowy-travel-400-volvo", "name": "Bagażnik dachowy Volvo z belkami", "image": "images/box_dachowy_travel_400_Volvo.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "box-dachowy-travel-400-volvo", "name": "Bagażnik dachowy Volvo z belkami", "image": "images/box_dachowy_travel_400_Volvo.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 70, "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Lodówka turystyczna", "tools": [
                 { "id": "lodowka-turystyczna-8l", "name": "Lodówka turystyczna 8l", "image": "images/lodowka_turystyczna_8l.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }

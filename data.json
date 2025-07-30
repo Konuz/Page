@@ -17,11 +17,14 @@
             ] },
             { "name": "Piły łańcuchowe", "tools": [
                 { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna NAC", "image": "images/pila_elektryczna_NAC_CE20_40_OS_H.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 35, "Kaucja *": "Dodaj cenę"} },
-                { "id": "mini-pila-ferm", "name": "Mini piła łańcuchowa Ferm", "image": "images/mini_pila_ferm.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "mini-pila-ferm", "name": "Mini piła łańcuchowa Ferm", "image": "images/mini_pila_ferm.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pila-na-wysiegniku-cedrus", "name": "Piła na wysięgniku Cedrus", "image": "images/pila_na_wysiegniku_Cedrus_CEDPW425.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "pilarka-akumulatorowa-cedrus", "name": "Piła akumulatorowa Cedrus", "image": "images/pilarka_akumulatorowa_Cedrus_60V_CHS350-B4.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Młotowiertarki", "tools": [
                 { "id": "mlotowiertarka-ryobi", "name": "Młotowiertarka Ryobi", "image": "images/mlotowiertarka_ryobi.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
-                { "id": "mlotowiertarka-mcalister", "name": "Młotowiertarka McAlister", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 50, "Kaucja *": "Dodaj cenę"} }
+                { "id": "mlotowiertarka-mcalister", "name": "Młotowiertarka McAlister", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 50, "Kaucja *": "Dodaj cenę"} },
+                { "id": "mloto-wiertarka-udarowa-cedrus", "name": "Młoto-wiertarka udarowa Cedrus", "image": "images/mloto–wiertarka_udarowa_cedrus_CEDRH2.2LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Frezarki", "tools": [
                 { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 80, "Kaucja *": "Dodaj cenę"} }
@@ -34,6 +37,9 @@
             ] },
             { "name": "Szlifierki", "tools": [
                 { "id": "szlifierka-metabo", "name": "Szlifierka Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": 35, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Pistolety malarskie", "tools": [
+                { "id": "pistolet-do-malowania-cedrus", "name": "Pistolet do malowania Cedrus", "image": "images/pistolet-do-malowania-Cedrus-CEDSP1000LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },
@@ -61,11 +67,14 @@
         "image": "images/karcher_k5.webp",
         "subcategories": [
             { "name": "Myjki ciśnieniowe", "tools": [
-                { "id": "karcher-k5", "name": "Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": "Dodaj cenę"} }
+                { "id": "karcher-k5", "name": "Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": "Dodaj cenę"} },
+                { "id": "myjka-cisnieniowa-cedrus-1", "name": "Myjka ciśnieniowa Cedrus", "image": "images/myjka_cisnieniowa_cedrus_CEDMC150.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "myjka-cisnieniowa-cedrus-2", "name": "Myjka ciśnieniowa Cedrus", "image": "images/myjka_cisnieniowa_cedrus_CEDWP160LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Odkurzacze", "tools": [
                 { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/karcher_nt_451.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 85, "Kaucja *": "Dodaj cenę"} },
-                { "id": "odkurzacz-pioracy", "name": "Odkurzacz piorący", "image": "images/odkurzacz_pioracy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "odkurzacz-pioracy", "name": "Odkurzacz piorący", "image": "images/odkurzacz_pioracy.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "odkurzacz-akumulatorowy-cedrus", "name": "Odkurzacz akumulatorowy Cedrus", "image": "images/odkurzacz_akumulatorowy_Cedrus_CEDVC15LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },
@@ -96,8 +105,36 @@
             { "name": "Stoły i krzesła", "tools": [
                 { "id": "stoly-krzesla-rozkladane", "name": "Stoły i krzesła rozkładane", "image": "images/stoly_krzesla_rozkladane.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
+            { "name": "Kosiarki", "tools": [
+                { "id": "kosiarka-akumulatorowa-cedrus", "name": "Kosiarka akumulatorowa Cedrus", "image": "images/kosiarka_akumulatorowa_cedrus_60V_LM560S-P25.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "kosiarka-automatyczna-cedrus", "name": "Kosiarka automatyczna Cedrus", "image": "images/kosiarka_automatyczna_cedrus_C-MOW-M6+.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Podkaszarki", "tools": [
+                { "id": "podkaszarka-akumulatorowa-cedrus-1", "name": "Podkaszarka akumulatorowa Cedrus", "image": "images/podkaszarka-akumulatorowa-Cedrus-60V-BC420L-B.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "podkaszarka-akumulatorowa-cedrus-2", "name": "Podkaszarka akumulatorowa Cedrus", "image": "images/podkaszarka-akumulatorowa-Cedrus-CEDST300LIX2.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Nożyce ogrodowe", "tools": [
+                { "id": "nozyce-akumulatorowe-cedrus", "name": "Nożyce akumulatorowe Cedrus", "image": "images/nozyce_akumulatorowe_Cedrus_60V_HT640-P.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Krawędziarki", "tools": [
+                { "id": "krawedziarka-cedrus", "name": "Krawędziarka Cedrus", "image": "images/krawędziarka_cedrus_CEDRUW01.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Wertykulator", "tools": [
+                { "id": "wertykulator-cedrus", "name": "Wertykulator Cedrus", "image": "images/wertykulator-Cedrus-CEDWR02R.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Dmuchawy", "tools": [
+                { "id": "dmuchawa-akumulatorowa-cedrus", "name": "Dmuchawa akumulatorowa Cedrus", "image": "images/dmuchawa_akumulatorowa_cedrus_60V_BL210-P.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Opryskiwacze", "tools": [
+                { "id": "opryskiwacz-akumulatorowy-cedrus", "name": "Opryskiwacz akumulatorowy Cedrus", "image": "images/opryskiwacz_akumulatorowy_Cedrus_CEDSC15LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
+            { "name": "Zagęszczarki", "tools": [
+                { "id": "zageszczarka-cedrus", "name": "Zagęszczarka Cedrus", "image": "images/zageszczarka-Cedrus-CEDZG02-79-kg.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+            ] },
             { "name": "Inne", "tools": [
-                { "id": "wyrywacz-chwastow-fiskars", "name": "Wyrywacz do chwastów Fiskars", "image": "images/wyrywacz_fiskars.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "wyrywacz-chwastow-fiskars", "name": "Wyrywacz do chwastów Fiskars", "image": "images/wyrywacz_fiskars.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "urzadzenie-wielofunkcyjne-cedrus", "name": "Urządzenie wielofunkcyjne Cedrus", "image": "images/urzadzenie-wielofunkcyjne-spalinowe-Cedrus-CEDUW552.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} },
+                { "id": "szczotka-akumulatorowa-cedrus", "name": "Szczotka akumulatorowa Cedrus", "image": "images/szczotka-akumulatorowa-do-czyszczenia-spoin-Cedrus-CEDPC160LI.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     },

@@ -1317,8 +1317,10 @@ body.subpage main {
     z-index: 999;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    will-change: opacity, visibility;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     backdrop-filter: blur(2px);
+    contain: layout style paint;
 }
 
 .mobile-menu-overlay.active {
@@ -1329,17 +1331,20 @@ body.subpage main {
 .mobile-menu-container {
     position: fixed;
     top: 0;
-    right: -55%;
+    right: 0;
     width: 55%;
     height: 100%;
     background-color: var(--card-bg-color);
     z-index: 1000;
-    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateX(100%);
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     overflow-x: hidden;
     display: flex;
     box-shadow: -8px 0 25px rgba(0, 0, 0, 0.15);
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+    contain: layout style paint;
 }
 
 [data-theme="dark"] .mobile-menu-container {
@@ -1348,7 +1353,7 @@ body.subpage main {
 }
 
 .mobile-menu-container.active {
-    right: 0;
+    transform: translateX(0);
 }
 
 .mobile-menu-panel {
@@ -1357,19 +1362,22 @@ body.subpage main {
     background-color: var(--card-bg-color);
     position: absolute;
     top: 0;
-    right: -100%;
-    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    right: 0;
+    transform: translateX(100%);
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     overflow-y: auto;
     padding: 0;
     border-radius: inherit;
+    contain: layout style paint;
 }
 
 .mobile-menu-panel.active {
-    right: 0;
+    transform: translateX(0);
 }
 
 .mobile-menu-panel.sliding-out {
-    right: 100%;
+    transform: translateX(-100%);
 }
 
 .mobile-menu-header {
@@ -1438,7 +1446,8 @@ body.subpage main {
     text-decoration: none;
     font-size: 16px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    will-change: transform, box-shadow;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     border-radius: 12px;
     background: var(--card-bg-color);
@@ -1449,6 +1458,7 @@ body.subpage main {
     /* Zasady typograficzne dla polskiego tekstu */
     hyphens: auto;
     overflow-wrap: break-word;
+    contain: layout style;
 }
 
 .mobile-menu-link:hover {
@@ -1572,7 +1582,6 @@ body.subpage main {
 @media (max-width: 992px) and (orientation: landscape) {
     .mobile-menu-container {
         width: 33.33%;
-        right: -33.33%;
     }
 }
 

@@ -255,10 +255,12 @@ function initializeMobileMenu(toolCatalog) {
     const hamburger = document.querySelector('.hamburger');
     const overlay = document.getElementById('mobile-menu-overlay');
     const container = document.getElementById('mobile-menu-container');
-    const backButtons = document.querySelectorAll('.mobile-menu-back');
-    const submenuLinks = document.querySelectorAll('[data-submenu]');
-
+    
     if (!hamburger || !overlay || !container) return;
+
+    // Cache DOM elements for better performance
+    const panels = document.querySelectorAll('.mobile-menu-panel');
+    const mainMenuPanel = document.getElementById('main-menu-panel');
 
     // Populate categories in mobile menu
     populateMobileMenuCategories(toolCatalog);
@@ -277,48 +279,63 @@ function initializeMobileMenu(toolCatalog) {
     // Close menu when clicking overlay
     overlay.addEventListener('click', closeMobileMenu);
 
-    // Handle back button clicks
-    backButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetPanel = button.getAttribute('data-back');
-            showMobileMenuPanel(targetPanel);
-        });
-    });
+    // Event delegation for better performance - single listener on container
+    container.addEventListener('click', handleContainerClick);
 
-    // Handle submenu links
-    submenuLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
+    // Handle all clicks within container using event delegation
+    function handleContainerClick(e) {
+        const backButton = e.target.closest('.mobile-menu-back');
+        const submenuLink = e.target.closest('[data-submenu]');
+        const categoryLink = e.target.closest('[data-category]');
+
+        if (backButton) {
             e.preventDefault();
-            const targetPanel = link.getAttribute('data-submenu');
+            const targetPanel = backButton.getAttribute('data-back') || 'main-menu';
+            showMobileMenuPanel(targetPanel);
+        } else if (submenuLink) {
+            e.preventDefault();
+            const targetPanel = submenuLink.getAttribute('data-submenu');
             if (targetPanel === 'tools-menu') {
                 populateMobileMenuCategories(toolCatalog);
             }
             showMobileMenuPanel(targetPanel);
-        });
-    });
+        } else if (categoryLink) {
+            e.preventDefault();
+            const categoryName = categoryLink.getAttribute('data-category');
+            const category = toolCatalog.find(cat => cat.category === categoryName);
+            if (category) {
+                populateMobileMenuSubcategories(category);
+                showMobileMenuPanel('category-menu');
+            }
+        }
+    }
 
     function openMobileMenu() {
-        hamburger.classList.add('active');
-        overlay.classList.add('active');
-        container.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Reset to main menu
-        showMobileMenuPanel('main-menu', false);
+        requestAnimationFrame(() => {
+            hamburger.classList.add('active');
+            overlay.classList.add('active');
+            container.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset to main menu
+            showMobileMenuPanel('main-menu', false);
+        });
     }
 
     function closeMobileMenu() {
-        hamburger.classList.remove('active');
-        overlay.classList.remove('active');
-        container.classList.remove('active');
-        document.body.style.overflow = '';
-        
-        // Reset all panels after animation
-        setTimeout(() => {
-            if (!container.classList.contains('active')) {
-                resetMobileMenuPanels();
-            }
-        }, 300);
+        requestAnimationFrame(() => {
+            hamburger.classList.remove('active');
+            overlay.classList.remove('active');
+            container.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Reset all panels after animation
+            setTimeout(() => {
+                if (!container.classList.contains('active')) {
+                    resetMobileMenuPanels();
+                }
+            }, 300);
+        });
     }
 
     function showMobileMenuPanel(panelId, animate = true) {
@@ -353,11 +370,14 @@ function initializeMobileMenu(toolCatalog) {
     }
 
     function resetMobileMenuPanels() {
-        const panels = document.querySelectorAll('.mobile-menu-panel');
-        panels.forEach(panel => {
-            panel.classList.remove('active', 'sliding-out');
+        requestAnimationFrame(() => {
+            panels.forEach(panel => {
+                panel.classList.remove('active', 'sliding-out');
+            });
+            if (mainMenuPanel) {
+                mainMenuPanel.classList.add('active');
+            }
         });
-        document.getElementById('main-menu-panel').classList.add('active');
     }
 }
 
@@ -365,7 +385,8 @@ function populateMobileMenuCategories(toolCatalog) {
     const categoriesList = document.getElementById('tools-categories-list');
     if (!categoriesList) return;
 
-    categoriesList.innerHTML = '';
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
 
     toolCatalog.forEach(category => {
         const listItem = document.createElement('li');
@@ -377,20 +398,20 @@ function populateMobileMenuCategories(toolCatalog) {
         link.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
         link.setAttribute('data-category', category.category);
         
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            populateMobileMenuSubcategories(category);
-            showMobileMenuPanel('category-menu');
-        });
+        // Remove individual event listeners - use event delegation instead
         
         listItem.appendChild(link);
-        categoriesList.appendChild(listItem);
+        fragment.appendChild(listItem);
     });
     
-    // Zastosuj zasady typografii po stworzeniu menu
-    setTimeout(() => {
+    // Single DOM update
+    categoriesList.innerHTML = '';
+    categoriesList.appendChild(fragment);
+    
+    // Use requestAnimationFrame for typography rules
+    requestAnimationFrame(() => {
         applyTypographyRules();
-    }, 50);
+    });
 }
 
 function populateMobileMenuSubcategories(category) {

@@ -1315,6 +1315,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('🔒 Google Consent Mode zainicjalizowany - domyślnie wyłączony');
     }
 
+    // Inicjalizacja Meta Pixel - domyślnie wyłączony
+    if (typeof fbq !== 'undefined') {
+        // Wyłącz automatyczne śledzenie Meta Pixel
+        fbq('consent', 'revoke');
+        console.log('🔒 Meta Pixel zainicjalizowany - domyślnie wyłączony');
+    }
+
     // Sprawdź czy użytkownik już podjął decyzję
     const consent = localStorage.getItem('cookieConsent');
     if (consent) {
@@ -1332,6 +1339,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     'analytics_storage': 'denied'
                 });
                 console.log('❌ Google Analytics wyłączony na podstawie zapisanych preferencji');
+            }
+        }
+
+        // Zastosuj preferencję dla Meta Pixel
+        if (typeof fbq !== 'undefined') {
+            if (consent === 'accepted') {
+                fbq('consent', 'grant');
+                console.log('✅ Meta Pixel włączony na podstawie zapisanych preferencji');
+            } else {
+                fbq('consent', 'revoke');
+                console.log('❌ Meta Pixel wyłączony na podstawie zapisanych preferencji');
             }
         }
     } else {
@@ -1362,6 +1380,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 console.log('✅ Google Analytics włączony po akceptacji cookies');
             }
+
+            // Włącz Meta Pixel po akceptacji
+            if (typeof fbq !== 'undefined') {
+                fbq('consent', 'grant');
+                console.log('✅ Meta Pixel włączony po akceptacji cookies');
+            }
         });
     }
 
@@ -1378,6 +1402,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     'analytics_storage': 'denied'
                 });
                 console.log('❌ Google Analytics wyłączony po odrzuceniu cookies');
+            }
+
+            // Wyłącz Meta Pixel po odrzuceniu
+            if (typeof fbq !== 'undefined') {
+                fbq('consent', 'revoke');
+                console.log('❌ Meta Pixel wyłączony po odrzuceniu cookies');
             }
         });
     }

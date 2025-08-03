@@ -951,7 +951,7 @@ function applyPolishTypography() {
     });
 }
 
-// Dodaj obsługę sierótek do istniejącego kodu inicjalizacyjnego
+// Dodaj obsługę sierotek do istniejącego kodu inicjalizacyjnego
 // Będzie wywoływane po renderowaniu kart kategorii
 function addPolishTypographyToCards() {
     // Opóźnienie dla pewności, że wszystkie elementy są już renderowane
@@ -1302,9 +1302,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // TESTOWANIE: Usuń tę linię w produkcji
     // localStorage.removeItem('cookieConsent');
 
+    // Inicjalizacja Google Consent Mode
+    if (typeof gtag !== 'undefined') {
+        // Domyślnie wyłącz wszystkie cookies
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'functionality_storage': 'denied',
+            'personalization_storage': 'denied',
+            'security_storage': 'granted'
+        });
+        console.log('🔒 Google Consent Mode zainicjalizowany - domyślnie wyłączony');
+    }
+
     // Sprawdź czy użytkownik już podjął decyzję
-    if (localStorage.getItem('cookieConsent')) {
+    const consent = localStorage.getItem('cookieConsent');
+    if (consent) {
         cookiePopup.classList.add('hidden');
+        
+        // Zastosuj zapisaną preferencję
+        if (typeof gtag !== 'undefined') {
+            if (consent === 'accepted') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted'
+                });
+                console.log('✅ Google Analytics włączony na podstawie zapisanych preferencji');
+            } else {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied'
+                });
+                console.log('❌ Google Analytics wyłączony na podstawie zapisanych preferencji');
+            }
+        }
     } else {
         // Upewnij się, że popup jest widoczny
         cookiePopup.style.display = 'block';
@@ -1325,6 +1354,14 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('cookieConsent', 'accepted');
             hidePopup();
             console.log('Cookies zostały zaakceptowane');
+            
+            // Włącz Google Tag Manager po akceptacji
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted'
+                });
+                console.log('✅ Google Analytics włączony po akceptacji cookies');
+            }
         });
     }
 
@@ -1334,6 +1371,14 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('cookieConsent', 'rejected');
             hidePopup();
             console.log('Cookies zostały odrzucone');
+            
+            // Wyłącz Google Tag Manager po odrzuceniu
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied'
+                });
+                console.log('❌ Google Analytics wyłączony po odrzuceniu cookies');
+            }
         });
     }
 }); 

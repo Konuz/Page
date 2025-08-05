@@ -793,6 +793,9 @@ function renderToolDetails(toolCatalog) {
         depositRow.appendChild(depositValueCell);
         pricingTableBody.appendChild(depositRow);
     }
+    
+    // Initialize carousel after tool details are rendered
+    initializeToolCarousel(toolCatalog);
 }
 
 function initializeDropdown(toolCatalog) {
@@ -862,16 +865,19 @@ function initializeThemeSwitcher() {
 }
 
 function initScrollAnimations() {
-    // Znajdź wszystkie karty na stronie, które powinny być animowane
-    const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
+    // Znajdź wszystkie karty na stronie, które powinny być animowane (excluding carousel cards)
+    const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card:not(.carousel .tool-card)');
     const contactSection = document.querySelector('#contact');
     const contactItems = document.querySelectorAll('.contact-details, .contact-map');
     const heroSection = document.querySelector('.hero-section');
 
-    // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart
+    // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart (excluding carousel cards)
     allCards.forEach(card => {
-        card.classList.add('stagger-item');
-        gsap.set(card, { opacity: 0, y: 20 });
+        // Skip cards that are inside carousel
+        if (!card.closest('.carousel')) {
+            card.classList.add('stagger-item');
+            gsap.set(card, { opacity: 0, y: 20 });
+        }
     });
 
     // Dodaj animacje dla elementów kontaktu
@@ -1492,10 +1498,11 @@ class ToolCarousel {
             animationDuration: this.isMobile ? 0.3 : 0.5, // Faster on mobile
             maxSimilarTools: 12,
             cloneMultiplier: this.isMobile ? 2 : 3, // Less cloning on mobile for performance
-            // Touch settings
-            swipeThreshold: 50,
-            swipeVelocityThreshold: 0.3,
-            touchMoveThreshold: 10
+            // Touch settings - optimized for smaller cards
+            swipeThreshold: this.isMobile ? 35 : 50, // Lower threshold for smaller cards
+            swipeVelocityThreshold: this.isMobile ? 0.25 : 0.3, // More sensitive for mobile
+            touchMoveThreshold: this.isMobile ? 8 : 10, // More responsive on mobile
+            dragResistance: this.isMobile ? 0.85 : 0.8 // Slightly smoother drag on mobile
         };
         
         // State
@@ -1668,18 +1675,15 @@ class ToolCarousel {
         
         const img = document.createElement('img');
         img.src = tool.image;
-        img.alt = tool.name;
+        img.alt = tool.name; // Maintain accessibility with proper alt text
         img.className = 'tool-card-img';
         img.loading = 'lazy';
         
         imageWrapper.appendChild(img);
-        
-        const titleWrapper = document.createElement('div');
-        titleWrapper.className = 'tool-card-title';
-        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(tool.name)}</h3>`;
-        
         card.appendChild(imageWrapper);
-        card.appendChild(titleWrapper);
+        
+        // Ensure carousel cards are visible (prevent scroll animation interference)
+        gsap.set(card, { opacity: 1, y: 0 });
         
         return card;
     }
@@ -1791,8 +1795,8 @@ class ToolCarousel {
             if (this.state.isDragging) {
                 e.preventDefault();
                 
-                // Apply drag with some resistance for smooth feel
-                const dragDistance = deltaX * 0.8; // 80% resistance for better feel
+                // Apply drag with configurable resistance for smooth feel
+                const dragDistance = deltaX * this.config.dragResistance;
                 const newPosition = this.state.startTransform + dragDistance;
                 
                 // Update position in real-time
@@ -2039,13 +2043,4 @@ function initializeToolCarousel(toolCatalog) {
     window.carouselCleanup.push(cleanup);
 }
 
-// Dodaj inicjalizację karuzeli do DOMContentLoaded
-document.addEventListener('DOMContentLoaded', async () => {
-    // Sprawdź czy jesteśmy na stronie szczegółów narzędzia
-    if (document.getElementById('tool-details-section')) {
-        const toolCatalog = await fetchData();
-        if (toolCatalog && toolCatalog.length > 0) {
-            initializeToolCarousel(toolCatalog);
-        }
-    }
-}); 
+ 

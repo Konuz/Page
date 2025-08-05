@@ -103,9 +103,7 @@ h2 {
 }
 
 
-section {
-    /* usunięto padding: 4rem 0; */
-}
+/* Usunięto pustą regułę section - padding: 4rem 0; został przeniesiony do konkretnych sekcji */
 
 .content-section {
     padding: 2rem 0;
@@ -237,17 +235,30 @@ section {
     border-radius: 6px;
     padding: 8px;
     color: var(--text-color);
-    display: inline-flex !important;
+    margin: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: auto;
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
     scale: 1 !important;
 }
 
+.search-toggle-btn .fa-search {
+    width: 1.2rem;
+    text-align: center;
+}
+
 .nav-actions .social-icon {
     font-size: 1.2rem;
+}
+
+.search-toggle-btn:hover {
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
 }
 
 .nav-actions a:hover,
@@ -791,6 +802,17 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin-top: 0.15em; /* Minor adjustment for alignment */
 }
 
+.contact-details ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-details ul li a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
 .address-clarification-subtext {
     font-size: 0.9rem;
     font-style: italic;
@@ -1281,10 +1303,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     cursor: pointer;
     color: var(--text-color);
     font-size: 1.2rem;
-    padding: 0;
+    transition: color 0.3s ease;
+    padding: 8px;
     margin: 0; /* Zmieniono z margin: 0 1rem */
+    border-radius: 6px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .theme-toggle-btn:hover {
@@ -1295,6 +1320,14 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .theme-toggle-btn .fa-sun {
     display: none;
+    width: 1.2rem;
+    text-align: center;
+}
+
+.theme-toggle-btn .fa-moon {
+    display: inline-block;
+    width: 1.2rem;
+    text-align: center;
 }
 
 [data-theme="dark"] .theme-toggle-btn .fa-sun {
@@ -2616,4 +2649,353 @@ body.subpage main {
     min-width: 220px;
     max-width: 260px;
   }
+}
+
+/* --- Optimized Carousel Styles --- */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    /* Optimize composite layers */
+    contain: layout style;
+}
+
+.carousel {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    /* Hardware acceleration for smooth scrolling */
+    transform: translateZ(0);
+    /* Optimize composite layers */
+    contain: layout style;
+    /* Efekt gradientowego zanikania na skrajnych kartach - optimized */
+    -webkit-mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        rgba(0, 0, 0, 1) 10%, 
+        rgba(0, 0, 0, 1) 90%, 
+        transparent 100%);
+    mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        rgba(0, 0, 0, 1) 10%, 
+        rgba(0, 0, 0, 1) 90%, 
+        transparent 100%);
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 1rem;
+    /* GPU acceleration for transforms */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Optimize repaints */
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.carousel .tool-card {
+    /* New dimensions: 25% smaller than original 300px x 350px */
+    min-width: 225px;
+    width: 225px;
+    height: 169px; /* Calculated to maintain 4:3 aspect ratio (225 * 3/4 = 168.75, rounded to 169) */
+    flex-shrink: 0;
+    cursor: pointer;
+    /* Performance optimizations */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Optimize composite layers */
+    contain: layout style paint;
+    /* Smooth transitions */
+    transition: transform 0.2s ease-out;
+    /* Apply 4:3 aspect ratio */
+    aspect-ratio: 4 / 3;
+    /* Remove background overlay effect since no text overlay needed */
+    position: relative;
+}
+
+.carousel .tool-card:hover {
+    transform: translateZ(0) scale(1.02);
+}
+
+.carousel .card-image-wrapper {
+    /* Fill entire card with 4:3 aspect ratio */
+    width: 100%;
+    height: 100%;
+    /* Optimize image rendering */
+    overflow: hidden;
+    contain: layout style;
+    /* Ensure proper aspect ratio */
+    aspect-ratio: 4 / 3;
+}
+
+
+/* Remove overlay gradient effect from carousel cards since no text needed */
+.carousel .tool-card::after {
+    display: none !important;
+}
+
+.carousel .tool-card-img {
+    /* Optimize image performance */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Optimized Navigation Arrows */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 10;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.nav-arrow::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: white;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.nav-arrow:hover::after {
+    transform: scale(1.2);
+    opacity: 0.2;
+}
+
+
+
+.nav-arrow.left {
+    left: -25px;
+}
+
+.nav-arrow.right {
+    right: -25px;
+}
+
+.nav-arrow:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.nav-arrow:disabled:hover::after {
+    transform: scale(0);
+    opacity: 0;
+}
+
+/* Optimized Mobile Styles */
+@media (max-width: 768px) {
+    .carousel-container {
+        margin: 1rem 0;
+        /* Mobile performance optimization */
+        contain: layout style paint;
+        transform: translateZ(0);
+    }
+    
+    .carousel {
+        /* Optimized mask for mobile */
+        -webkit-mask-image: linear-gradient(to right, 
+            transparent 0%, 
+            rgba(0, 0, 0, 1) 5%, 
+            rgba(0, 0, 0, 1) 95%, 
+            transparent 100%);
+        mask-image: linear-gradient(to right, 
+            transparent 0%, 
+            rgba(0, 0, 0, 1) 5%, 
+            rgba(0, 0, 0, 1) 95%, 
+            transparent 100%);
+        /* Enhanced mobile GPU acceleration */
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .nav-arrow {
+        display: none;
+    }
+    
+    .carousel-track {
+        cursor: grab;
+        gap: 1rem;
+        padding: 0 0.5rem;
+        /* Enhanced touch responsiveness */
+        touch-action: pan-x;
+        -webkit-overflow-scrolling: touch;
+        /* Mobile performance optimizations */
+        will-change: transform;
+        contain: layout style paint;
+        /* Reduce composite layer promotion for mobile */
+        backface-visibility: hidden;
+        perspective: 1000px;
+        /* iOS-specific smooth scrolling */
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    
+    .carousel-track.dragging {
+        cursor: grabbing;
+        /* Prevent text selection during drag */
+        user-select: none;
+        -webkit-user-select: none;
+        /* Add subtle visual feedback during drag */
+        opacity: 0.9;
+        transform: scale(0.98);
+        transition: opacity 0.1s ease, transform 0.1s ease;
+    }
+    
+    .carousel .tool-card {
+        /* 25% smaller than original 250px x 300px */
+        min-width: 188px;
+        width: 188px;
+        height: 141px; /* Calculated for 4:3 aspect ratio (188 * 3/4 = 141) */
+        /* Enhanced touch targets */
+        touch-action: manipulation;
+        /* Apply 4:3 aspect ratio */
+        aspect-ratio: 4 / 3;
+        /* Mobile-specific touch feedback */
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    
+    /* Mobile touch feedback - use :active for immediate response */
+    .carousel .tool-card:active {
+        transform: translateZ(0) scale(0.95);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    /* Prevent hover effects on mobile for cleaner interaction */
+    @media (hover: none) {
+        .carousel .tool-card:hover {
+            transform: translateZ(0) scale(1);
+        }
+    }
+    
+    .carousel .card-image-wrapper {
+        /* Fill entire card */
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel .tool-card {
+        /* 25% smaller than original 200px x 250px */
+        min-width: 150px;
+        width: 150px;
+        height: 113px; /* Calculated for 4:3 aspect ratio (150 * 3/4 = 112.5, rounded to 113) */
+        aspect-ratio: 4 / 3;
+        /* Enhanced touch target - extend clickable area */
+        position: relative;
+    }
+    
+    /* Extend touch target beyond visible card for better accessibility */
+    .carousel .tool-card::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        z-index: -1;
+        /* This creates a larger invisible touch area */
+        pointer-events: auto;
+    }
+    
+    .carousel .card-image-wrapper {
+        /* Fill entire card */
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 4 / 3;
+        /* Ensure images remain crisp on small sizes */
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Performance optimizations for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .carousel .tool-card {
+        transition: none;
+    }
+    
+    .carousel .tool-card:hover {
+        transform: translateZ(0); /* Remove hover scale for reduced motion */
+    }
+    
+    .carousel-track.dragging {
+        transform: none; /* No drag feedback for reduced motion */
+        opacity: 1;
+    }
+}
+
+/* High contrast mode optimizations */
+@media (prefers-contrast: high) {
+    .carousel .tool-card {
+        border: 2px solid;
+        border-color: ButtonText;
+    }
+    
+    .carousel .tool-card:active {
+        border-color: Highlight;
+    }
+}
+
+/* Mobile viewport optimizations */
+@supports (-webkit-touch-callout: none) {
+    /* iOS-specific optimizations */
+    .carousel-track {
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .carousel .tool-card {
+        -webkit-tap-highlight-color: rgba(217, 119, 6, 0.2);
+    }
+}
+
+/* Simplified carousel card styles - no need for complex cloning classes */
+.carousel .tool-card {
+    pointer-events: auto;
+    cursor: pointer;
+    will-change: transform;
+    transform: translateZ(0);
+    contain: layout style paint;
+}
+
+
+/* Optimize all carousel images */
+.carousel .tool-card img {
+    /* Fill the entire card with proper aspect ratio */
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Performance optimizations */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    /* Ensure consistent aspect ratio */
+    aspect-ratio: 4 / 3;
 }

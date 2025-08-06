@@ -793,6 +793,9 @@ function renderToolDetails(toolCatalog) {
         depositRow.appendChild(depositValueCell);
         pricingTableBody.appendChild(depositRow);
     }
+    
+    // Initialize carousel after tool details are rendered
+    initializeToolCarousel(toolCatalog);
 }
 
 function initializeDropdown(toolCatalog) {
@@ -862,16 +865,19 @@ function initializeThemeSwitcher() {
 }
 
 function initScrollAnimations() {
-    // Znajdź wszystkie karty na stronie, które powinny być animowane
-    const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
+    // Znajdź wszystkie karty na stronie, które powinny być animowane (excluding carousel cards)
+    const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card:not(.carousel .tool-card)');
     const contactSection = document.querySelector('#contact');
     const contactItems = document.querySelectorAll('.contact-details, .contact-map');
     const heroSection = document.querySelector('.hero-section');
 
-    // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart
+    // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart (excluding carousel cards)
     allCards.forEach(card => {
-        card.classList.add('stagger-item');
-        gsap.set(card, { opacity: 0, y: 20 });
+        // Skip cards that are inside carousel
+        if (!card.closest('.carousel')) {
+            card.classList.add('stagger-item');
+            gsap.set(card, { opacity: 0, y: 20 });
+        }
     });
 
     // Dodaj animacje dla elementów kontaktu
@@ -1419,28 +1425,74 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 class ToolCarousel {
     constructor(toolCatalog) {
+        console.log('🏗️ ToolCarousel constructor starting...');
+        
         // DOM references
         this.carouselTrack = document.querySelector('.carousel-track');
         this.leftArrow = document.querySelector('.nav-arrow.left');
         this.rightArrow = document.querySelector('.nav-arrow.right');
         this.similarToolsSection = document.getElementById('similar-tools');
         
-        if (!this.carouselTrack || !this.leftArrow || !this.rightArrow) {
-            console.warn('Carousel elements not found');
+        console.log('🔍 DOM element check:');
+        console.log('   - carouselTrack:', this.carouselTrack ? 'found' : 'NOT FOUND');
+        console.log('   - leftArrow:', this.leftArrow ? 'found' : 'not found (may be hidden)');
+        console.log('   - rightArrow:', this.rightArrow ? 'found' : 'not found (may be hidden)');
+        console.log('   - similarToolsSection:', this.similarToolsSection ? 'found' : 'NOT FOUND');
+        
+        // CRITICAL FIX: More flexible initialization - handle missing elements gracefully
+        if (!this.similarToolsSection) {
+            console.error('❌ Similar tools section not found - carousel cannot initialize');
             return;
         }
         
-        // Store bound functions for proper cleanup
+        // CRITICAL FIX: If carousel track is missing, try to create it or handle gracefully
+        if (!this.carouselTrack) {
+            console.warn('⚠️ Carousel track element not found - attempting recovery');
+            const carouselContainer = this.similarToolsSection.querySelector('.carousel');
+            if (carouselContainer) {
+                // Try to create missing track element
+                const track = document.createElement('div');
+                track.className = 'carousel-track';
+                carouselContainer.appendChild(track);
+                this.carouselTrack = track;
+                console.log('✅ Carousel track element created successfully');
+            } else {
+                console.error('❌ Cannot recover - carousel container also missing');
+                // Keep section visible on mobile even if carousel fails
+                const isMobileScreen = window.innerWidth <= 768;
+                if (isMobileScreen && this.similarToolsSection) {
+                    this.similarToolsSection.style.display = 'block';
+                    this.similarToolsSection.style.visibility = 'visible';
+                    console.log('📱 Mobile fallback - kept section visible despite missing elements');
+                }
+                return;
+            }
+        }
+        
+        // Arrows are optional (hidden on mobile) but log if missing
+        if (!this.leftArrow || !this.rightArrow) {
+            console.log('⚠️ Navigation arrows not found - likely hidden on mobile, continuing with touch-only carousel');
+        }
+        
+        console.log('✅ DOM elements validated, continuing with carousel initialization...');
+        
+        // Store bound functions for proper cleanup - optimized for immediate response
         this.boundHandleLeftClick = (e) => {
             e.preventDefault();
-            if (!this.isMobile) {
+            e.stopPropagation();
+            // Allow arrows on wider mobile screens (landscape/tablet) for better UX
+            if (!this.isNarrowMobile) {
+                // Immediate response - no debouncing
                 this.slide(-1);
             }
         };
         
         this.boundHandleRightClick = (e) => {
             e.preventDefault();
-            if (!this.isMobile) {
+            e.stopPropagation();
+            // Allow arrows on wider mobile screens (landscape/tablet) for better UX
+            if (!this.isNarrowMobile) {
+                // Immediate response - no debouncing
                 this.slide(1);
             }
         };
@@ -1463,39 +1515,63 @@ class ToolCarousel {
         };
         
         this.boundHandleResize = () => {
-            clearTimeout(this.resizeTimeout);
+            // Clear any existing timeout for better responsiveness
+            if (this.resizeTimeout) {
+                clearTimeout(this.resizeTimeout);
+            }
+            
+            // Reduced timeout for faster response on mobile
             this.resizeTimeout = setTimeout(() => {
-                // Update mobile detection
+                // Update mobile detection with enhanced checks
                 const wasMobile = this.isMobile;
-                this.isMobile = window.innerWidth <= 768;
+                const wasNarrowMobile = this.isNarrowMobile;
+                
+                // Re-detect mobile capabilities on resize
+                this.detectMobileCapabilities();
                 
                 // Re-bind events if mobile status changed
-                if (wasMobile !== this.isMobile) {
+                if (wasMobile !== this.isMobile || wasNarrowMobile !== this.isNarrowMobile) {
                     this.unbindTouchEvents();
+                    this.unbindMouseEvents();
                     if (this.isMobile) {
                         this.bindTouchEvents();
                     }
-                    // Update config
-                    this.config.animationDuration = this.isMobile ? 0.3 : 0.5;
+                    // Re-bind mouse events for narrow screens without touch
+                    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                    const narrowScreen = window.innerWidth <= 768;
+                    if (narrowScreen && !hasTouch) {
+                        this.bindMouseEvents();
+                    }
+                    // Update accessibility when mobile state changes
+                    this.updateArrowAccessibility();
+                    // Update config for immediate response
+                    this.config.animationDuration = this.isMobile ? 0.2 : 0.5;
+                    this.config.debounceDelay = this.isMobile ? 0 : 50;
                 }
                 
                 this.calculateDimensions();
                 this.repositionAfterResize();
-            }, 100);
+            }, this.isMobile ? 50 : 100); // Faster resize response on mobile
         };
         
-        // Mobile detection
-        this.isMobile = window.innerWidth <= 768;
+        // Enhanced mobile detection - check for touch capabilities and viewport
+        this.detectMobileCapabilities();
         
-        // Configuration - optimized for mobile
+        // Debug mobile detection
+        this.logMobileDetection();
+        this.updateArrowAccessibility();
+        
+        // Configuration - optimized for mobile with immediate response
         this.config = {
-            animationDuration: this.isMobile ? 0.3 : 0.5, // Faster on mobile
+            animationDuration: this.isMobile ? 0.2 : 0.5, // Faster response on mobile
             maxSimilarTools: 12,
             cloneMultiplier: this.isMobile ? 2 : 3, // Less cloning on mobile for performance
-            // Touch settings
-            swipeThreshold: 50,
-            swipeVelocityThreshold: 0.3,
-            touchMoveThreshold: 10
+            // Touch settings - optimized for immediate response
+            swipeThreshold: this.isMobile ? 25 : 50, // Lower threshold for more responsive touch
+            swipeVelocityThreshold: this.isMobile ? 0.15 : 0.3, // More sensitive for immediate response
+            touchMoveThreshold: this.isMobile ? 5 : 10, // More responsive on mobile
+            dragResistance: this.isMobile ? 0.9 : 0.8, // Higher resistance for better control
+            debounceDelay: this.isMobile ? 0 : 50 // No debounce on mobile for instant response
         };
         
         // State
@@ -1512,7 +1588,9 @@ class ToolCarousel {
             touchStartTime: 0,
             isDragging: false,
             startTransform: 0,
-            hasMoved: false
+            hasMoved: false,
+            // Persistent state - tracks if user has ever interacted with carousel
+            hasEverMoved: false
         };
         
         // Initialize
@@ -1521,20 +1599,89 @@ class ToolCarousel {
     
     init(toolCatalog) {
         try {
+            console.log('🔄 Getting similar tools from catalog...');
             const similarTools = this.getSimilarTools(toolCatalog);
+            console.log('📊 Similar tools found:', similarTools.length);
             
             if (similarTools.length === 0) {
-                this.hideSimilarToolsSection();
+                console.warn('⚠️ No similar tools found, showing mobile-friendly message');
+                
+                // Instead of hiding section, show a message
+                if (this.similarToolsSection) {
+                    this.similarToolsSection.style.display = 'block';
+                    this.similarToolsSection.style.visibility = 'visible';
+                    this.similarToolsSection.style.opacity = '1';
+                    
+                    const carouselContainer = this.similarToolsSection.querySelector('.carousel-container');
+                    if (carouselContainer) {
+                        carouselContainer.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+                                <p>Brak podobnych narzędzi do wyświetlenia</p>
+                            </div>
+                        `;
+                    }
+                }
                 return;
             }
             
+            console.log('✅ Setting up carousel with', similarTools.length, 'tools');
             this.state.tools = similarTools;
+            
+            // CRITICAL FIX: Ensure section is always visible before setup
+            if (this.similarToolsSection) {
+                this.similarToolsSection.style.display = 'block';
+                this.similarToolsSection.style.visibility = 'visible';
+                this.similarToolsSection.style.opacity = '1';
+            }
+            
             this.setupCarousel();
             this.bindEvents();
             
         } catch (error) {
-            console.error('Carousel initialization failed:', error);
-            this.hideSimilarToolsSection();
+            console.error('❌ Carousel initialization failed:', error);
+            console.error('Error details:', error.stack);
+            
+            // Debug DOM structure on failure
+            console.log('🔍 DOM structure debug:');
+            const h2 = similarToolsSection.querySelector('h2');
+            const container = similarToolsSection.querySelector('.carousel-container');
+            const carousel = similarToolsSection.querySelector('.carousel');
+            const track = similarToolsSection.querySelector('.carousel-track');
+            
+            console.log('  - H2 element:', h2 ? 'found' : 'NOT FOUND');
+            console.log('  - Container element:', container ? 'found' : 'NOT FOUND');
+            console.log('  - Carousel element:', carousel ? 'found' : 'NOT FOUND');
+            console.log('  - Track element:', track ? 'found' : 'NOT FOUND');
+            
+            // CRITICAL FIX: Better error handling - always keep section visible on mobile
+            const isMobileScreen = window.innerWidth <= 768;
+            if (isMobileScreen) {
+                console.log('📱 Mobile error fallback - keeping section visible');
+                if (this.similarToolsSection) {
+                    this.similarToolsSection.style.display = 'block';
+                    this.similarToolsSection.style.visibility = 'visible';
+                    const carousel = this.similarToolsSection.querySelector('.carousel');
+                    if (carousel) {
+                        carousel.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; min-height: 120px; color: #666; padding: 1rem; text-align: center; font-size: 0.9rem;">Problem z ładowaniem podobnych narzędzi</div>';
+                    }
+                }
+            } else {
+                // Always keep section visible with appropriate message
+                if (this.similarToolsSection) {
+                    this.similarToolsSection.style.display = 'block';
+                    this.similarToolsSection.style.visibility = 'visible';
+                    this.similarToolsSection.style.opacity = '1';
+                    
+                    const carouselContainer = this.similarToolsSection.querySelector('.carousel-container');
+                    if (carouselContainer) {
+                        carouselContainer.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+                                <p>Brak podobnych narzędzi do wyświetlenia</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
         }
     }
     
@@ -1668,18 +1815,15 @@ class ToolCarousel {
         
         const img = document.createElement('img');
         img.src = tool.image;
-        img.alt = tool.name;
+        img.alt = tool.name; // Maintain accessibility with proper alt text
         img.className = 'tool-card-img';
         img.loading = 'lazy';
         
         imageWrapper.appendChild(img);
-        
-        const titleWrapper = document.createElement('div');
-        titleWrapper.className = 'tool-card-title';
-        titleWrapper.innerHTML = `<h3>${fixPolishOrphans(tool.name)}</h3>`;
-        
         card.appendChild(imageWrapper);
-        card.appendChild(titleWrapper);
+        
+        // Ensure carousel cards are visible (prevent scroll animation interference)
+        gsap.set(card, { opacity: 1, y: 0 });
         
         return card;
     }
@@ -1694,9 +1838,97 @@ class ToolCarousel {
         // Get actual card width including gap
         const cardRect = card.getBoundingClientRect();
         const trackStyle = getComputedStyle(this.carouselTrack);
-        const gap = parseFloat(trackStyle.gap) || 24; // Fallback to 24px
+        const gap = parseFloat(trackStyle.gap) || (this.isNarrowMobile ? 16 : 24);
         
-        this.state.cardWidth = cardRect.width + gap;
+        // DEBUGGING: Comprehensive viewport and positioning information
+        const viewportInfo = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            devicePixelRatio: window.devicePixelRatio,
+            orientationAngle: screen.orientation?.angle || 'unknown'
+        };
+        
+        const trackRect = this.carouselTrack.getBoundingClientRect();
+        const containerRect = this.carouselTrack.parentElement.getBoundingClientRect();
+        
+        console.log('🔍 VIEWPORT & POSITIONING DEBUG:');
+        console.log('📱 Viewport Info:', viewportInfo);
+        console.log('📦 Container Rect:', {
+            x: containerRect.x,
+            y: containerRect.y,
+            width: containerRect.width,
+            height: containerRect.height,
+            top: containerRect.top,
+            left: containerRect.left,
+            bottom: containerRect.bottom,
+            right: containerRect.right
+        });
+        console.log('🎠 Track Rect:', {
+            x: trackRect.x,
+            y: trackRect.y,
+            width: trackRect.width,
+            height: trackRect.height,
+            top: trackRect.top,
+            left: trackRect.left,
+            bottom: trackRect.bottom,
+            right: trackRect.right
+        });
+        console.log('🎯 Card Rect:', {
+            x: cardRect.x,
+            y: cardRect.y,
+            width: cardRect.width,
+            height: cardRect.height,
+            top: cardRect.top,
+            left: cardRect.left,
+            bottom: cardRect.bottom,
+            right: cardRect.right
+        });
+        console.log('📏 Calculated Values:', {
+            gap: gap,
+            cardWidth: cardRect.width,
+            totalCardWidth: cardRect.width + gap,
+            cardsVisibleInViewport: Math.floor(viewportInfo.width / (cardRect.width + gap))
+        });
+        console.log('🎛️ Track CSS Properties:', {
+            display: trackStyle.display,
+            flexDirection: trackStyle.flexDirection,
+            gap: trackStyle.gap,
+            width: trackStyle.width,
+            transform: trackStyle.transform,
+            position: trackStyle.position
+        });
+        
+        // CRITICAL FIX: On narrow mobile, use actual rendered dimensions
+        if (this.isNarrowMobile) {
+            // Force recalculation after any layout changes
+            this.carouselTrack.style.visibility = 'visible';
+            this.carouselTrack.style.display = 'flex';
+            
+            // Wait for layout to settle, then get accurate measurements
+            setTimeout(() => {
+                const updatedCard = this.carouselTrack.querySelector('.tool-card');
+                if (updatedCard) {
+                    const updatedRect = updatedCard.getBoundingClientRect();
+                    this.state.cardWidth = updatedRect.width + gap;
+                    
+                    console.log('📏 Updated card dimensions for narrow mobile:');
+                    console.log('   Card width:', updatedRect.width);
+                    console.log('   Gap:', gap);
+                    console.log('   Total card width:', this.state.cardWidth);
+                    
+                    // CRITICAL FIX: Only reset position if carousel hasn't been used yet
+                    // Don't reset if user has already interacted with carousel
+                    if (this.state.currentIndex === 0 && !this.state.hasEverMoved) {
+                        console.log('🔄 Resetting position for initial setup only');
+                        this.setInitialPosition();
+                    } else {
+                        console.log('⚠️ Skipping position reset - user has interacted with carousel');
+                    }
+                }
+            }, 10);
+        } else {
+            this.state.cardWidth = cardRect.width + gap;
+        }
         
         console.log('📏 Card dimensions:');
         console.log('   Card width:', cardRect.width);
@@ -1707,13 +1939,37 @@ class ToolCarousel {
     setInitialPosition() {
         // Start at the middle set (index 1 of cloneMultiplier sets)
         const middleSetIndex = Math.floor(this.config.cloneMultiplier / 2);
-        const initialOffset = -(middleSetIndex * this.state.tools.length * this.state.cardWidth);
+        let initialOffset = -(middleSetIndex * this.state.tools.length * this.state.cardWidth);
+        
+        // CRITICAL FIX: On narrow mobile, ensure content is visible within viewport
+        if (this.isNarrowMobile && this.state.cardWidth > 0) {
+            const viewportWidth = window.innerWidth;
+            // Start with first card visible (small left margin for visual appeal)
+            const desiredFirstCardPosition = 8; // 8px from left edge
+            const containerLeft = this.carouselTrack.parentElement.getBoundingClientRect().x;
+            
+            // Calculate what offset would place first card at desired position
+            const desiredOffset = desiredFirstCardPosition - containerLeft;
+            
+            console.log('📱 Narrow mobile positioning fix:', {
+                originalOffset: initialOffset,
+                containerLeft: containerLeft,
+                desiredFirstCardPos: desiredFirstCardPosition,
+                calculatedOffset: desiredOffset
+            });
+            
+            // Use the calculated offset to ensure visibility
+            initialOffset = desiredOffset;
+            console.log('📱 Adjusted initial offset for narrow mobile visibility:', initialOffset);
+        }
         
         console.log('🎯 Setting initial position:');
         console.log('   Middle set index:', middleSetIndex);
         console.log('   Tools count:', this.state.tools.length);
         console.log('   Card width:', this.state.cardWidth);
         console.log('   Initial offset:', initialOffset);
+        console.log('   Viewport width:', window.innerWidth);
+        console.log('   Is narrow mobile:', this.isNarrowMobile);
         
         gsap.set(this.carouselTrack, { 
             x: initialOffset,
@@ -1726,13 +1982,51 @@ class ToolCarousel {
     }
     
     bindEvents() {
-        // Arrow clicks - desktop only
-        this.leftArrow.addEventListener('click', this.boundHandleLeftClick);
-        this.rightArrow.addEventListener('click', this.boundHandleRightClick);
+        // Arrow clicks - desktop only (if arrows exist)
+        if (this.leftArrow) {
+            this.leftArrow.addEventListener('click', this.boundHandleLeftClick);
+        }
+        if (this.rightArrow) {
+            this.rightArrow.addEventListener('click', this.boundHandleRightClick);
+        }
         
-        // Touch events for mobile
-        if (this.isMobile) {
+        // Touch events for mobile - bind with multiple detection methods
+        console.log('🎯 Touch event binding - isMobile:', this.isMobile);
+        console.log('   - Window width:', window.innerWidth);
+        console.log('   - Touch capability:', 'ontouchstart' in window);
+        console.log('   - Max touch points:', navigator.maxTouchPoints || 0);
+        
+        // DEBUGGING: Add simple touch test
+        if (this.carouselTrack) {
+            console.log('🧪 Adding simple touch test to carousel track');
+            this.carouselTrack.addEventListener('touchstart', function(e) {
+                console.log('🚨 SIMPLE TOUCH TEST - touchstart fired on carousel track!');
+            }, { passive: true });
+        }
+        
+        // Enhanced touch detection with fallbacks
+        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+        const narrowScreen = window.innerWidth <= 768;
+        
+        console.log('📱 Touch detection results:', {
+            isMobile: this.isMobile,
+            hasTouch: hasTouch,
+            narrowScreen: narrowScreen,
+            shouldBind: this.isMobile || hasTouch || narrowScreen
+        });
+        
+        // ALWAYS bind touch events on mobile screens, regardless of other detection
+        if (this.isMobile || hasTouch || narrowScreen) {
+            console.log('✅ Binding touch events - mobile/touch capability detected');
             this.bindTouchEvents();
+        } else {
+            console.log('⚠️ Touch events NOT bound - no touch capability detected');
+        }
+        
+        // CRITICAL FIX: On narrow screens, also bind mouse events as fallback
+        if (narrowScreen && !hasTouch) {
+            console.log('🖱️ Binding mouse events as touch fallback for narrow screens');
+            this.bindMouseEvents();
         }
         
         // Card clicks - handle after touch/drag
@@ -1742,10 +2036,162 @@ class ToolCarousel {
         window.addEventListener('resize', this.boundHandleResize);
     }
     
+    bindMouseEvents() {
+        console.log('🖱️ bindMouseEvents called - setting up mouse handlers as touch fallback');
+        
+        let isMouseDown = false;
+        
+        // Mouse down (equivalent to touch start)
+        this.handleMouseDown = (e) => {
+            if (e.button !== 0) return; // Only left mouse button
+            
+            console.log('🖱️ Mouse down detected', {
+                button: e.button,
+                clientX: e.clientX,
+                clientY: e.clientY,
+                isAnimating: this.state.isAnimating
+            });
+            
+            if (this.state.isAnimating) return;
+            
+            isMouseDown = true;
+            this.state.touchStartX = e.clientX;
+            this.state.touchStartY = e.clientY;
+            this.state.touchCurrentX = e.clientX;
+            this.state.touchCurrentY = e.clientY;
+            this.state.touchStartTime = Date.now();
+            this.state.isDragging = false;
+            this.state.hasMoved = false;
+            
+            // Get current transform for smooth dragging continuation
+            this.state.startTransform = gsap.getProperty(this.carouselTrack, "x");
+            
+            e.preventDefault();
+            console.log('✅ Mouse down handled successfully');
+        };
+        
+        // Mouse move (equivalent to touch move)
+        this.handleMouseMove = (e) => {
+            if (!isMouseDown || !this.state.touchStartX) {
+                return;
+            }
+            
+            this.state.touchCurrentX = e.clientX;
+            this.state.touchCurrentY = e.clientY;
+            
+            const deltaX = this.state.touchCurrentX - this.state.touchStartX;
+            const deltaY = this.state.touchCurrentY - this.state.touchStartY;
+            
+            console.log('🖱️ Mouse move', {deltaX, deltaY, isDragging: this.state.isDragging, threshold: this.config.touchMoveThreshold});
+            
+            // Determine if this is a horizontal drag
+            if (!this.state.isDragging && Math.abs(deltaX) > this.config.touchMoveThreshold) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    console.log('🔄 Starting horizontal drag');
+                    this.state.isDragging = true;
+                    this.state.hasMoved = true;
+                    this.state.hasEverMoved = true; // Mark permanent interaction
+                    this.carouselTrack.classList.add('dragging');
+                    e.preventDefault();
+                }
+            }
+            
+            // Apply drag resistance and move carousel if dragging
+            if (this.state.isDragging) {
+                e.preventDefault();
+                const dragDistance = deltaX * this.config.dragResistance;
+                const newPosition = this.state.startTransform + dragDistance;
+                
+                console.log('🏃 Dragging carousel', {dragDistance, newPosition, startTransform: this.state.startTransform});
+                gsap.set(this.carouselTrack, { x: newPosition });
+            }
+        };
+        
+        // Mouse up (equivalent to touch end)
+        this.handleMouseUp = (e) => {
+            console.log('🖱️ Mouse up detected', {
+                touchStartX: this.state.touchStartX,
+                isDragging: this.state.isDragging,
+                hasMoved: this.state.hasMoved
+            });
+            
+            if (!isMouseDown) return;
+            isMouseDown = false;
+            
+            if (!this.state.touchStartX) {
+                this.resetTouchState();
+                return;
+            }
+            
+            // Calculate swipe metrics
+            const deltaX = this.state.touchCurrentX - this.state.touchStartX;
+            const deltaTime = Date.now() - this.state.touchStartTime;
+            const velocity = Math.abs(deltaX) / Math.max(deltaTime, 1);
+            
+            const isSwipe = Math.abs(deltaX) >= this.config.swipeThreshold && 
+                           velocity >= this.config.swipeVelocityThreshold;
+            
+            console.log('📊 Mouse swipe analysis', {
+                deltaX,
+                deltaTime,
+                velocity,
+                swipeThreshold: this.config.swipeThreshold,
+                velocityThreshold: this.config.swipeVelocityThreshold,
+                isSwipe,
+                isDragging: this.state.isDragging
+            });
+            
+            if (this.state.isDragging && isSwipe) {
+                // Determine direction and trigger slide
+                const direction = deltaX > 0 ? -1 : 1; // Mouse right = slide left (previous)
+                console.log('🎯 Triggering slide in direction:', direction);
+                this.slide(direction);
+            } else if (this.state.isDragging) {
+                // Snap back to current position if not enough swipe
+                console.log('↩️ Snapping back to current position');
+                this.snapToCurrentPosition();
+            }
+            
+            // Reset touch state immediately for better responsiveness
+            const resetDelay = this.isMobile ? 10 : 100;
+            setTimeout(() => {
+                this.resetTouchState();
+            }, resetDelay);
+        };
+        
+        // Bind mouse events with error handling
+        console.log('🔗 Binding mouse event listeners to carousel-track');
+        try {
+            this.carouselTrack.addEventListener('mousedown', this.handleMouseDown, { passive: false });
+            document.addEventListener('mousemove', this.handleMouseMove, { passive: false });
+            document.addEventListener('mouseup', this.handleMouseUp, { passive: false });
+            
+            console.log('✅ All mouse events bound successfully');
+        } catch (error) {
+            console.error('❌ Failed to bind mouse events:', error);
+        }
+    }
+    
     bindTouchEvents() {
+        console.log('📱 bindTouchEvents called - setting up touch handlers');
+        
         // Touch start
         this.handleTouchStart = (e) => {
-            if (this.state.isAnimating) return;
+            console.log('🚨 TOUCH START FIRED!', {
+                touches: e.touches.length,
+                clientX: e.touches[0].clientX,
+                clientY: e.touches[0].clientY,
+                isAnimating: this.state.isAnimating,
+                screenWidth: window.innerWidth,
+                isNarrowMobile: this.isNarrowMobile,
+                target: e.target.className,
+                currentTarget: e.currentTarget.className
+            });
+            
+            if (this.state.isAnimating) {
+                console.log('⏸️ Touch start blocked - animation in progress');
+                return;
+            }
             
             const touch = e.touches[0];
             this.state.touchStartX = touch.clientX;
@@ -1760,13 +2206,17 @@ class ToolCarousel {
             // Add dragging class for visual feedback
             this.carouselTrack.classList.add('dragging');
             
-            // Prevent default behavior
-            e.preventDefault();
+            // Only prevent default on horizontal movement to allow vertical scrolling
+            // Don't prevent default immediately - wait for movement direction
+            console.log('✅ Touch start handled successfully');
         };
         
         // Touch move
         this.handleTouchMove = (e) => {
-            if (!this.state.touchStartX) return;
+            if (!this.state.touchStartX) {
+                console.log('⚠️ Touch move ignored - no touch start');
+                return;
+            }
             
             const touch = e.touches[0];
             this.state.touchCurrentX = touch.clientX;
@@ -1775,15 +2225,32 @@ class ToolCarousel {
             const deltaX = this.state.touchCurrentX - this.state.touchStartX;
             const deltaY = this.state.touchCurrentY - this.state.touchStartY;
             
+            console.log('🚨 TOUCH MOVE FIRED!', {
+                deltaX,
+                deltaY,
+                isDragging: this.state.isDragging,
+                threshold: this.config.touchMoveThreshold,
+                screenWidth: window.innerWidth,
+                isNarrowMobile: this.isNarrowMobile,
+                absX: Math.abs(deltaX),
+                absY: Math.abs(deltaY)
+            });
+            
             // Check if this is a horizontal swipe (not vertical scroll)
             if (!this.state.isDragging) {
                 if (Math.abs(deltaX) > this.config.touchMoveThreshold) {
                     if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                        console.log('🔄 Starting horizontal drag');
                         this.state.isDragging = true;
                         this.state.hasMoved = true;
-                        // Prevent page scrolling
+                        this.state.hasEverMoved = true; // Mark permanent interaction
+                        // Prevent page scrolling when we detect horizontal movement
                         e.preventDefault();
+                    } else {
+                        console.log('↕️ Vertical movement detected - allowing scroll');
                     }
+                } else {
+                    console.log('🔍 Movement below threshold');
                 }
             }
             
@@ -1791,9 +2258,15 @@ class ToolCarousel {
             if (this.state.isDragging) {
                 e.preventDefault();
                 
-                // Apply drag with some resistance for smooth feel
-                const dragDistance = deltaX * 0.8; // 80% resistance for better feel
+                // Apply drag with configurable resistance for smooth feel
+                const dragDistance = deltaX * this.config.dragResistance;
                 const newPosition = this.state.startTransform + dragDistance;
+                
+                console.log('🏃 Dragging carousel', {
+                    dragDistance,
+                    newPosition,
+                    startTransform: this.state.startTransform
+                });
                 
                 // Update position in real-time
                 gsap.set(this.carouselTrack, { x: newPosition });
@@ -1802,7 +2275,18 @@ class ToolCarousel {
         
         // Touch end
         this.handleTouchEnd = (e) => {
-            if (!this.state.touchStartX) return;
+            console.log('🚨 TOUCH END FIRED!', {
+                touchStartX: this.state.touchStartX,
+                isDragging: this.state.isDragging,
+                hasMoved: this.state.hasMoved,
+                screenWidth: window.innerWidth,
+                isNarrowMobile: this.isNarrowMobile
+            });
+            
+            if (!this.state.touchStartX) {
+                console.log('⚠️ Touch end ignored - no touch start');
+                return;
+            }
             
             // Remove dragging class
             this.carouselTrack.classList.remove('dragging');
@@ -1815,19 +2299,32 @@ class ToolCarousel {
             const isSwipe = Math.abs(deltaX) > this.config.swipeThreshold || 
                            velocity > this.config.swipeVelocityThreshold;
             
+            console.log('📊 Swipe analysis', {
+                deltaX,
+                deltaTime,
+                velocity,
+                swipeThreshold: this.config.swipeThreshold,
+                velocityThreshold: this.config.swipeVelocityThreshold,
+                isSwipe,
+                isDragging: this.state.isDragging
+            });
+            
             if (this.state.isDragging && isSwipe) {
                 // Determine direction and trigger slide
                 const direction = deltaX > 0 ? -1 : 1; // Swipe right = slide left (previous)
+                console.log('🎯 Triggering slide in direction:', direction);
                 this.slide(direction);
             } else if (this.state.isDragging) {
                 // Snap back to current position if not enough swipe
+                console.log('↩️ Snapping back to current position');
                 this.snapToCurrentPosition();
             }
             
-            // Reset touch state after a short delay to prevent immediate clicks
+            // Reset touch state immediately on mobile for better responsiveness
+            const resetDelay = this.isMobile ? 10 : 100;
             setTimeout(() => {
                 this.resetTouchState();
-            }, 100);
+            }, resetDelay);
         };
         
         // Create bound touch cancel handler for proper cleanup
@@ -1839,11 +2336,34 @@ class ToolCarousel {
             this.resetTouchState();
         };
         
-        // Bind touch events
-        this.carouselTrack.addEventListener('touchstart', this.handleTouchStart, { passive: false });
-        this.carouselTrack.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-        this.carouselTrack.addEventListener('touchend', this.handleTouchEnd, { passive: false });
-        this.carouselTrack.addEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+        // Bind touch events with error handling
+        console.log('🔗 Binding touch event listeners to carousel-track', {
+            trackElement: !!this.carouselTrack,
+            screenWidth: window.innerWidth,
+            isMobile: this.isMobile,
+            isNarrowMobile: this.isNarrowMobile,
+            trackClass: this.carouselTrack?.className
+        });
+        try {
+            this.carouselTrack.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+            this.carouselTrack.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+            this.carouselTrack.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+            this.carouselTrack.addEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+            
+            console.log('✅ All touch events bound successfully to:', this.carouselTrack.className);
+        } catch (error) {
+            console.error('❌ Failed to bind touch events:', error);
+            // Fallback: try with passive listeners
+            try {
+                this.carouselTrack.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+                this.carouselTrack.addEventListener('touchmove', this.handleTouchMove, { passive: true });
+                this.carouselTrack.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+                this.carouselTrack.addEventListener('touchcancel', this.handleTouchCancel, { passive: true });
+                console.log('⚠️  Touch events bound with passive listeners (fallback)');
+            } catch (fallbackError) {
+                console.error('❌ Failed to bind touch events even with passive listeners:', fallbackError);
+            }
+        }
     }
     
     unbindTouchEvents() {
@@ -1852,6 +2372,14 @@ class ToolCarousel {
             this.carouselTrack.removeEventListener('touchmove', this.handleTouchMove);
             this.carouselTrack.removeEventListener('touchend', this.handleTouchEnd);
             this.carouselTrack.removeEventListener('touchcancel', this.handleTouchCancel);
+        }
+    }
+    
+    unbindMouseEvents() {
+        if (this.handleMouseDown) {
+            this.carouselTrack.removeEventListener('mousedown', this.handleMouseDown);
+            document.removeEventListener('mousemove', this.handleMouseMove);
+            document.removeEventListener('mouseup', this.handleMouseUp);
         }
     }
     
@@ -1872,18 +2400,118 @@ class ToolCarousel {
             startTransform: 0
         });
         
-        // Delay hasMoved reset to prevent immediate clicks
+        // Optimized delay for mobile responsiveness
+        const hasMovedResetDelay = this.isMobile ? 20 : 50;
         this.touchResetTimeout = setTimeout(() => {
             this.state.hasMoved = false;
-        }, 50);
+        }, hasMovedResetDelay);
+    }
+    
+    // Enhanced mobile detection with comprehensive capability checking
+    detectMobileCapabilities() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Basic mobile detection
+        this.isMobile = width <= 768 || 'ontouchstart' in window;
+        this.isNarrowMobile = width <= 480;
+        
+        // Enhanced detection for edge cases
+        const isTouchDevice = 'ontouchstart' in window || 
+                             navigator.maxTouchPoints > 0 || 
+                             navigator.msMaxTouchPoints > 0;
+        
+        // Detect tablet in portrait vs mobile
+        const isTablet = isTouchDevice && Math.min(width, height) >= 768;
+        
+        // Detect devices that might have both touch and pointer
+        const hasPointer = window.matchMedia('(pointer: fine)').matches;
+        const hasTouch = window.matchMedia('(pointer: coarse)').matches;
+        
+        // Store enhanced capabilities
+        this.deviceCapabilities = {
+            width,
+            height,
+            isTouchDevice,
+            isTablet,
+            hasPointer,
+            hasTouch,
+            aspectRatio: width / height,
+            isLandscape: width > height
+        };
+        
+        // Override mobile detection for hybrid devices
+        if (hasPointer && hasTouch && !isTablet) {
+            this.isMobile = true; // Treat hybrid as mobile for touch interactions
+        }
+    }
+    
+    // Debug logging for mobile detection
+    logMobileDetection() {
+        console.log('🔍 Enhanced Mobile Detection Debug:');
+        console.log('   - Window dimensions:', `${this.deviceCapabilities.width}x${this.deviceCapabilities.height}`);
+        console.log('   - Touch support:', this.deviceCapabilities.isTouchDevice);
+        console.log('   - Has fine pointer:', this.deviceCapabilities.hasPointer);
+        console.log('   - Has coarse pointer:', this.deviceCapabilities.hasTouch);
+        console.log('   - Is tablet:', this.deviceCapabilities.isTablet);
+        console.log('   - Is landscape:', this.deviceCapabilities.isLandscape);
+        console.log('   - Final isMobile:', this.isMobile);
+        console.log('   - Final isNarrowMobile:', this.isNarrowMobile);
+        
+        // Warn about potential issues
+        if (this.deviceCapabilities.hasPointer && this.deviceCapabilities.hasTouch) {
+            console.log('⚠️  Hybrid device detected - both touch and pointer available');
+        }
+        if (this.isMobile && this.deviceCapabilities.width > 768) {
+            console.log('⚠️  Large mobile device detected - may need special handling');
+        }
+    }
+    
+    // Update arrow accessibility based on mobile state
+    updateArrowAccessibility() {
+        if (!this.leftArrow || !this.rightArrow) {
+            console.log('Arrows not found, skipping accessibility updates');
+            return;
+        }
+        
+        if (this.isNarrowMobile) {
+            // Hide arrows from screen readers on narrow mobile
+            this.leftArrow.setAttribute('aria-hidden', 'true');
+            this.rightArrow.setAttribute('aria-hidden', 'true');
+            this.leftArrow.setAttribute('tabindex', '-1');
+            this.rightArrow.setAttribute('tabindex', '-1');
+        } else {
+            // Make arrows accessible on larger screens
+            this.leftArrow.removeAttribute('aria-hidden');
+            this.rightArrow.removeAttribute('aria-hidden');
+            this.leftArrow.removeAttribute('tabindex');
+            this.rightArrow.removeAttribute('tabindex');
+        }
     }
     
     snapToCurrentPosition() {
         // Smoothly return to the correct position
         const middleSetIndex = Math.floor(this.config.cloneMultiplier / 2);
-        const baseOffset = -(middleSetIndex * this.state.tools.length * this.state.cardWidth);
+        let baseOffset = -(middleSetIndex * this.state.tools.length * this.state.cardWidth);
         const currentOffset = -(this.state.currentIndex * this.state.cardWidth);
-        const correctPosition = baseOffset + currentOffset;
+        let correctPosition = baseOffset + currentOffset;
+        
+        // CRITICAL FIX: On narrow mobile, ensure snap position is visible
+        if (this.isNarrowMobile && this.state.cardWidth > 0) {
+            const desiredFirstCardPosition = 8; // 8px from left edge
+            const containerLeft = this.carouselTrack.parentElement.getBoundingClientRect().x;
+            const baseOffset = desiredFirstCardPosition - containerLeft;
+            
+            // Calculate position for current card index
+            correctPosition = baseOffset - (this.state.currentIndex * this.state.cardWidth);
+            
+            console.log('📱 Adjusted snap position for narrow mobile:', {
+                currentIndex: this.state.currentIndex,
+                baseOffset: baseOffset,
+                cardWidth: this.state.cardWidth,
+                finalPosition: correctPosition
+            });
+        }
         
         gsap.to(this.carouselTrack, {
             x: correctPosition,
@@ -1896,6 +2524,7 @@ class ToolCarousel {
         if (this.state.isAnimating) return;
         
         this.state.isAnimating = true;
+        this.state.hasEverMoved = true; // Mark that user has interacted with carousel
         this.calculateDimensions(); // Recalculate in case of resize
         
         // Update logical index
@@ -1913,11 +2542,23 @@ class ToolCarousel {
         const easing = this.isMobile ? "power2.out" : "power2.out";
         
         // Animate to new position
+        console.log('🎬 GSAP Animation:', {
+            element: this.carouselTrack,
+            fromX: currentTransform,
+            toX: newPosition,
+            duration: this.config.animationDuration,
+            direction
+        });
+        
         gsap.to(this.carouselTrack, {
             x: newPosition,
             duration: this.config.animationDuration,
             ease: easing,
+            onStart: () => {
+                console.log('✅ GSAP animation started');
+            },
             onComplete: () => {
+                console.log('✅ GSAP animation completed, final x:', gsap.getProperty(this.carouselTrack, "x"));
                 this.state.isAnimating = false;
                 this.checkAndReposition();
             }
@@ -1962,8 +2603,31 @@ class ToolCarousel {
     }
     
     hideSimilarToolsSection() {
+        console.log('🙈 Request to hide similar tools section');
+        
+        // CRITICAL FIX: Always keep section visible on mobile to prevent disappearing issue
+        const isMobileScreen = window.innerWidth <= 768; // Extended mobile range for better compatibility
+        
+        if (isMobileScreen) {
+            console.log('📱 On mobile screen - keeping section visible with fallback message');
+            if (this.similarToolsSection) {
+                // Keep section visible but show appropriate message
+                this.similarToolsSection.style.display = 'block';
+                this.similarToolsSection.style.visibility = 'visible';
+                const carousel = this.similarToolsSection.querySelector('.carousel');
+                if (carousel) {
+                    carousel.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; min-height: 120px; color: #666; padding: 1rem; text-align: center; font-size: 0.9rem;">Brak podobnych narzędzi do wyświetlenia</div>';
+                }
+            }
+            return;
+        }
+        
+        // On desktop, proceed with normal hiding
         if (this.similarToolsSection) {
             this.similarToolsSection.style.display = 'none';
+            console.log('✅ Similar tools section hidden via style.display = none (desktop only)');
+        } else {
+            console.log('❌ Cannot hide - similar tools section not found');
         }
     }
     
@@ -1976,8 +2640,9 @@ class ToolCarousel {
             clearTimeout(this.resizeTimeout);
         }
         
-        // Clean up touch events
+        // Clean up touch and mouse events
         this.unbindTouchEvents();
+        this.unbindMouseEvents();
         
         // Clean up other event listeners using bound functions
         if (this.leftArrow && this.boundHandleLeftClick) {
@@ -2007,20 +2672,119 @@ class ToolCarousel {
         this.handleTouchMove = null;
         this.handleTouchEnd = null;
         this.handleTouchCancel = null;
+        this.handleMouseDown = null;
+        this.handleMouseMove = null;
+        this.handleMouseUp = null;
         
         console.log('Carousel destroyed with cleanup');
     }
 }
 
-// Initialize carousel with proper cleanup
+// Initialize carousel with proper cleanup and mobile fallbacks
 function initializeToolCarousel(toolCatalog) {
+    console.log('🎠 Initializing tool carousel with', toolCatalog ? toolCatalog.length : 'no', 'categories');
+    
+    // Check if similar-tools section exists
+    const similarToolsSection = document.getElementById('similar-tools');
+    if (!similarToolsSection) {
+        console.error('❌ #similar-tools section not found in DOM');
+        return;
+    } else {
+        console.log('✅ #similar-tools section found');
+    }
+    
+    // FORCE SECTION VISIBILITY ON ALL DEVICES
+    console.log('🔧 Forcing carousel section visibility');
+    similarToolsSection.style.display = 'block';
+    similarToolsSection.style.visibility = 'visible';
+    similarToolsSection.style.opacity = '1';
+    similarToolsSection.style.minHeight = '200px';
+    similarToolsSection.style.position = 'static';
+    similarToolsSection.style.transform = 'none';
+    
+    // Debug section position and dimensions
+    const rect = similarToolsSection.getBoundingClientRect();
+    console.log('📐 Similar tools section dimensions:', {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+        bottom: rect.bottom,
+        right: rect.right,
+        visible: rect.height > 0 && rect.width > 0
+    });
+    
+    // CRITICAL FIX: Always ensure section is visible first (especially on mobile)
+    const isMobileScreen = window.innerWidth <= 768;
+    if (isMobileScreen) {
+        console.log('📱 Mobile screen detected - ensuring section visibility');
+        similarToolsSection.style.display = 'block';
+        similarToolsSection.style.visibility = 'visible';
+        similarToolsSection.style.opacity = '1';
+        
+        // Also ensure carousel container exists and is visible
+        const carouselContainer = similarToolsSection.querySelector('.carousel');
+        if (carouselContainer) {
+            carouselContainer.style.display = 'block';
+            carouselContainer.style.visibility = 'visible';
+            carouselContainer.style.opacity = '1';
+        }
+    }
+    
     // Clean up existing carousel if present
     if (window.activeCarousel) {
+        console.log('🔄 Cleaning up existing carousel');
         window.activeCarousel.destroy();
     }
     
-    // Create new carousel instance
-    window.activeCarousel = new ToolCarousel(toolCatalog);
+    // Create new carousel instance with error handling
+    try {
+        console.log('🎯 Creating new ToolCarousel instance');
+        window.activeCarousel = new ToolCarousel(toolCatalog);
+        
+        if (window.activeCarousel) {
+            console.log('✅ ToolCarousel instance created successfully');
+            
+            // Debug DOM elements after successful creation
+            setTimeout(() => {
+                const h2 = similarToolsSection.querySelector('h2');
+                const container = similarToolsSection.querySelector('.carousel-container');
+                const carousel = similarToolsSection.querySelector('.carousel');
+                const track = similarToolsSection.querySelector('.carousel-track');
+                
+                console.log('🔍 Post-creation DOM check:');
+                console.log('  - H2:', h2 ? 'found' : 'NOT FOUND');
+                console.log('  - Container:', container ? 'found' : 'NOT FOUND');
+                console.log('  - Carousel:', carousel ? 'found' : 'NOT FOUND'); 
+                console.log('  - Track:', track ? 'found' : 'NOT FOUND');
+                
+                if (track) {
+                    console.log('  - Track children:', track.children.length);
+                    const trackRect = track.getBoundingClientRect();
+                    console.log('  - Track dimensions:', {
+                        width: trackRect.width,
+                        height: trackRect.height,
+                        visible: trackRect.height > 0 && trackRect.width > 0
+                    });
+                }
+            }, 100);
+        } else {
+            console.error('❌ Failed to create ToolCarousel instance');
+        }
+    } catch (error) {
+        console.error('❌ ToolCarousel initialization threw error:', error);
+        
+        // CRITICAL FIX: Mobile fallback when carousel fails completely
+        if (isMobileScreen) {
+            console.log('📱 Mobile carousel fallback - keeping section visible');
+            if (similarToolsSection) {
+                const carousel = similarToolsSection.querySelector('.carousel');
+                if (carousel) {
+                    carousel.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; min-height: 120px; color: #666; padding: 1rem; text-align: center; font-size: 0.9rem;">Podobne narzędzia będą wkrótce dostępne</div>';
+                }
+            }
+        }
+    }
     
     // Setup cleanup on page unload
     const cleanup = () => {
@@ -2039,13 +2803,4 @@ function initializeToolCarousel(toolCatalog) {
     window.carouselCleanup.push(cleanup);
 }
 
-// Dodaj inicjalizację karuzeli do DOMContentLoaded
-document.addEventListener('DOMContentLoaded', async () => {
-    // Sprawdź czy jesteśmy na stronie szczegółów narzędzia
-    if (document.getElementById('tool-details-section')) {
-        const toolCatalog = await fetchData();
-        if (toolCatalog && toolCatalog.length > 0) {
-            initializeToolCarousel(toolCatalog);
-        }
-    }
-}); 
+ 

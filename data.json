@@ -159,7 +159,7 @@
                 { "id": "box-dachowy-travel-400-volvo", "name": "Bagażnik dachowy Volvo z belkami", "image": "images/box_dachowy_travel_400_Volvo.webp", "pricing": {"1-3 Dni": 200, "4-7 Dni": 150, "Sobota + Niedziela": 350, "Kaucja *": 1000} }
             ] },
             { "name": "Lodówka turystyczna", "tools": [
-                { "id": "lodowka-turystyczna-8l", "name": "Lodówka turystyczna 8l", "image": "images/lodowka_hyundai_hyumc08.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 30, "Kaucja *": 60} }
+                { "id": "lodowka-turystyczna-8l", "name": "Lodówka turystyczna 8l", "image": "images/lodowka_turystyczna_8l.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] }
         ]
     }

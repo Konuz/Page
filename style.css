@@ -1108,6 +1108,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     /* Enable momentum scrolling on iOS */
     -webkit-overflow-scrolling: touch;
     /* Improve touch response - allow horizontal pan and vertical scroll */
+    -ms-touch-action: pan-y pinch-zoom;
     touch-action: pan-y pinch-zoom;
     /* Completely prevent all touch highlights */
     -webkit-tap-highlight-color: transparent !important;
@@ -1115,10 +1116,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
     -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
     outline: none !important;
     /* Additional mobile browser tap prevention */
-    -ms-touch-action: pan-y pinch-zoom;
     -ms-content-zooming: none;
+    overscroll-behavior-x: contain;
 }
 
 /* Prevent carousel container states from darkening */
@@ -1136,7 +1139,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 .zobacz-takze-track {
     display: flex;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    gap: 1rem;
+    gap: 1rem; /* JS reads this gap to sync snapping */
     background-color: transparent;
     /* Prevent text selection during drag */
     user-select: none;
@@ -1152,6 +1155,8 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
     -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
     outline: none !important;
     pointer-events: auto;
 }
@@ -1212,14 +1217,18 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
     -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
     outline: none !important;
     -webkit-focus-ring-color: transparent !important;
     /* Prevent active/focus darkening */
     -webkit-any-link: none !important;
     -ms-touch-action: manipulation;
+    touch-action: manipulation;
     transform: translateZ(0);
     /* Snap alignment for touch scroll */
     scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 /* Prevent active and focus states from causing darkening */
@@ -1248,6 +1257,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-touch-callout: none !important;
     -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
     -webkit-user-drag: none !important;
     outline: none !important;
     /* Prevent any child from darkening on touch */
@@ -1325,6 +1337,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -1558,11 +1571,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         -ms-overflow-style: none;
         background-color: transparent;
         /* Better touch performance - allow only horizontal pan in carousel area */
+        -ms-touch-action: pan-x pinch-zoom;
         touch-action: pan-x pinch-zoom;
         /* Smooth momentum physics */
         -webkit-scroll-snap-type: x mandatory;
         /* Prevent reflow during transforms */
         contain: layout;
+        overscroll-behavior-x: contain;
     }
     
     .zobacz-takze-carousel::-webkit-scrollbar {
@@ -1582,7 +1597,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-card {
         scroll-snap-align: start;
-        scroll-snap-stop: normal;
+        scroll-snap-stop: always;
         /* Optimize for smooth scrolling and prevent repaints */
         transform: translate3d(0, 0, 0);
         backface-visibility: hidden;

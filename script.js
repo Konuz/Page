@@ -1424,8 +1424,8 @@ const SEE_ALSO_CONFIG = {
     LOADING_DELAY: 200,
     SCROLL_TOLERANCE: 5,
     SWIPE_THRESHOLD: 10,
-    SNAP_TIMEOUT: 150,
-    ANIMATION_DURATION: 300
+    SNAP_TIMEOUT: 100,
+    ANIMATION_DURATION: 400
 };
 
 function initializeSeeAlso(toolCatalog) {
@@ -1870,39 +1870,200 @@ function setupMobileTouch() {
     const carousel = document.getElementById('zobacz-takze-carousel');
     if (!carousel) return;
 
+    // Check if passive listeners are supported
+    let supportsPassive = false;
+    try {
+        const opts = Object.defineProperty({}, 'passive', {
+            get: function() {
+                supportsPassive = true;
+                return true;
+            }
+        });
+        window.addEventListener('testPassive', null, opts);
+        window.removeEventListener('testPassive', null, opts);
+    } catch (e) {}
+
+    const passiveOption = supportsPassive ? { passive: true } : false;
+    const nonPassiveOption = supportsPassive ? { passive: false } : false;
+
     let startX = 0;
+    let startY = 0;
+    let currentX = 0;
     let startScrollLeft = 0;
     let isDragging = false;
     let startTime = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocityX = 0;
     let hasMovedEnough = false;
+    let isScrollingVertically = false;
+    let animationFrame = null;
+    let accumulatedDelta = 0; // For simulating mass inertia
+    let lastAppliedScroll = 0;
 
-    // Minimum distance to consider it a swipe (in pixels)
-    const SWIPE_THRESHOLD = SEE_ALSO_CONFIG.SWIPE_THRESHOLD;
+    // Enhanced config for momentum with weight/mass simulation
+    const SWIPE_THRESHOLD = 10;
+    const MIN_VELOCITY = 0.2;
+    const FRICTION = 0.95;
+    const MIN_MOMENTUM_VELOCITY = 0.1;
+    const MOMENTUM_MULTIPLIER = 350;
+    const WEIGHT_FACTOR = 0.75; // How much the cards resist movement (0.1 = heavy, 1.0 = no resistance)
+    const VELOCITY_DAMPENING = 0.85; // Dampening factor for fast gestures
+    const MIN_DAMPENING = 0.25; // Minimum movement ratio for very fast swipes
+
+    // Calculate resistance based on velocity - faster moves get more resistance
+    function calculateResistance(velocity) {
+        const absVelocity = Math.abs(velocity);
+        
+        // Low velocity (slow drag) = less resistance = more movement
+        if (absVelocity < 0.5) {
+            return WEIGHT_FACTOR; // Normal movement
+        }
+        
+        // High velocity (fast drag) = more resistance = less movement
+        // Scale resistance inversely with velocity
+        const resistanceMultiplier = Math.min(absVelocity / 2, 3); // Cap at 3x resistance
+        const resistance = WEIGHT_FACTOR * (1 - (resistanceMultiplier * VELOCITY_DAMPENING));
+        
+        // Ensure minimum movement even for very fast gestures
+        return Math.max(resistance, MIN_DAMPENING);
+    }
+
+    // Function to clear any text selection
+    function clearTextSelection() {
+        if (window.getSelection) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                selection.removeAllRanges();
+            }
+        }
+        if (document.selection && document.selection.clear) {
+            document.selection.clear();
+        }
+    }
 
     function handleTouchStart(e) {
+        // Cancel any ongoing momentum animation
+        if (animationFrame) {
+            cancelAnimationFrame(animationFrame);
+            animationFrame = null;
+        }
+
+        // Clear any existing text selection
+        clearTextSelection();
+
         isDragging = true;
         hasMovedEnough = false;
-        startX = e.touches[0].clientX;
+        isScrollingVertically = false;
+        
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = startX;
+        lastX = startX;
+        
         startScrollLeft = carousel.scrollLeft;
         startTime = Date.now();
+        lastTime = startTime;
+        velocityX = 0;
+        accumulatedDelta = 0;
+        lastAppliedScroll = startScrollLeft;
+        
+        // Disable smooth scrolling during dragging - avoid style flickering
         carousel.style.scrollBehavior = 'auto';
+        carousel.classList.add('dragging');
+        
+        // Disable selection globally during drag
+        document.body.style.webkitUserSelect = 'none';
+        document.body.style.mozUserSelect = 'none';
+        document.body.style.msUserSelect = 'none';
+        document.body.style.userSelect = 'none';
     }
 
     function handleTouchMove(e) {
         if (!isDragging) return;
 
-        const currentX = e.touches[0].clientX;
-        const deltaX = startX - currentX;
-        
-        // Check if moved enough to be considered a swipe
-        if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
-            hasMovedEnough = true;
-            e.preventDefault(); // Prevent page scrolling only after threshold
+        // Early exit if event can't be canceled and we haven't determined direction yet
+        if (!hasMovedEnough && !e.cancelable) {
+            return;
         }
 
-        if (hasMovedEnough) {
-            const newScrollLeft = startScrollLeft + deltaX;
-            carousel.scrollLeft = Math.max(0, Math.min(newScrollLeft, carousel.scrollWidth - carousel.clientWidth));
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        const currentY = touch.clientY;
+        const now = Date.now();
+        
+        const deltaX = startX - currentX;
+        const deltaY = startY - currentY;
+        const timeDelta = now - lastTime;
+
+        // Determine scroll direction early
+        if (!hasMovedEnough && !isScrollingVertically) {
+            if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > SWIPE_THRESHOLD) {
+                // User is scrolling vertically - don't interfere
+                isScrollingVertically = true;
+                return;
+            }
+            
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                hasMovedEnough = true;
+                // Clear selection as soon as we start dragging
+                clearTextSelection();
+                // Only prevent default if the event is cancelable
+                if (e.cancelable) {
+                    try {
+                        e.preventDefault();
+                    } catch (err) {
+                        // Fallback if preventDefault fails
+                        console.debug('preventDefault failed:', err.message);
+                    }
+                }
+            }
+        }
+
+        if (hasMovedEnough && !isScrollingVertically && e.cancelable) {
+            // Continuously clear selection during drag
+            clearTextSelection();
+            try {
+                e.preventDefault();
+            } catch (err) {
+                // Graceful fallback if preventDefault fails during momentum
+                console.debug('preventDefault failed during drag:', err.message);
+            }
+            
+            // Calculate velocity for momentum
+            if (timeDelta > 0) {
+                velocityX = (lastX - currentX) / timeDelta;
+            }
+            
+            // Apply weight/mass simulation based on current velocity
+            const resistance = calculateResistance(velocityX);
+            const currentDelta = deltaX * resistance;
+            
+            // Accumulate delta for mass simulation - cards resist sudden changes
+            const massInertia = 0.8; // How much the current movement is influenced by accumulated momentum
+            accumulatedDelta = accumulatedDelta * massInertia + currentDelta * (1 - massInertia);
+            
+            // Apply drag with resistance at boundaries
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            let newScrollLeft = startScrollLeft + accumulatedDelta;
+            
+            // Add light resistance at boundaries for more natural feel
+            if (newScrollLeft < 0) {
+                newScrollLeft = newScrollLeft * 0.5; // Lighter rubber band effect
+            } else if (newScrollLeft > maxScroll) {
+                const overflow = newScrollLeft - maxScroll;
+                newScrollLeft = maxScroll + (overflow * 0.5); // Lighter rubber band effect
+            }
+            
+            carousel.scrollLeft = newScrollLeft;
+            lastAppliedScroll = newScrollLeft;
+            
+            // Remove visual brightness feedback as it causes unwanted darkening
+            // Visual feedback now handled purely through CSS transforms
+            
+            lastX = currentX;
+            lastTime = now;
         }
     }
 
@@ -1910,74 +2071,150 @@ function setupMobileTouch() {
         if (!isDragging) return;
         isDragging = false;
 
+        if (isScrollingVertically) {
+            // Don't interfere with vertical scrolling
+            carousel.classList.remove('dragging');
+            
+            // Reset visual effects
+            carousel.style.filter = '';
+            
+            // Re-enable selection globally
+            document.body.style.webkitUserSelect = '';
+            document.body.style.mozUserSelect = '';
+            document.body.style.msUserSelect = '';
+            document.body.style.userSelect = '';
+            
+            // Use setTimeout to prevent flickering
+            setTimeout(() => {
+                carousel.style.scrollBehavior = 'smooth';
+            }, 50);
+            return;
+        }
+
         const endTime = Date.now();
         const timeDelta = endTime - startTime;
-        const endX = e.changedTouches[0].clientX;
-        const deltaX = startX - endX;
+        const totalDeltaX = startX - currentX;
 
-        carousel.style.scrollBehavior = 'smooth';
+        // Remove dragging class and re-enable smooth scrolling with delay to prevent flicker
+        carousel.classList.remove('dragging');
+        
+        // Reset visual effects
+        carousel.style.filter = '';
+        
+        // Re-enable selection globally
+        document.body.style.webkitUserSelect = '';
+        document.body.style.mozUserSelect = '';
+        document.body.style.msUserSelect = '';
+        document.body.style.userSelect = '';
+        
+        setTimeout(() => {
+            carousel.style.scrollBehavior = 'smooth';
+        }, 50);
 
-        // Implement momentum/snap behavior for quick swipes
-        if (hasMovedEnough && timeDelta < SEE_ALSO_CONFIG.ANIMATION_DURATION && Math.abs(deltaX) > 50) {
-            const cardWidth = carousel.querySelector('.zobacz-takze-card')?.offsetWidth || SEE_ALSO_CONFIG.CARD_WIDTH;
-            const gap = SEE_ALSO_CONFIG.CARD_GAP;
-            const scrollDistance = cardWidth + gap;
+        // Handle momentum and snapping
+        if (hasMovedEnough) {
             const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-            
             let targetScroll = carousel.scrollLeft;
-            
-            if (deltaX > 0) {
-                // Swiped left, scroll right
-                targetScroll = Math.ceil(carousel.scrollLeft / scrollDistance) * scrollDistance;
-                // If we're close to the end, scroll to the very end to show the last card fully
-                if (targetScroll > maxScroll - scrollDistance) {
-                    targetScroll = maxScroll;
-                }
-            } else {
-                // Swiped right, scroll left
-                targetScroll = Math.floor(carousel.scrollLeft / scrollDistance) * scrollDistance;
+
+            // If there's sufficient velocity, apply momentum with mass simulation
+            if (Math.abs(velocityX) > MIN_VELOCITY && timeDelta < 300) {
+                // Calculate momentum distance based on velocity with weight consideration
+                // Higher velocity gets dampened momentum (heavy feel)
+                const velocityDamping = Math.max(1 - (Math.abs(velocityX) * 0.3), 0.4);
+                const massAdjustedMomentum = velocityX * MOMENTUM_MULTIPLIER * velocityDamping * WEIGHT_FACTOR;
+                targetScroll = carousel.scrollLeft + massAdjustedMomentum;
             }
 
+            // Ensure we stay within bounds
             targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-            
-            carousel.scrollTo({
-                left: targetScroll,
-                behavior: 'smooth'
-            });
-        }
-    }
 
-    // Add touch event listeners
-    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
-    carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
-    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    // Improve scroll snapping on mobile
-    let scrollTimeout;
-    carousel.addEventListener('scroll', () => {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            // Optional: Add snap-to-card behavior on scroll end
+            // Snap to nearest card
             const cardWidth = carousel.querySelector('.zobacz-takze-card')?.offsetWidth || SEE_ALSO_CONFIG.CARD_WIDTH;
             const gap = SEE_ALSO_CONFIG.CARD_GAP;
             const scrollDistance = cardWidth + gap;
-            const currentScroll = carousel.scrollLeft;
-            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-            let snapPosition = Math.round(currentScroll / scrollDistance) * scrollDistance;
             
-            // Don't snap if we're very close to the end - let it stay at the end
+            // Find the nearest snap position
+            let snapPosition = Math.round(targetScroll / scrollDistance) * scrollDistance;
+            
+            // If we're close to the end, snap to the end to show the last card fully
             if (snapPosition > maxScroll - scrollDistance) {
                 snapPosition = maxScroll;
             }
             
-            if (Math.abs(currentScroll - snapPosition) > 10) {
+            snapPosition = Math.max(0, Math.min(snapPosition, maxScroll));
+
+            // Smooth scroll to target position - only if significant difference
+            if (Math.abs(carousel.scrollLeft - snapPosition) > 15) {
+                // Use requestAnimationFrame to prevent flickering
+                requestAnimationFrame(() => {
+                    carousel.scrollTo({
+                        left: snapPosition,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        } else {
+            // Small movement - just snap to nearest position
+            snapToNearestCard();
+        }
+    }
+
+    function snapToNearestCard() {
+        const cardWidth = carousel.querySelector('.zobacz-takze-card')?.offsetWidth || SEE_ALSO_CONFIG.CARD_WIDTH;
+        const gap = SEE_ALSO_CONFIG.CARD_GAP;
+        const scrollDistance = cardWidth + gap;
+        const currentScroll = carousel.scrollLeft;
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        
+        let snapPosition = Math.round(currentScroll / scrollDistance) * scrollDistance;
+        
+        if (snapPosition > maxScroll - scrollDistance) {
+            snapPosition = maxScroll;
+        }
+        
+        snapPosition = Math.max(0, Math.min(snapPosition, maxScroll));
+        
+        if (Math.abs(currentScroll - snapPosition) > 20) {
+            // Use requestAnimationFrame to prevent flickering
+            requestAnimationFrame(() => {
                 carousel.scrollTo({
                     left: snapPosition,
                     behavior: 'smooth'
                 });
-            }
-        }, SEE_ALSO_CONFIG.SNAP_TIMEOUT);
-    });
+            });
+        }
+    }
+
+    // Add touch event listeners with proper passive handling
+    carousel.addEventListener('touchstart', handleTouchStart, passiveOption);
+    carousel.addEventListener('touchmove', handleTouchMove, nonPassiveOption);
+    carousel.addEventListener('touchend', handleTouchEnd, passiveOption);
+    carousel.addEventListener('touchcancel', handleTouchEnd, passiveOption);
+
+    // Enhanced scroll snapping with debouncing and throttling
+    let scrollTimeout;
+    let isScrollThrottled = false;
+    
+    carousel.addEventListener('scroll', () => {
+        // Throttle scroll events to prevent excessive calls
+        if (isScrollThrottled) return;
+        isScrollThrottled = true;
+        
+        requestAnimationFrame(() => {
+            isScrollThrottled = false;
+        });
+        
+        clearTimeout(scrollTimeout);
+        
+        // Only snap if not currently dragging
+        if (!isDragging) {
+            scrollTimeout = setTimeout(() => {
+                if (!isDragging) {
+                    snapToNearestCard();
+                }
+            }, 200); // Longer timeout for less aggressive snapping
+        }
+    }, { passive: true });
 }
 
 function setupLazyLoading() {

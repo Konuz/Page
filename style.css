@@ -1105,13 +1105,85 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    /* Enable momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Improve touch response - allow horizontal pan and vertical scroll */
+    touch-action: pan-y pinch-zoom;
+    /* Completely prevent all touch highlights */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
+    /* Additional mobile browser tap prevention */
+    -ms-touch-action: pan-y pinch-zoom;
+    -ms-content-zooming: none;
+}
+
+/* Prevent carousel container states from darkening */
+.zobacz-takze-carousel:active,
+.zobacz-takze-carousel:focus,
+.zobacz-takze-carousel-container:active,
+.zobacz-takze-carousel-container:focus {
+    filter: none !important;
+    opacity: 1 !important;
+    background-color: transparent !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .zobacz-takze-track {
     display: flex;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     gap: 1rem;
     background-color: transparent;
+    /* Prevent text selection during drag */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    /* Improve transform performance */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Aggressive tap highlight prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
+    pointer-events: auto;
+}
+
+/* Heavier feeling during drag - no transitions */
+.zobacz-takze-carousel.dragging .zobacz-takze-track {
+    transition: none;
+    /* Simulate mass through transform timing */
+    transform: translateZ(0) scale(0.999);
+    /* Force no selection during drag */
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Cards feel heavier during drag */
+.zobacz-takze-carousel.dragging .zobacz-takze-card {
+    /* Remove all visual filters to prevent darkening */
+    filter: none;
+    transform: translateZ(0) scale(0.998);
+    transition: none;
+    /* Prevent any selection during drag */
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    /* Complete tap highlight prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
 }
 
 .zobacz-takze-card {
@@ -1134,6 +1206,59 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    /* Aggressive tap highlight and touch feedback prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
+    -webkit-focus-ring-color: transparent !important;
+    /* Prevent active/focus darkening */
+    -webkit-any-link: none !important;
+    -ms-touch-action: manipulation;
+    transform: translateZ(0);
+    /* Snap alignment for touch scroll */
+    scroll-snap-align: start;
+}
+
+/* Prevent active and focus states from causing darkening */
+.zobacz-takze-card:active,
+.zobacz-takze-card:focus,
+.zobacz-takze-card:focus-visible,
+.zobacz-takze-card:focus-within {
+    filter: none !important;
+    opacity: 1 !important;
+    background-color: #ffffff !important;
+    outline: none !important;
+    box-shadow: 
+        8px 8px 16px var(--neumorphic-dark-shadow),
+        -8px -8px 16px var(--neumorphic-light-shadow) !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Prevent any child elements from causing darkening */
+.zobacz-takze-card *,
+.zobacz-takze-card-image,
+.zobacz-takze-card-image img,
+.zobacz-takze-card-content,
+.zobacz-takze-card-title,
+.zobacz-takze-card-category,
+.zobacz-takze-card-price {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -webkit-user-drag: none !important;
+    outline: none !important;
+    /* Prevent any child from darkening on touch */
+    filter: none !important;
+}
+
+.zobacz-takze-card *:active,
+.zobacz-takze-card *:focus {
+    filter: none !important;
+    opacity: 1 !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .zobacz-takze-card:hover {
@@ -1427,9 +1552,17 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
+        /* Ensure smooth momentum */
+        scroll-behavior: smooth;
         scrollbar-width: none;
         -ms-overflow-style: none;
         background-color: transparent;
+        /* Better touch performance - allow only horizontal pan in carousel area */
+        touch-action: pan-x pinch-zoom;
+        /* Smooth momentum physics */
+        -webkit-scroll-snap-type: x mandatory;
+        /* Prevent reflow during transforms */
+        contain: layout;
     }
     
     .zobacz-takze-carousel::-webkit-scrollbar {
@@ -1439,10 +1572,42 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     .zobacz-takze-track {
         width: max-content;
         transition: none;
+        /* Force hardware acceleration and prevent repaints */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        contain: layout style paint;
+        /* Optimize for scrolling */
+        overflow-anchor: none;
     }
     
     .zobacz-takze-card {
         scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        /* Optimize for smooth scrolling and prevent repaints */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        contain: layout style paint;
+        /* Prevent layout shifts during scroll */
+        content-visibility: auto;
+    }
+    
+    /* Disable snap during active dragging - controlled by JS */
+    .zobacz-takze-carousel.dragging {
+        scroll-snap-type: none !important;
+        -webkit-scroll-snap-type: none !important;
+        /* Prevent visual glitches during drag */
+        will-change: scroll-position;
+    }
+    
+    /* Completely disable selection when dragging */
+    .zobacz-takze-carousel.dragging,
+    .zobacz-takze-carousel.dragging * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
     }
 }
 

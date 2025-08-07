@@ -1121,6 +1121,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     outline: none !important;
     /* Additional mobile browser tap prevention */
     -ms-content-zooming: none;
+    overscroll-behavior-x: contain;
 }
 
 /* Prevent carousel container states from darkening */
@@ -1138,7 +1139,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 .zobacz-takze-track {
     display: flex;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    gap: 1rem;
+    gap: 1rem; /* JS reads this gap to sync snapping */
     background-color: transparent;
     /* Prevent text selection during drag */
     user-select: none;
@@ -1227,6 +1228,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     transform: translateZ(0);
     /* Snap alignment for touch scroll */
     scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 /* Prevent active and focus states from causing darkening */
@@ -1575,6 +1577,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         -webkit-scroll-snap-type: x mandatory;
         /* Prevent reflow during transforms */
         contain: layout;
+        overscroll-behavior-x: contain;
     }
     
     .zobacz-takze-carousel::-webkit-scrollbar {
@@ -1594,7 +1597,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-card {
         scroll-snap-align: start;
-        scroll-snap-stop: normal;
+        scroll-snap-stop: always;
         /* Optimize for smooth scrolling and prevent repaints */
         transform: translate3d(0, 0, 0);
         backface-visibility: hidden;

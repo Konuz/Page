@@ -1,6 +1,7 @@
 :root {
     --bg-color: #fdfaf6;
     --text-color: #3a3a3a;
+    --text-light: #6B7280;
     --primary-color: #D97706;
     --primary-hover-color: #B45309;
     --card-bg-color: #ffffff;
@@ -8,7 +9,11 @@
     --font-family: 'Poppins', sans-serif;
     --container-width: 1100px;
     --border-radius: 8px;
-    --background-color: #f0f0f0;
+    --background-color: #fdfaf6;
+    --bg-secondary: #fdfaf6;
+    --hover-color: #f8f4f0;
+    --table-header-bg: #f8f4f0;
+    --table-row-hover: #f8f4f0;
     --shadow-light: rgba(255, 255, 255, 0.6);
     --shadow-dark: rgba(212, 212, 212, 0.4);
     --shadow-light-inset: rgba(255, 255, 255, 0.6);
@@ -24,8 +29,14 @@
     --text-color: #e5e7eb;
     --text-color-dark: #f9fafb;
     --text-color-light: #9ca3af;
+    --text-light: #9ca3af;
     --border-color: #374151;
     --card-bg-color: #1f2937;
+    --background-color: #111827;
+    --bg-secondary: #111827;
+    --hover-color: #1f2937;
+    --table-header-bg: #1f2937;
+    --table-row-hover: #374151;
     --shadow-light: rgba(56, 68, 94, 0.7);
     --shadow-dark: rgba(12, 17, 29, 0.7);
     --shadow-light-inset: rgba(56, 68, 94, 0.7);
@@ -840,7 +851,11 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     padding-bottom: 3rem;
     margin-top: 2rem;
     margin-bottom: 4rem;
-    background-color: var(--bg-color);
+    background-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* Call to Action Section */
@@ -904,12 +919,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .cta-button-pricing:hover {
     background-color: var(--primary-hover-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .cta-button-pricing:active {
@@ -988,11 +1004,25 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     justify-content: center;
     width: 36px;
     height: 36px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .phone-modal-close:hover {
     background-color: var(--border-color);
-    transform: rotate(90deg);
+}
+
+.phone-modal-close:focus {
+    outline: none;
+}
+
+.phone-modal-close:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.phone-modal-close:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .phone-modal-body {
@@ -1014,12 +1044,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     transition: all 0.3s ease;
     font-weight: 600;
     font-size: 1.1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .phone-option:hover {
     background-color: var(--primary-hover-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .phone-option:active {
@@ -1069,18 +1100,94 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     overflow: hidden;
     width: 100%;
     border-radius: var(--border-radius);
-    background-color: var(--bg-color);
+    background-color: transparent;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    /* Enable momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Improve touch response - allow horizontal pan and vertical scroll */
+    -ms-touch-action: pan-y pinch-zoom;
+    touch-action: pan-y pinch-zoom;
+    /* Completely prevent all touch highlights */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    /* Additional mobile browser tap prevention */
+    -ms-content-zooming: none;
+}
+
+/* Prevent carousel container states from darkening */
+.zobacz-takze-carousel:active,
+.zobacz-takze-carousel:focus,
+.zobacz-takze-carousel-container:active,
+.zobacz-takze-carousel-container:focus {
+    filter: none !important;
+    opacity: 1 !important;
+    background-color: transparent !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .zobacz-takze-track {
     display: flex;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     gap: 1rem;
-    background-color: var(--bg-color);
+    background-color: transparent;
+    /* Prevent text selection during drag */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    /* Improve transform performance */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Aggressive tap highlight prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    pointer-events: auto;
+}
+
+/* Heavier feeling during drag - no transitions */
+.zobacz-takze-carousel.dragging .zobacz-takze-track {
+    transition: none;
+    /* Simulate mass through transform timing */
+    transform: translateZ(0) scale(0.999);
+    /* Force no selection during drag */
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Cards feel heavier during drag */
+.zobacz-takze-carousel.dragging .zobacz-takze-card {
+    /* Remove all visual filters to prevent darkening */
+    filter: none;
+    transform: translateZ(0) scale(0.998);
+    transition: none;
+    /* Prevent any selection during drag */
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    /* Complete tap highlight prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
 }
 
 .zobacz-takze-card {
@@ -1103,6 +1210,65 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    /* Aggressive tap highlight and touch feedback prevention */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-drag: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    -webkit-focus-ring-color: transparent !important;
+    /* Prevent active/focus darkening */
+    -webkit-any-link: none !important;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    /* Snap alignment for touch scroll */
+    scroll-snap-align: start;
+}
+
+/* Prevent active and focus states from causing darkening */
+.zobacz-takze-card:active,
+.zobacz-takze-card:focus,
+.zobacz-takze-card:focus-visible,
+.zobacz-takze-card:focus-within {
+    filter: none !important;
+    opacity: 1 !important;
+    background-color: #ffffff !important;
+    outline: none !important;
+    box-shadow: 
+        8px 8px 16px var(--neumorphic-dark-shadow),
+        -8px -8px 16px var(--neumorphic-light-shadow) !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Prevent any child elements from causing darkening */
+.zobacz-takze-card *,
+.zobacz-takze-card-image,
+.zobacz-takze-card-image img,
+.zobacz-takze-card-content,
+.zobacz-takze-card-title,
+.zobacz-takze-card-category,
+.zobacz-takze-card-price {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+    outline: none !important;
+    /* Prevent any child from darkening on touch */
+    filter: none !important;
+}
+
+.zobacz-takze-card *:active,
+.zobacz-takze-card *:focus {
+    filter: none !important;
+    opacity: 1 !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .zobacz-takze-card:hover {
@@ -1169,6 +1335,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
@@ -1346,14 +1513,14 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-track {
         gap: 0.75rem;
-        background-color: var(--bg-color);
+        background-color: transparent;
     }
 }
 
 @media (max-width: 480px) {
     .zobacz-takze-carousel {
         padding: 0 0.5rem;
-        background-color: var(--bg-color);
+        background-color: transparent;
     }
     
     .zobacz-takze-card {
@@ -1380,7 +1547,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-track {
         gap: 0.5rem;
-        background-color: var(--bg-color);
+        background-color: transparent;
     }
     
     .zobacz-takze-title {
@@ -1396,9 +1563,18 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
+        /* Ensure smooth momentum */
+        scroll-behavior: smooth;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        background-color: var(--bg-color);
+        background-color: transparent;
+        /* Better touch performance - allow only horizontal pan in carousel area */
+        -ms-touch-action: pan-x pinch-zoom;
+        touch-action: pan-x pinch-zoom;
+        /* Smooth momentum physics */
+        -webkit-scroll-snap-type: x mandatory;
+        /* Prevent reflow during transforms */
+        contain: layout;
     }
     
     .zobacz-takze-carousel::-webkit-scrollbar {
@@ -1408,10 +1584,42 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     .zobacz-takze-track {
         width: max-content;
         transition: none;
+        /* Force hardware acceleration and prevent repaints */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        contain: layout style paint;
+        /* Optimize for scrolling */
+        overflow-anchor: none;
     }
     
     .zobacz-takze-card {
         scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        /* Optimize for smooth scrolling and prevent repaints */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        contain: layout style paint;
+        /* Prevent layout shifts during scroll */
+        content-visibility: auto;
+    }
+    
+    /* Disable snap during active dragging - controlled by JS */
+    .zobacz-takze-carousel.dragging {
+        scroll-snap-type: none !important;
+        -webkit-scroll-snap-type: none !important;
+        /* Prevent visual glitches during drag */
+        will-change: scroll-position;
+    }
+    
+    /* Completely disable selection when dragging */
+    .zobacz-takze-carousel.dragging,
+    .zobacz-takze-carousel.dragging * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
     }
 }
 
@@ -1475,11 +1683,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 [data-theme="dark"] .cta-button-pricing {
     background-color: var(--primary-color);
     color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .cta-button-pricing:hover {
     background-color: var(--primary-hover-color);
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] .phone-modal-overlay {
@@ -1512,14 +1721,29 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: var(--border-color);
 }
 
+[data-theme="dark"] .phone-modal-close:focus {
+    outline: none;
+}
+
+[data-theme="dark"] .phone-modal-close:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+[data-theme="dark"] .phone-modal-close:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
 [data-theme="dark"] .phone-option {
     background-color: var(--primary-color);
     color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .phone-option:hover {
     background-color: var(--primary-hover-color);
-    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Footer */
@@ -2356,6 +2580,10 @@ body.subpage main {
     margin-top: auto;
     border-top: 1px solid transparent; /* Hide the top border if not needed */
     transition: background-color 0.3s ease, color 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 [data-theme="dark"] .footer {
@@ -3134,11 +3362,26 @@ body.subpage main {
     border-radius: 6px;
     transition: all 0.3s ease;
     margin-left: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .search-close:hover {
     background: var(--hover-color);
     color: var(--text-color);
+}
+
+.search-close:focus {
+    outline: none;
+}
+
+.search-close:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.search-close:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .search-results {

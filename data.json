@@ -103,7 +103,7 @@
                 { "id": "grill-gazowy-landmann", "name": "Grill gazowy Landmann", "image": "images/grill_gazowy_triton_max.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Stoły i krzesła", "tools": [
-                { "id": "stoly-krzesla-rozkladane", "name": "Stoły i krzesła rozkładane", "image": "images/stoly_krzesla_rozkladane.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
+                { "id": "stoly-krzesla-rozkladane", "name": "Stoły i krzesła rozkładane", "image": "images/grill_gazowy_triton_max.webp", "pricing": {"1-3 Dni": "Dodaj cenę", "4-7 Dni": "Dodaj cenę", "Sobota + Niedziela": "Dodaj cenę", "Kaucja *": "Dodaj cenę"} }
             ] },
             { "name": "Kosiarki", "tools": [
                 { "id": "kosiarka-akumulatorowa-cedrus", "name": "Kosiarka akumulatorowa Cedrus", "image": "images/kosiarka_akumulatorowa_cedrus_60V_LM560S-P25.webp", "pricing": {"1-3 Dni": 170, "4-7 Dni": 135, "Sobota + Niedziela": 275, "Kaucja *": 500} },

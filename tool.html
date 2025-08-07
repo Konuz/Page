@@ -170,8 +170,65 @@
                                     <!-- Cennik będzie wstawiany tutaj przez JS -->
                                 </tbody>
                             </table>
+                            
+                            <!-- Call to Action Button -->
+                            <div class="cta-container">
+                                <button type="button" class="cta-button-pricing" id="call-button">
+                                    <i class="fas fa-phone"></i>
+                                    Zadzwoń i zamów!
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phone Selection Modal -->
+        <div id="phone-modal" class="phone-modal" style="display: none;">
+            <div class="phone-modal-overlay"></div>
+            <div class="phone-modal-content">
+                <div class="phone-modal-header">
+                    <h3>Wybierz numer telefonu</h3>
+                    <button type="button" class="phone-modal-close" id="close-phone-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="phone-modal-body">
+                    <a href="tel:+48604481600" class="phone-option">
+                        <i class="fas fa-phone"></i>
+                        <div class="phone-info">
+                            <span class="phone-name">Michał</span>
+                            <span class="phone-number">+48 604 481 600</span>
+                        </div>
+                    </a>
+                    <a href="tel:+48604481700" class="phone-option">
+                        <i class="fas fa-phone"></i>
+                        <div class="phone-info">
+                            <span class="phone-name">Marek</span>
+                            <span class="phone-number">+48 604 481 700</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zobacz również Section -->
+        <section id="zobacz-takze-section" class="zobacz-takze-section">
+            <div class="container">
+                <h2 class="zobacz-takze-title">Zobacz również</h2>
+                <div class="zobacz-takze-carousel-container">
+                    <button class="carousel-nav-btn carousel-prev" aria-label="Poprzednie narzędzia">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="zobacz-takze-carousel" id="zobacz-takze-carousel">
+                        <div class="zobacz-takze-track" id="zobacz-takze-track">
+                            <!-- Related tools will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn carousel-next" aria-label="Następne narzędzia">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </section>

@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WLNRPMGP');</script>
-    <!-- End Google Tag Manager -->
-    
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1799690884088967');
-    fbq('track', 'PageView');
-    </script>
-    <!-- End Meta Pixel Code -->
+    <!-- Tracking scripts are loaded after cookie consent via script.js -->
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com; img-src 'self' data: https:;">
+    <meta name="description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
+    <link rel="canonical" href="https://toolshare.com.pl/">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ToolShare">
+    <meta property="og:title" content="ToolShare – Wypożyczalnia Narzędzi | Czernica">
+    <meta property="og:description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
+    <meta property="og:url" content="https://toolshare.com.pl/">
+    <meta property="og:image" content="https://toolshare.com.pl/images/logo.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ToolShare – Wypożyczalnia Narzędzi | Czernica">
+    <meta name="twitter:description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
+    <meta name="twitter:image" content="https://toolshare.com.pl/images/logo.webp">
     <meta name="referrer" content="no-referrer-when-downgrade">
     <title>ToolShare - Wypożyczalnia Narzędzi</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
@@ -62,31 +56,79 @@
             }
         })();
     </script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔨</text></svg>">
+    <link rel="icon" href="favicon.png?v=2" sizes="any">
+    <link rel="apple-touch-icon" href="favicon.png?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" media="all" onload="this.media='all'" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"></noscript>
+    <link rel="preload" as="image" href="images/hero.webp" imagesrcset="images/hero.webp 1x" fetchpriority="high">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
     <link rel="stylesheet" href="style.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "ToolShare",
+      "url": "https://toolshare.com.pl/",
+      "image": "https://toolshare.com.pl/images/logo.webp",
+      "telephone": ["+48604481600", "+48604481700"],
+      "email": "toolshare.chrzastawa@gmail.com",
+      "logo": "https://toolshare.com.pl/images/logo.webp",
+      "@id": "https://toolshare.com.pl/#localbusiness",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ul. Sportowa 9",
+        "addressLocality": "Chrząstawa Wielka",
+        "postalCode": "55-003",
+        "addressCountry": "PL"
+      },
+      "areaServed": ["Gmina Czernica", "Chrząstawa Wielka", "Czernica"],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 51.0938405,
+        "longitude": 17.2914599
+      },
+      "hasMap": "https://maps.google.com/?q=51.0938405,17.2914599",
+      "openingHoursSpecification": [{
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"
+        ],
+        "opens": "08:00",
+        "closes": "20:00"
+      }],
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61578827231969"
+      ],
+      "priceRange": "$"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "ToolShare",
+      "url": "https://toolshare.com.pl/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://toolshare.com.pl/index.html?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLNRPMGP"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    
-    <!-- Meta Pixel Code (noscript) -->
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1799690884088967&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code (noscript) -->
+    <!-- Tracking noscript fallbacks removed to respect consent -->
 
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="logo"><img src="images/logo.png" alt="ToolShare Logo"></a>
+            <a href="index.html" class="logo" aria-label="Strona główna"><img src="images/logo.webp" alt="ToolShare Logo"></a>
             <div class="nav-right">
                 <div class="nav-links">
-                    <a href="index.html" class="nav-link" id="start-link">Start</a>
+                    <a href="index.html" class="nav-link" id="start-link">Strona Główna</a>
                     <div class="dropdown">
                         <a href="#tools" class="dropbtn">
                             Narzędzia
@@ -141,7 +183,7 @@
             </div>
             <ul class="mobile-menu-list">
                 <li class="mobile-menu-item">
-                    <a href="index.html" class="mobile-menu-link">Start</a>
+                    <a href="index.html" class="mobile-menu-link">Strona Główna</a>
                 </li>
                 <li class="mobile-menu-item">
                     <a href="#" class="mobile-menu-link has-submenu" data-submenu="tools-menu">Narzędzia</a>
@@ -229,7 +271,7 @@
             <div class="container">
                 <h2>Kontakt</h2>
                 <div class="contact-grid">
-                    <div class="contact-details">
+                <div class="contact-details" data-nosnippet>
                         <h3>Odezwij się!</h3>
                         <p>Masz pytania? Potrzebujesz narzędzia, którego nie ma na liście? Jesteśmy do Twojej dyspozycji.</p>
                         <ul>
@@ -290,6 +332,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html> 

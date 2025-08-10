@@ -145,7 +145,7 @@ h2 {
     background-color: rgba(253, 250, 246, 0.7);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 1rem 0;
+    padding: 0.9rem 0; /* 10% mniej */
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
@@ -163,7 +163,7 @@ h2 {
     align-items: center;
     transition: all 0.2s ease-in-out;
     position: relative;
-    height: 60px;
+    height: 54px; /* 10% mniej */
 }
 
 .logo {
@@ -186,10 +186,10 @@ h2 {
 }
 
 .logo img {
-    height: 260px;
+    height: 234px; /* 10% mniej */
     width: auto;
     display: block;
-    transform: translateY(-74px);
+    transform: translateY(-66px); /* 10% mniej przesunięcia */
     filter: drop-shadow(0px 4px 5px rgba(0,0,0,0.25));
 }
 
@@ -197,7 +197,7 @@ h2 {
     display: flex;
     align-items: center;
     margin-left: auto;
-    gap: 2rem;
+    gap: 1.8rem; /* 10% mniej */
 }
 
 .nav-links {
@@ -205,7 +205,7 @@ h2 {
     align-items: center;
     color: #ffffff;
     order: 2;
-    gap: 2rem;
+    gap: 1.8rem; /* 10% mniej */
 }
 
 .nav-links a {
@@ -1096,8 +1096,33 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin: 0 auto;
 }
 
+/* Edge shadow overlays for extreme cards */
+.zobacz-takze-carousel-container::before,
+.zobacz-takze-carousel-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 36px; /* szersze, łagodniejsze przejście */
+    pointer-events: none;
+    z-index: 1;
+}
+
+.zobacz-takze-carousel-container::before {
+    left: 0;
+    /* blend z tłem zamiast przyciemniania */
+    background: linear-gradient(to right, var(--bg-color), transparent);
+}
+
+.zobacz-takze-carousel-container::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-color), transparent);
+}
+
 .zobacz-takze-carousel {
-    overflow: hidden;
+    /* Always allow horizontal scroll; hide vertical overflow */
+    overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     border-radius: var(--border-radius);
     background-color: transparent;
@@ -1107,9 +1132,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -ms-user-select: none;
     /* Enable momentum scrolling on iOS */
     -webkit-overflow-scrolling: touch;
-    /* Improve touch response - allow horizontal pan and vertical scroll */
-    -ms-touch-action: pan-y pinch-zoom;
-    touch-action: pan-y pinch-zoom;
+    /* Allow horizontal panning by default (fixes devices not matching MQ) */
+    -ms-touch-action: pan-x pinch-zoom;
+    touch-action: pan-x pinch-zoom;
     /* Completely prevent all touch highlights */
     -webkit-tap-highlight-color: transparent !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
@@ -1122,6 +1147,17 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     /* Additional mobile browser tap prevention */
     -ms-content-zooming: none;
     overscroll-behavior-x: contain;
+    /* Subtle edge fade for extreme cards */
+    -webkit-mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0.85) 16px,
+        rgba(0,0,0,0.85) calc(100% - 16px),
+        rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0.85) 16px,
+        rgba(0,0,0,0.85) calc(100% - 16px),
+        rgba(0,0,0,0) 100%);
 }
 
 /* Prevent carousel container states from darkening */
@@ -1140,7 +1176,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     display: flex;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     gap: 1rem; /* JS reads this gap to sync snapping */
-    background-color: transparent;
+    background-color: var(--bg-color);
     /* Prevent text selection during drag */
     user-select: none;
     -webkit-user-select: none;
@@ -1159,6 +1195,22 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     appearance: none !important;
     outline: none !important;
     pointer-events: auto;
+}
+
+/* Tighter fades on small screens */
+@media (max-width: 768px) {
+  .zobacz-takze-carousel {
+    -webkit-mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0.9) 8px,
+        rgba(0,0,0,0.9) calc(100% - 8px),
+        rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0,
+        rgba(0,0,0,0.9) 8px,
+        rgba(0,0,0,0.9) calc(100% - 8px),
+        rgba(0,0,0,0) 100%);
+  }
 }
 
 /* Heavier feeling during drag - no transitions */
@@ -1204,9 +1256,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     color: inherit;
     height: 180px;
     display: block;
-    box-shadow: 
-        8px 8px 16px var(--neumorphic-dark-shadow),
-        -8px -8px 16px var(--neumorphic-light-shadow);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.08);
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -1275,9 +1325,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .zobacz-takze-card:hover {
     transform: translateY(-4px);
-    box-shadow: 
-        12px 12px 24px var(--neumorphic-dark-shadow),
-        -12px -12px 24px var(--neumorphic-light-shadow);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
 .zobacz-takze-card::after {
@@ -1287,7 +1335,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     left: 0;
     right: 0;
     height: 60%;
-    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%);
     pointer-events: none;
     z-index: 1;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
@@ -1515,14 +1563,14 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-track {
         gap: 0.75rem;
-        background-color: transparent;
+        background-color: var(--bg-color);
     }
 }
 
 @media (max-width: 480px) {
     .zobacz-takze-carousel {
         padding: 0 0.5rem;
-        background-color: transparent;
+        background-color: var(--bg-color);
     }
     
     .zobacz-takze-card {
@@ -1549,7 +1597,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     
     .zobacz-takze-track {
         gap: 0.5rem;
-        background-color: transparent;
+        background-color: var(--bg-color);
     }
     
     .zobacz-takze-title {
@@ -1561,18 +1609,14 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 /* Touch Scroll Behavior */
 @media (hover: none) and (pointer: coarse) {
     .zobacz-takze-carousel {
-        overflow-x: auto;
-        overflow-y: hidden;
+        /* Retain same behavior under MQ; base already enables pan-x and overflow-x */
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
         /* Ensure smooth momentum */
         scroll-behavior: smooth;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        background-color: transparent;
-        /* Better touch performance - allow only horizontal pan in carousel area */
-        -ms-touch-action: pan-x pinch-zoom;
-        touch-action: pan-x pinch-zoom;
+        background-color: var(--bg-color);
         /* Smooth momentum physics */
         -webkit-scroll-snap-type: x mandatory;
         /* Prevent reflow during transforms */
@@ -3477,6 +3521,46 @@ body.subpage main {
     background: var(--bg-secondary);
 }
 
+/* --- Performance: lazy-render offscreen cards --- */
+@supports (content-visibility: auto) {
+    /* Reduce initial render cost for offscreen containers */
+    .features-grid,
+    #tools-grid,
+    #subcategory-grid {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 1000px;
+    }
+    .feature-card,
+    .tool-card,
+    .category-card,
+    .subcategory-card,
+    .zobacz-takze-card {
+        content-visibility: auto;
+        /* Reserve space to avoid layout shifts before real render */
+        contain-intrinsic-size: 280px;
+    }
+    /* Fine-tune typical heights per component */
+    .tool-card { contain-intrinsic-size: 260px; }
+    .category-card { contain-intrinsic-size: 300px; }
+    .subcategory-card { contain-intrinsic-size: 120px; }
+    .zobacz-takze-card { contain-intrinsic-size: 180px; }
+}
+
+/* Prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile: disable heavy blur for performance */
+@media (max-width: 768px) {
+  .navbar { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
 .search-history-item {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--border-color);
@@ -3583,4 +3667,58 @@ body.subpage main {
     min-width: 220px;
     max-width: 260px;
   }
+}
+
+/* Mobile tap highlight/outline cleanup (touch devices only) */
+@media (hover: none) and (pointer: coarse) {
+  *,
+  *:before,
+  *:after,
+  a,
+  a:link,
+  a:visited,
+  a:active,
+  a:focus,
+  button,
+  button:focus,
+  input,
+  input:focus,
+  textarea,
+  textarea:focus,
+  select,
+  select:focus,
+  [role="button"],
+  [onclick],
+  .logo,
+  .logo:focus,
+  .navbar a,
+  img {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
+    outline: none !important;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none !important;
+  }
+}
+
+/* Global tap highlight removal for all devices */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button, 
+a, 
+[role="button"], 
+[onclick],
+.btn,
+.button {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
 }

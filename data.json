@@ -83,7 +83,7 @@
         "image": "images/betoniarka.webp",
         "subcategories": [
             { "name": "Betoniarki", "tools": [
-                { "id": "betoniarka-180", "name": "Betoniarka 180 litrów na 230V", "image": "images/betoniarka.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": 200} }
+                { "id": "betoniarka-200", "name": "Betoniarka 200 litrów na 230V", "image": "images/betoniarka.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": 200} }
             ] },
             { "name": "Aeratory", "tools": [
                 { "id": "aerator-reczny", "name": "Aerator ręczny", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 35, "Kaucja *": "Dodaj cenę"} }

@@ -76,6 +76,69 @@ console.log('Skrypt załadowany!');
     
 })();
 
+// ===== Tracking helpers (global, available on every page) =====
+function loadScript(src, attrs = {}) {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    Object.entries(attrs).forEach(([k, v]) => s.setAttribute(k, v));
+    document.head.appendChild(s);
+    return s;
+}
+
+function ensureFbqStub() {
+    if (typeof window.fbq === 'undefined') {
+        (function(f,b,e,v,n,t,s){
+            if(f.fbq)return; n=f.fbq=function(){ n.callMethod ?
+                n.callMethod.apply(n,arguments) : n.queue.push(arguments) };
+            if(!f._fbq)f._fbq=n; n.push=n; n.loaded=!0; n.version='2.0';
+            n.queue=[]; t=b.createElement(e); t.async=!0; t.src=v; s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s);
+        })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    }
+}
+
+function loadTrackingScripts() {
+    if (window.__trackingLoaded) return;
+    window.__trackingLoaded = true;
+
+    // GTM (GA4 przez GTM) – załaduj dopiero po zgodzie
+    window.dataLayer = window.dataLayer || [];
+    // Odtworzenie semantyki oficjalnego snippetu: znacznik startu i event 'gtm.js'
+    try { window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); } catch(_) {}
+    loadScript('https://www.googletagmanager.com/gtm.js?id=GTM-WLNRPMGP');
+
+    // Meta Pixel – stub + skrypt, a następnie ewentualna zgoda
+    ensureFbqStub();
+    try { window.fbq('init', '1799690884088967'); window.fbq('track', 'PageView'); } catch(_) {}
+
+    // Google Consent Mode update jeśli gtag już dostępny (GTM mógł go zainicjalizować)
+    if (typeof window.gtag !== 'undefined') {
+        window.gtag('consent', 'update', {
+            'analytics_storage': 'granted',
+            'ad_storage': 'granted',
+            'functionality_storage': 'granted',
+            'personalization_storage': 'granted',
+            'security_storage': 'granted'
+        });
+    }
+    // Meta Pixel consent
+    if (typeof window.fbq !== 'undefined') {
+        try { window.fbq('consent', 'grant'); } catch(_) {}
+    }
+    console.log('✅ Tracking scripts loaded after consent');
+}
+
+// Auto-load trackers on page load if consent was already granted (even without cookie popup element)
+(function() {
+    try {
+        const consent = localStorage.getItem('cookieConsent');
+        if (consent === 'accepted') {
+            loadTrackingScripts();
+        }
+    } catch (_) {}
+})();
+
 // Funkcja zapobiegająca polskim sierotkom
 function fixPolishOrphans(text) {
     if (!text || typeof text !== 'string') return text;
@@ -110,25 +173,35 @@ async function fetchData() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const toolCatalog = await fetchData();
+    // Determine if this page needs the catalog
+    const needsCatalog = !!(
+        document.getElementById('why-us') ||
+        document.getElementById('category-title') ||
+        document.getElementById('subcategory-title') ||
+        document.getElementById('tool-details-section')
+    );
 
-    if (!toolCatalog || toolCatalog.length === 0) {
-        console.error("Brak danych narzędzi do wyświetlenia.");
-        // Można tu dodać komunikat dla użytkownika na stronie
-        return;
-    }
+    const toolCatalog = needsCatalog ? await fetchData() : null;
 
     // Router oparty na unikalnych elementach strony
     if (document.getElementById('why-us')) {
-        renderCategories(toolCatalog);
+        if (toolCatalog && toolCatalog.length) {
+            renderCategories(toolCatalog);
+        }
         initScrollAnimations(toolCatalog);
     } else if (document.getElementById('category-title')) {
-        renderSubcategories(toolCatalog);
+        if (toolCatalog && toolCatalog.length) {
+            renderSubcategories(toolCatalog);
+        }
     } else if (document.getElementById('subcategory-title')) {
-        renderTools(toolCatalog);
+        if (toolCatalog && toolCatalog.length) {
+            renderTools(toolCatalog);
+        }
     } else if (document.getElementById('tool-details-section')) {
-        renderToolDetails(toolCatalog);
-        initializeSeeAlso(toolCatalog);
+        if (toolCatalog && toolCatalog.length) {
+            renderToolDetails(toolCatalog);
+            initializeSeeAlso(toolCatalog);
+        }
     } else if (document.getElementById('about-us-title')) {
         // Strona "O nas" nie wymaga specjalnego renderowania
         console.log('Router -> About us page');
@@ -136,14 +209,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Router -> No match found for page.');
     }
 
-    renderNavigationCategories(toolCatalog);
+    // Nawigacja i UI, które mogą działać bez katalogu
+    if (toolCatalog && toolCatalog.length) {
+        renderNavigationCategories(toolCatalog);
+        initializeDropdown(toolCatalog);
+        initializeMobileMenu(toolCatalog);
+        initializeSearch(toolCatalog);
+    }
     initializeHamburger(); // To może zostać, jeśli zarządza tylko klasą 'active'
-    initializeDropdown(toolCatalog);
     initializeThemeSwitcher();
-    initializeMobileMenu(toolCatalog);
-    initializeSearch(toolCatalog);
+    initializeSeoManager(toolCatalog);
     initScrollAnimations();
-    
+
     // Zastosuj zasady typografii po wszystkich inicjalizacjach
     setTimeout(() => {
         applyTypographyRules();
@@ -862,6 +939,239 @@ function initializeThemeSwitcher() {
     });
 }
 
+function initializeSeoManager(toolCatalog) {
+    try {
+        upsertMetaRobots();
+        const url = new URL(window.location.href);
+        const isCategoryPage = !!document.getElementById('category-title');
+        const isSubcategoryPage = !!document.getElementById('subcategory-title');
+        const isToolPage = !!document.getElementById('tool-details-section');
+        const isHomePage = !!document.getElementById('why-us');
+
+        if (isHomePage) {
+            ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
+            updateCanonical('https://toolshare.com.pl/');
+        }
+
+        if (!toolCatalog || !toolCatalog.length) {
+            return;
+        }
+
+        if (isCategoryPage) {
+            const categoryName = new URLSearchParams(url.search).get('category');
+            const category = toolCatalog.find(c => c.category === categoryName);
+            if (!category) return;
+
+            const pageUrl = `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}`;
+            const description = `${stripHtmlTags(category.category)} do wypożyczenia w gminie Czernica (Chrząstawa Wielka). Atrakcyjne ceny i elastyczne godziny odbioru.`;
+            const dynamicTitle = `${stripHtmlTags(category.category)} – wypożyczalnia narzędzi Czernica | ToolShare`;
+
+            // Title + meta
+            if (document.title) {
+                document.title = dynamicTitle;
+            }
+            upsertMetaByName('description', description);
+            ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
+            upsertMetaByProperty('og:title', dynamicTitle);
+            upsertMetaByProperty('og:description', description);
+            upsertMetaByProperty('og:url', pageUrl);
+            upsertMetaByName('twitter:title', dynamicTitle);
+            upsertMetaByName('twitter:description', description);
+            upsertMetaByName('twitter:image', 'https://toolshare.com.pl/images/logo.webp');
+            updateCanonical(pageUrl);
+
+            const breadcrumbItems = [
+                { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
+                { name: stripHtmlTags(category.category), url: pageUrl }
+            ];
+            injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+
+            const itemList = buildItemList(
+                category.subcategories.map(sub => ({
+                    name: stripHtmlTags(sub.name),
+                    url: `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`
+                })),
+                pageUrl
+            );
+            injectJsonLd(itemList);
+        }
+
+        if (isSubcategoryPage) {
+            const params = new URLSearchParams(url.search);
+            const categoryName = params.get('category');
+            const subcategoryName = params.get('subcategory');
+            const category = toolCatalog.find(c => c.category === categoryName);
+            const subcategory = category?.subcategories.find(s => s.name === subcategoryName);
+            if (!subcategory) return;
+
+            const pageUrl = `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
+            const description = `${stripHtmlTags(subcategory.name)} do wypożyczenia – gmina Czernica. Odbiór w Chrząstawie Wielkiej, szybki kontakt, szybka obsługa.`;
+            const dynamicTitle = `${stripHtmlTags(subcategory.name)} – wypożyczalnia narzędzi Czernica | ToolShare`;
+
+            // Title + meta
+            if (document.title) {
+                document.title = dynamicTitle;
+            }
+            upsertMetaByName('description', description);
+            ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
+            upsertMetaByProperty('og:title', dynamicTitle);
+            upsertMetaByProperty('og:description', description);
+            upsertMetaByProperty('og:url', pageUrl);
+            upsertMetaByName('twitter:title', dynamicTitle);
+            upsertMetaByName('twitter:description', description);
+            upsertMetaByName('twitter:image', 'https://toolshare.com.pl/images/logo.webp');
+            updateCanonical(pageUrl);
+
+            const breadcrumbItems = [
+                { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
+                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}` },
+                { name: stripHtmlTags(subcategory.name), url: pageUrl }
+            ];
+            injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+
+            const enabledTools = (subcategory.tools || []).filter(t => t.enabled !== false);
+            const itemList = buildItemList(
+                enabledTools.map(t => ({
+                    name: stripHtmlTags(t.name),
+                    url: `https://toolshare.com.pl/tool.html?toolId=${encodeURIComponent(t.id)}`
+                })),
+                pageUrl
+            );
+            injectJsonLd(itemList);
+        }
+
+        if (isToolPage) {
+            const params = new URLSearchParams(url.search);
+            const toolId = params.get('toolId');
+            const toolCtx = findToolById(toolId, toolCatalog);
+            const tool = toolCtx?.tool;
+            const category = toolCtx?.category;
+            const subcategory = toolCtx?.subcategory;
+            if (!tool) return;
+
+            const pageUrl = `https://toolshare.com.pl/tool.html?toolId=${encodeURIComponent(tool.id)}`;
+            const firstPrice = getFirstNumericPrice(tool?.pricing);
+            const descriptionBase = `${stripHtmlTags(tool.name)} do wypożyczenia. ${stripHtmlTags(category.category)} › ${stripHtmlTags(subcategory.name)}. Odbiór w Chrząstawie Wielkiej, elastyczne godziny.`;
+            const description = firstPrice ? `${descriptionBase} Ceny od ${firstPrice} zł/dzień.` : descriptionBase;
+
+            upsertMetaByName('description', description);
+            ensureOgTwitterDefaults(absoluteUrl(tool.image));
+            upsertMetaByProperty('og:title', document.title || 'Narzędzie – ToolShare');
+            upsertMetaByProperty('og:description', description);
+            upsertMetaByProperty('og:url', pageUrl);
+            upsertMetaByName('twitter:title', document.title || 'Narzędzie – ToolShare');
+            upsertMetaByName('twitter:description', description);
+            upsertMetaByName('twitter:image', absoluteUrl(tool.image));
+            updateCanonical(pageUrl);
+
+            const breadcrumbItems = [
+                { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
+                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}` },
+                { name: stripHtmlTags(subcategory.name), url: `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}` },
+                { name: stripHtmlTags(tool.name), url: pageUrl }
+            ];
+            injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+        }
+    } catch (_) {}
+}
+
+function upsertMetaRobots() {
+    upsertMetaByName('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+}
+
+function ensureOgTwitterDefaults(defaultImageUrl) {
+    upsertMetaByProperty('og:site_name', 'ToolShare');
+    upsertMetaByProperty('og:image', defaultImageUrl);
+    upsertMetaByProperty('og:image:width', '1200');
+    upsertMetaByProperty('og:image:height', '630');
+    upsertMetaByName('twitter:card', 'summary_large_image');
+    upsertMetaByName('twitter:image', defaultImageUrl);
+}
+
+function upsertMetaByName(name, content) {
+    if (!name || !content) return;
+    let el = document.head.querySelector(`meta[name="${CSS.escape(name)}"]`);
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('name', name);
+        document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+}
+
+function upsertMetaByProperty(property, content) {
+    if (!property || !content) return;
+    let el = document.head.querySelector(`meta[property="${CSS.escape(property)}"]`);
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('property', property);
+        document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+}
+
+function updateCanonical(url) {
+    if (!url) return;
+    let link = document.head.querySelector('link[rel="canonical"]');
+    if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+    }
+    link.setAttribute('href', url);
+}
+
+function buildBreadcrumbList(items) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': items.map((item, index) => ({
+            '@type': 'ListItem',
+            'position': index + 1,
+            'name': item.name,
+            'item': item.url
+        }))
+    };
+}
+
+function buildItemList(entries, pageUrl) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'url': pageUrl,
+        'itemListElement': entries.map((entry, index) => ({
+            '@type': 'ListItem',
+            'position': index + 1,
+            'url': entry.url,
+            'name': entry.name
+        }))
+    };
+}
+
+function injectJsonLd(object) {
+    if (!object) return;
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(object);
+    document.head.appendChild(script);
+}
+
+function absoluteUrl(path) {
+    if (!path) return 'https://toolshare.com.pl/images/logo.webp';
+    try {
+        const u = new URL(path, 'https://toolshare.com.pl/');
+        return u.toString();
+    } catch (_) {
+        return 'https://toolshare.com.pl/images/logo.webp';
+    }
+}
+
+function getFirstNumericPrice(pricing) {
+    if (!pricing || typeof pricing !== 'object') return null;
+    const val = Object.values(pricing).find(p => typeof p === 'number');
+    return typeof val === 'number' ? val : null;
+}
+
 function initScrollAnimations() {
     // Znajdź wszystkie karty na stronie, które powinny być animowane
     const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
@@ -1303,55 +1613,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // TESTOWANIE: Usuń tę linię w produkcji
     // localStorage.removeItem('cookieConsent');
 
-    // Inicjalizacja Google Consent Mode
-    if (typeof gtag !== 'undefined') {
-        // Domyślnie wyłącz wszystkie cookies
-        gtag('consent', 'default', {
-            'analytics_storage': 'denied',
-            'ad_storage': 'denied',
-            'functionality_storage': 'denied',
-            'personalization_storage': 'denied',
-            'security_storage': 'granted'
-        });
-        console.log('🔒 Google Consent Mode zainicjalizowany - domyślnie wyłączony');
-    }
+    // Używamy globalnych helperów trackingowych: loadTrackingScripts()
 
-    // Inicjalizacja Meta Pixel - domyślnie wyłączony
-    if (typeof fbq !== 'undefined') {
-        // Wyłącz automatyczne śledzenie Meta Pixel
-        fbq('consent', 'revoke');
-        console.log('🔒 Meta Pixel zainicjalizowany - domyślnie wyłączony');
-    }
+    // Tryb domyślny: nic nie ładujemy przed zgodą
 
     // Sprawdź czy użytkownik już podjął decyzję
     const consent = localStorage.getItem('cookieConsent');
     if (consent) {
         cookiePopup.classList.add('hidden');
         
-        // Zastosuj zapisaną preferencję
-        if (typeof gtag !== 'undefined') {
-            if (consent === 'accepted') {
-                gtag('consent', 'update', {
-                    'analytics_storage': 'granted'
-                });
-                console.log('✅ Google Analytics włączony na podstawie zapisanych preferencji');
-            } else {
-                gtag('consent', 'update', {
-                    'analytics_storage': 'denied'
-                });
-                console.log('❌ Google Analytics wyłączony na podstawie zapisanych preferencji');
-            }
-        }
-
-        // Zastosuj preferencję dla Meta Pixel
-        if (typeof fbq !== 'undefined') {
-            if (consent === 'accepted') {
-                fbq('consent', 'grant');
-                console.log('✅ Meta Pixel włączony na podstawie zapisanych preferencji');
-            } else {
-                fbq('consent', 'revoke');
-                console.log('❌ Meta Pixel wyłączony na podstawie zapisanych preferencji');
-            }
+        // Jeśli zaakceptowano wcześniej – doładuj trackery teraz
+        if (consent === 'accepted') {
+            loadTrackingScripts();
+        } else {
+            console.log('❌ Tracking pozostaje wyłączony (wcześniej odrzucono)');
         }
     } else {
         // Upewnij się, że popup jest widoczny
@@ -1374,19 +1649,8 @@ document.addEventListener('DOMContentLoaded', function() {
             hidePopup();
             console.log('Cookies zostały zaakceptowane');
             
-            // Włącz Google Tag Manager po akceptacji
-            if (typeof gtag !== 'undefined') {
-                gtag('consent', 'update', {
-                    'analytics_storage': 'granted'
-                });
-                console.log('✅ Google Analytics włączony po akceptacji cookies');
-            }
-
-            // Włącz Meta Pixel po akceptacji
-            if (typeof fbq !== 'undefined') {
-                fbq('consent', 'grant');
-                console.log('✅ Meta Pixel włączony po akceptacji cookies');
-            }
+            // Załaduj i włącz trackery po akceptacji
+            loadTrackingScripts();
         });
     }
 
@@ -1397,19 +1661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hidePopup();
             console.log('Cookies zostały odrzucone');
             
-            // Wyłącz Google Tag Manager po odrzuceniu
-            if (typeof gtag !== 'undefined') {
-                gtag('consent', 'update', {
-                    'analytics_storage': 'denied'
-                });
-                console.log('❌ Google Analytics wyłączony po odrzuceniu cookies');
-            }
-
-            // Wyłącz Meta Pixel po odrzuceniu
-            if (typeof fbq !== 'undefined') {
-                fbq('consent', 'revoke');
-                console.log('❌ Meta Pixel wyłączony po odrzuceniu cookies');
-            }
+            // Nic nie ładujemy – pozostaje wyłączone
         });
     }
 });
@@ -1913,13 +2165,13 @@ function initPhoneModal() {
         const modalContent = phoneModal.querySelector('.phone-modal-content');
         if (modalContent) {
             modalContent.style.opacity = '0';
-            modalContent.style.transform = 'scale(0.9)';
+            modalContent.style.transform = 'scale(0.8)';
             modalContent.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            
-            // Animate modal content in
+
+            // Animate modal content in (to 85% size)
             requestAnimationFrame(() => {
                 modalContent.style.opacity = '1';
-                modalContent.style.transform = 'scale(1)';
+                modalContent.style.transform = 'scale(0.85)';
             });
         }
     }
@@ -1929,7 +2181,7 @@ function initPhoneModal() {
         const modalContent = phoneModal.querySelector('.phone-modal-content');
         if (modalContent) {
             modalContent.style.opacity = '0';
-            modalContent.style.transform = 'scale(0.9)';
+            modalContent.style.transform = 'scale(0.8)';
         }
         
         setTimeout(() => {

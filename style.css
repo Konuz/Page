@@ -140,7 +140,7 @@ h2 {
     background-color: var(--primary-hover-color);
 }
 
-/* Navbar */
+/* Pasek nawigacyjny (Navbar) */
 .navbar {
     background-color: rgba(253, 250, 246, 0.7);
     backdrop-filter: blur(10px);
@@ -236,7 +236,7 @@ h2 {
     color: var(--text-color);
 }
 
-/* Search Toggle Button */
+/* Przycisk otwierania wyszukiwarki */
 .search-toggle-btn {
     background: none;
     border: none;
@@ -278,7 +278,7 @@ h2 {
     transform: translateY(-1px);
 }
 
-/* Hamburger Menu Icon */
+/* Ikona menu hamburger */
 .hamburger {
     display: none;
     cursor: pointer;
@@ -293,7 +293,7 @@ h2 {
     transition: all 0.3s ease-in-out;
 }
 
-/* Hero Section */
+/* Sekcja hero */
 .hero-section {
     text-align: center;
     padding: 2rem 0;
@@ -411,7 +411,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     font-size: 1.25rem;
 }
 
-/* Tools Section */
+/* Sekcja narzędzi */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, 300px);
@@ -519,7 +519,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #EF4444; /* Red-500 */
 }
 
-/* == TOOL DETAILS PAGE STYLES START == */
+/* == STYLY STRONY SZCZEGÓŁÓW NARZĘDZIA – START == */
 
 .tool-details-grid {
     display: grid;
@@ -630,9 +630,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin-top: 1.5rem;
 }
 
-/* == TOOL DETAILS PAGE STYLES END == */
+/* == STYLY STRONY SZCZEGÓŁÓW NARZĘDZIA – KONIEC == */
 
-/* == NEW CATEGORY & SUBCATEGORY STYLES START == */
+/* == NOWE STYLE: KATEGORIE I PODKATEGORIE – START == */
 
 .category-card, .subcategory-card {
     background-color: var(--card-bg-color);
@@ -774,10 +774,10 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #374151; /* gray-700, ciemniejszy hover dla trybu nocnego */
 }
 
-/* == NEW CATEGORY & SUBCATEGORY STYLES END == */
+/* == NOWE STYLE: KATEGORIE I PODKATEGORIE – KONIEC == */
 
 
-/* Contact Section */
+/* Sekcja kontaktowa */
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -858,7 +858,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -ms-user-select: none;
 }
 
-/* Call to Action Section */
+/* Sekcja Call to Action (wezwanie do działania) */
 .cta-section {
     padding: 3rem 0;
     background-color: var(--bg-color);
@@ -937,7 +937,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     font-size: 1em;
 }
 
-/* Phone Selection Modal */
+/* Modal wyboru telefonu */
 .phone-modal {
     position: fixed;
     top: 0;
@@ -1096,7 +1096,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin: 0 auto;
 }
 
-/* Edge shadow overlays for extreme cards */
+/* Cienie krawędziowe dla skrajnych kart */
 .zobacz-takze-carousel-container::before,
 .zobacz-takze-carousel-container::after {
     content: '';
@@ -1135,6 +1135,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     /* Allow horizontal panning by default (fixes devices not matching MQ) */
     -ms-touch-action: pan-x pinch-zoom;
     touch-action: pan-x pinch-zoom;
+    /* Hide scrollbars across browsers, keep scrolling */
+    scrollbar-width: none;           /* Firefox */
+    -ms-overflow-style: none;        /* IE/Edge */
     /* Completely prevent all touch highlights */
     -webkit-tap-highlight-color: transparent !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
@@ -1160,7 +1163,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         rgba(0,0,0,0) 100%);
 }
 
-/* Prevent carousel container states from darkening */
+/* Ukrywanie paska przewijania dla WebKit (Chrome/Safari/Edge Chromium) */
+.zobacz-takze-carousel::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Zapobiegaj przyciemnianiu stanu kontenera karuzeli */
 .zobacz-takze-carousel:active,
 .zobacz-takze-carousel:focus,
 .zobacz-takze-carousel-container:active,
@@ -1197,7 +1206,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     pointer-events: auto;
 }
 
-/* Tighter fades on small screens */
+/* Mocniejsze wygaszenia na małych ekranach */
 @media (max-width: 768px) {
   .zobacz-takze-carousel {
     -webkit-mask-image: linear-gradient(to right,
@@ -1213,7 +1222,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
   }
 }
 
-/* Heavier feeling during drag - no transitions */
+/* Cięższe odczucie podczas przeciągania – bez przejść */
 .zobacz-takze-carousel.dragging .zobacz-takze-track {
     transition: none;
     /* Simulate mass through transform timing */
@@ -1225,7 +1234,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     user-select: none !important;
 }
 
-/* Cards feel heavier during drag */
+/* Karty sprawiają wrażenie cięższych podczas przeciągania */
 .zobacz-takze-carousel.dragging .zobacz-takze-card {
     /* Remove all visual filters to prevent darkening */
     filter: none;
@@ -1413,7 +1422,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Carousel Navigation Buttons */
+/* Przyciski nawigacji karuzeli */
 .carousel-nav-btn {
     position: absolute;
     top: 50%;
@@ -1475,7 +1484,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     pointer-events: none;
 }
 
-/* Loading State */
+/* Stan ładowania */
 .zobacz-takze-loading {
     display: flex;
     justify-content: center;
@@ -1501,7 +1510,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
+/* Projekt responsywny */
 @media (max-width: 1200px) {
     .carousel-prev {
         left: -50px;
@@ -1606,7 +1615,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* Touch Scroll Behavior */
+/* Zachowanie przewijania dotykowego */
 @media (hover: none) and (pointer: coarse) {
     .zobacz-takze-carousel {
         /* Retain same behavior under MQ; base already enables pan-x and overflow-x */
@@ -1670,7 +1679,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* Focus States for Accessibility */
+/* Stany fokusu dla dostępności */
 .zobacz-takze-card:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
@@ -1685,7 +1694,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     outline-offset: 2px;
 }
 
-/* Dark Theme Adjustments */
+/* Dostosowania motywu ciemnego */
 [data-theme="dark"] .zobacz-takze-card {
     background-color: #ffffff;
     border-color: var(--border-color);
@@ -1793,7 +1802,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer */
+/* Stopka */
 .footer {
     background-color: var(--text-color);
     color: var(--bg-color);
@@ -1802,7 +1811,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin-top: 2rem;
 }
 
-/* Scroll-to-top Button */
+/* Przycisk przewijania do góry */
 .scroll-to-top {
     position: fixed;
     bottom: 2rem;
@@ -1839,7 +1848,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     opacity: 0.2;
 }
 
-/* Navigation Dropdown */
+/* Rozwijane menu nawigacji */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -1949,12 +1958,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #f1f1f1;
 }
 
-/* Dropdown arrow */
+/* Strzałka rozwijanego menu */
 .dropdown .breadcrumb-arrow {
     transition: transform 0.3s ease;
 }
 
-/* Breadcrumb */
+/* Okruszki nawigacyjne (breadcrumb) */
 .breadcrumb {
     padding: 0;
     background-color: transparent;
@@ -2169,7 +2178,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* --- Tool Detail Page --- */
+/* --- Strona szczegółów narzędzia --- */
 .tool-detail-section {
     background: #fff;
     padding: 2rem;
@@ -2251,7 +2260,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #ddd;
 }
 
-/* Dropdown arrow */
+/* Strzałka rozwijanego menu */
 .dropdown .breadcrumb-arrow {
     transition: transform 0.3s ease;
 }
@@ -2702,7 +2711,7 @@ body.subpage main {
     opacity: 0.2;
 }
 
-/* Navigation Dropdown */
+/* Rozwijane menu nawigacji */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -2812,12 +2821,12 @@ body.subpage main {
     background-color: #f1f1f1;
 }
 
-/* Dropdown arrow */
+/* Strzałka rozwijanego menu */
 .dropdown .breadcrumb-arrow {
     transition: transform 0.3s ease;
 }
 
-/* Breadcrumb */
+/* Okruszki nawigacyjne (breadcrumb) */
 .breadcrumb {
     padding: 0;
     background-color: transparent;
@@ -2923,7 +2932,7 @@ body.subpage main {
     display: none; /* Ukryj strzałki wewnątrz listy rozwijanej */
 }
 
-/* Responsive Design */
+/* Projekt responsywny */
 @media (max-width: 992px) {
     .nav-links {
         position: absolute;
@@ -3248,12 +3257,12 @@ body.subpage main {
     }
 }
 
-/* --- Breadcrumb --- */
+/* --- Okruszki nawigacyjne (breadcrumb) --- */
 .breadcrumb {
     margin-bottom: 2rem;
 }
 
-/* --- Cookie Popup --- */
+/* --- Wyskakujące okienko cookies --- */
 .cookie-popup {
     position: fixed;
     bottom: 20px;
@@ -3332,7 +3341,7 @@ body.subpage main {
     }
 }
 
-/* --- Search Bar --- */
+/* --- Pasek wyszukiwania --- */
 .search-container {
     position: fixed;
     top: 0;
@@ -3521,7 +3530,7 @@ body.subpage main {
     background: var(--bg-secondary);
 }
 
-/* --- Performance: lazy-render offscreen cards --- */
+/* --- Wydajność: lazy-render kart poza ekranem --- */
 @supports (content-visibility: auto) {
     /* Reduce initial render cost for offscreen containers */
     .features-grid,
@@ -3546,7 +3555,7 @@ body.subpage main {
     .zobacz-takze-card { contain-intrinsic-size: 180px; }
 }
 
-/* Prefer reduced motion */
+/* Preferuj ograniczone animacje (reduced motion) */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
@@ -3556,7 +3565,7 @@ body.subpage main {
   }
 }
 
-/* Mobile: disable heavy blur for performance */
+/* Mobile: wyłącz silne rozmycia dla wydajności */
 @media (max-width: 768px) {
   .navbar { backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
@@ -3669,7 +3678,7 @@ body.subpage main {
   }
 }
 
-/* Mobile tap highlight/outline cleanup (touch devices only) */
+/* Czyszczenie podświetleń/obrysów dotyku (tylko urządzenia dotykowe) */
 @media (hover: none) and (pointer: coarse) {
   *,
   *:before,
@@ -3708,7 +3717,7 @@ body.subpage main {
   }
 }
 
-/* Global tap highlight removal for all devices */
+/* Globalne usunięcie podświetlenia dotyku dla wszystkich urządzeń */
 * {
   -webkit-tap-highlight-color: transparent !important;
 }

@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
 
+# Canonical homepage - prevent indexing duplicate
+Disallow: /index.html
+
 Sitemap: https://toolshare.com.pl/sitemap.xml
 
 

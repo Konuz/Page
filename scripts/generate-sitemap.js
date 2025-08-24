@@ -29,7 +29,7 @@ function main() {
   const sitemapPath = path.join(projectRoot, 'sitemap.xml');
 
   const staticUrls = [
-    { loc: absoluteUrl(''), changefreq: 'daily', priority: '1.0' },
+    { loc: absoluteUrl('index.html'), changefreq: 'daily', priority: '1.0' },
     { loc: absoluteUrl('o-nas.html'), changefreq: 'monthly', priority: '0.3' },
     { loc: absoluteUrl('polityka-prywatnosci.html'), changefreq: 'yearly', priority: '0.1' },
     { loc: absoluteUrl('regulamin.html'), changefreq: 'yearly', priority: '0.1' },

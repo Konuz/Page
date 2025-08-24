@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <!-- Tracking scripts are loaded after cookie consent via script.js -->
+    <!-- Skrypty śledzące są ładowane po wyrażeniu zgody (via script.js) -->
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com; img-src 'self' data: https:;">
+    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com; img-src 'self' data: https:;">
     <title>Narzędzie – ToolShare</title>
     <meta name="description" content="Wypożycz narzędzie w ToolShare – szybki odbiór, elastyczne godziny, lokalna obsługa i atrakcyjne ceny. Sprawdzone, gotowe do pracy urządzenia.">
     <link rel="canonical" href="https://toolshare.com.pl/tool.html">
@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Tracking noscript fallbacks removed to respect consent -->
+    <!-- Usunięto noscript trackingu, aby respektować zgodę -->
 
     <nav class="navbar">
         <div class="container">
@@ -69,7 +69,7 @@
         </div>
     </nav>
 
-    <!-- Search Bar -->
+    <!-- Pasek wyszukiwania -->
     <div id="search-container" class="search-container hidden">
         <div class="search-wrapper">
             <div class="search-input-group">
@@ -83,10 +83,10 @@
         </div>
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Menu mobilne -->
     <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
     <div class="mobile-menu-container" id="mobile-menu-container">
-        <!-- Main menu panel -->
+        <!-- Panel głównego menu -->
         <div class="mobile-menu-panel active" id="main-menu-panel">
             <div class="mobile-menu-header">
                 <div class="mobile-menu-title">Menu</div>
@@ -104,7 +104,7 @@
             </ul>
         </div>
         
-        <!-- Tools menu panel -->
+        <!-- Panel menu narzędzi -->
         <div class="mobile-menu-panel" id="tools-menu-panel">
             <div class="mobile-menu-header">
                 <button class="mobile-menu-back" data-back="main-menu">
@@ -117,7 +117,7 @@
             </ul>
         </div>
         
-        <!-- Category menu panel -->
+        <!-- Panel menu kategorii -->
         <div class="mobile-menu-panel" id="category-menu-panel">
             <div class="mobile-menu-header">
                 <button class="mobile-menu-back" data-back="tools-menu">
@@ -159,11 +159,11 @@
                                 </tbody>
                             </table>
                             
-                            <!-- Call to Action Button -->
+                            <!-- Przycisk wezwania do działania (CTA) -->
                             <div class="cta-container">
                                 <button type="button" class="cta-button-pricing" id="call-button">
                                     <i class="fas fa-phone"></i>
-                                    Zadzwoń i zamów!
+                                    Zadzwoń i zarezerwuj!
                                 </button>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
             </div>
         </section>
 
-        <!-- Phone Selection Modal -->
+        <!-- Modal wyboru telefonu -->
         <div id="phone-modal" class="phone-modal" style="display: none;">
             <div class="phone-modal-overlay"></div>
             <div class="phone-modal-content">
@@ -201,7 +201,7 @@
             </div>
         </div>
 
-        <!-- Zobacz również Section -->
+        <!-- Sekcja „Zobacz również” -->
         <section id="zobacz-takze-section" class="zobacz-takze-section">
             <div class="container">
                 <h2 class="zobacz-takze-title">Zobacz również</h2>
@@ -211,7 +211,7 @@
                     </button>
                     <div class="zobacz-takze-carousel" id="zobacz-takze-carousel">
                         <div class="zobacz-takze-track" id="zobacz-takze-track">
-                            <!-- Related tools will be inserted here by JavaScript -->
+                            <!-- Powiązane narzędzia będą dodane przez JavaScript -->
                         </div>
                     </div>
                     <button class="carousel-nav-btn carousel-next" aria-label="Następne narzędzia">

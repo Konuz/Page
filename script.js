@@ -76,7 +76,7 @@ console.log('Skrypt załadowany!');
     
 })();
 
-// ===== Tracking helpers (global, available on every page) =====
+// ===== Pomocnicze funkcje śledzenia (globalne, dostępne na każdej stronie) =====
 function loadScript(src, attrs = {}) {
     const s = document.createElement('script');
     s.src = src;
@@ -110,7 +110,7 @@ function loadTrackingScripts() {
 
     // Meta Pixel – stub + skrypt, a następnie ewentualna zgoda
     ensureFbqStub();
-    try { window.fbq('init', '1799690884088967'); window.fbq('track', 'PageView'); } catch(_) {}
+    try { window.fbq('init', '1469053347622952'); window.fbq('track', 'PageView'); } catch(_) {}
 
     // Google Consent Mode update jeśli gtag już dostępny (GTM mógł go zainicjalizować)
     if (typeof window.gtag !== 'undefined') {
@@ -129,7 +129,7 @@ function loadTrackingScripts() {
     console.log('✅ Tracking scripts loaded after consent');
 }
 
-// Auto-load trackers on page load if consent was already granted (even without cookie popup element)
+// Automatyczne ładowanie trackerów przy starcie strony, jeśli zgoda została już udzielona (nawet bez widocznego popupu)
 (function() {
     try {
         const consent = localStorage.getItem('cookieConsent');
@@ -216,17 +216,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         initializeMobileMenu(toolCatalog);
         initializeSearch(toolCatalog);
     }
-    initializeHamburger(); // To może zostać, jeśli zarządza tylko klasą 'active'
     initializeThemeSwitcher();
     initializeSeoManager(toolCatalog);
     initScrollAnimations();
+    initializeContactEventTracking();
 
     // Zastosuj zasady typografii po wszystkich inicjalizacjach
     setTimeout(() => {
         applyTypographyRules();
     }, 100);
 
-    // Scroll-to-top button logic with GSAP
+    // Logika przycisku przewijania do góry z użyciem GSAP
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     let isButtonVisible = false;
     let isAnimating = false; // Flaga do blokowania animacji
@@ -300,6 +300,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// ===== Meta Pixel: Contact event tracking =====
+function trackContactEvent(source) {
+    try {
+        const consent = localStorage.getItem('cookieConsent');
+        if (consent !== 'accepted') return;
+        if (typeof window.fbq === 'undefined') return;
+        const params = source ? { content_name: source } : undefined;
+        window.fbq('track', 'Contact', params);
+        console.log('📞 Meta Pixel Contact sent', params || '');
+    } catch (_) {}
+}
+
+function initializeContactEventTracking() {
+    try {
+        const contactSelectors = [
+            'a[href^="tel:"]',
+            'a[href^="mailto:"]',
+            'a[href*="#contact"]',
+            '#call-button',
+            '.phone-option'
+        ];
+        const elements = document.querySelectorAll(contactSelectors.join(','));
+        if (!elements || elements.length === 0) return;
+
+        elements.forEach(el => {
+            el.addEventListener('click', () => {
+                const href = el.getAttribute('href') || '';
+                let source = 'contact';
+                if (href.startsWith('tel:')) source = `tel:${href.replace('tel:', '')}`;
+                else if (href.startsWith('mailto:')) source = `mailto:${href.replace('mailto:', '')}`;
+                else if (href.includes('#contact')) source = 'contact_section_link';
+                else if (el.id === 'call-button') source = 'open_phone_modal';
+                else if (el.classList && el.classList.contains('phone-option')) source = 'phone_option';
+                trackContactEvent(source);
+            }, { passive: true });
+        });
+    } catch (_) {}
+}
+
 function applyTypographyRules() {
     // Rozszerzona lista selektorów obejmująca elementy menu
     const selectors = '.feature-card p, .tool-info-container p, .hero-section p, .mobile-menu-link, .dropdown-content a, .sub-dropdown-content a, .breadcrumb span, .category-card-title h3, .tool-card-title h3, .subcategory-card h3';
@@ -317,7 +356,7 @@ function applyTypographyRules() {
     });
 }
 
-// Debounce function to limit the rate at which a function gets called.
+// Funkcja debounce ograniczająca częstotliwość wywołań innej funkcji
 function debounce(func, wait = 100) {
     let timeout;
     return function(...args) {
@@ -336,14 +375,14 @@ function initializeMobileMenu(toolCatalog) {
     
     if (!hamburger || !overlay || !container) return;
 
-    // Cache DOM elements for better performance
+    // Buforuj elementy DOM dla lepszej wydajności
     const panels = document.querySelectorAll('.mobile-menu-panel');
     const mainMenuPanel = document.getElementById('main-menu-panel');
 
-    // Populate categories in mobile menu
+    // Wypełnij kategorie w menu mobilnym
     populateMobileMenuCategories(toolCatalog);
 
-    // Toggle mobile menu
+    // Przełączanie menu mobilnego
     hamburger.addEventListener('click', () => {
         const isActive = container.classList.contains('active');
         
@@ -354,13 +393,13 @@ function initializeMobileMenu(toolCatalog) {
         }
     });
 
-    // Close menu when clicking overlay
+    // Zamknij menu po kliknięciu w tło (overlay)
     overlay.addEventListener('click', closeMobileMenu);
 
-    // Event delegation for better performance - single listener on container
+    // Delegowanie zdarzeń dla lepszej wydajności – jeden listener na kontenerze
     container.addEventListener('click', handleContainerClick);
 
-    // Handle all clicks within container using event delegation
+    // Obsługuj wszystkie kliknięcia w kontenerze za pomocą delegowania zdarzeń
     function handleContainerClick(e) {
         const backButton = e.target.closest('.mobile-menu-back');
         const submenuLink = e.target.closest('[data-submenu]');
@@ -423,7 +462,7 @@ function initializeMobileMenu(toolCatalog) {
         if (!targetPanel) return;
 
         if (animate) {
-            // Hide current active panel
+            // Ukryj aktualnie aktywny panel
             panels.forEach(panel => {
                 if (panel.classList.contains('active')) {
                     panel.classList.remove('active');
@@ -431,7 +470,7 @@ function initializeMobileMenu(toolCatalog) {
                 }
             });
 
-            // Show target panel after a brief delay
+            // Pokaż docelowy panel po krótkiej zwłoce
             setTimeout(() => {
                 panels.forEach(panel => {
                     panel.classList.remove('sliding-out');
@@ -439,7 +478,7 @@ function initializeMobileMenu(toolCatalog) {
                 targetPanel.classList.add('active');
             }, 150);
         } else {
-            // Immediate switch without animation
+            // Natychmiastowe przełączenie bez animacji
             panels.forEach(panel => {
                 panel.classList.remove('active', 'sliding-out');
             });
@@ -463,7 +502,7 @@ function populateMobileMenuCategories(toolCatalog) {
     const categoriesList = document.getElementById('tools-categories-list');
     if (!categoriesList) return;
 
-    // Use DocumentFragment for better performance
+    // Użyj DocumentFragment dla lepszej wydajności
     const fragment = document.createDocumentFragment();
 
     toolCatalog.forEach(category => {
@@ -476,7 +515,7 @@ function populateMobileMenuCategories(toolCatalog) {
         link.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
         link.setAttribute('data-category', category.category);
         
-        // Remove individual event listeners - use event delegation instead
+        // Usuń pojedyncze listenery – użyj delegowania zdarzeń
         
         listItem.appendChild(link);
         fragment.appendChild(listItem);
@@ -527,7 +566,7 @@ function showMobileMenuPanel(panelId, animate = true) {
     if (!targetPanel) return;
 
     if (animate) {
-        // Hide current active panel
+        // Ukryj aktualnie aktywny panel
         panels.forEach(panel => {
             if (panel.classList.contains('active')) {
                 panel.classList.remove('active');
@@ -535,7 +574,7 @@ function showMobileMenuPanel(panelId, animate = true) {
             }
         });
 
-        // Show target panel after a brief delay
+        // Pokaż docelowy panel po krótkiej zwłoce
         setTimeout(() => {
             panels.forEach(panel => {
                 panel.classList.remove('sliding-out');
@@ -543,7 +582,7 @@ function showMobileMenuPanel(panelId, animate = true) {
             targetPanel.classList.add('active');
         }, 150);
     } else {
-        // Immediate switch without animation
+        // Natychmiastowe przełączenie bez animacji
         panels.forEach(panel => {
             panel.classList.remove('active', 'sliding-out');
         });
@@ -660,7 +699,7 @@ function renderSubcategories(toolCatalog) {
 
     titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
     
-    // Breadcrumb rendering
+    // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
     homeLink.href = 'index.html';
@@ -672,7 +711,7 @@ function renderSubcategories(toolCatalog) {
     categorySpan.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
     breadcrumbContainer.appendChild(categorySpan);
 
-    // Page content
+    // Zawartość strony
     contentGrid.innerHTML = '';
     category.subcategories.forEach(sub => {
         const cardLink = document.createElement('a');
@@ -706,7 +745,7 @@ function renderTools(toolCatalog) {
 
     titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
 
-    // Breadcrumb rendering
+    // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
     homeLink.href = 'index.html';
@@ -723,7 +762,7 @@ function renderTools(toolCatalog) {
     subcategorySpan.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
     breadcrumbContainer.appendChild(subcategorySpan);
 
-    // Page content
+    // Zawartość strony
     contentGrid.innerHTML = '';
     const enabledTools = subcategory.tools.filter(tool => tool.enabled !== false);
 
@@ -789,7 +828,7 @@ function renderToolDetails(toolCatalog) {
         return;
     }
 
-    // Breadcrumb rendering
+    // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
     homeLink.href = 'index.html';
@@ -918,10 +957,7 @@ function initializeDropdown(toolCatalog) {
     }, 50);
 }
 
-function initializeHamburger() {
-    // Hamburger functionality is now handled by initializeMobileMenu()
-    // This function is kept for compatibility but functionality moved to mobile menu
-}
+// Usunięto pustą funkcję zgodności initializeHamburger – logikę obsługuje initializeMobileMenu
 
 function initializeThemeSwitcher() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -966,7 +1002,7 @@ function initializeSeoManager(toolCatalog) {
             const description = `${stripHtmlTags(category.category)} do wypożyczenia w gminie Czernica (Chrząstawa Wielka). Atrakcyjne ceny i elastyczne godziny odbioru.`;
             const dynamicTitle = `${stripHtmlTags(category.category)} – wypożyczalnia narzędzi Czernica | ToolShare`;
 
-            // Title + meta
+            // Tytuł i meta tagi
             if (document.title) {
                 document.title = dynamicTitle;
             }
@@ -1008,7 +1044,7 @@ function initializeSeoManager(toolCatalog) {
             const description = `${stripHtmlTags(subcategory.name)} do wypożyczenia – gmina Czernica. Odbiór w Chrząstawie Wielkiej, szybki kontakt, szybka obsługa.`;
             const dynamicTitle = `${stripHtmlTags(subcategory.name)} – wypożyczalnia narzędzi Czernica | ToolShare`;
 
-            // Title + meta
+            // Tytuł i meta tagi
             if (document.title) {
                 document.title = dynamicTitle;
             }
@@ -1668,7 +1704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ========== ZOBACZ RÓWNIEŻ FUNCTIONALITY ==========
 
-// Constants for the See Also carousel
+// Stałe dla karuzeli „Zobacz również”
 const SEE_ALSO_CONFIG = {
     MAX_TOOLS: 10,
     CARD_WIDTH: 225,
@@ -1680,7 +1716,7 @@ const SEE_ALSO_CONFIG = {
     ANIMATION_DURATION: 400
 };
 
-// Helper: read actual flex gap in pixels from computed styles (falls back to config)
+// Pomocnicze: odczytaj rzeczywistą wartość odstępu (gap) z obliczonych styli (z fallbackiem)
 function getCarouselGapPx(track) {
     try {
         const style = window.getComputedStyle(track);
@@ -1709,7 +1745,7 @@ function initializeSeeAlso(toolCatalog) {
             return;
         }
 
-        // Generate related tools
+        // Wygeneruj powiązane narzędzia
         const relatedTools = generateRelatedTools(currentToolId, currentToolData, toolCatalog);
         
         if (relatedTools.length === 0) {
@@ -1718,16 +1754,16 @@ function initializeSeeAlso(toolCatalog) {
             return;
         }
 
-        // Render the carousel
+        // Renderuj karuzelę
         renderSeeAlsoCards(relatedTools);
         
-        // Setup navigation
+        // Skonfiguruj nawigację
         setupCarouselNavigation();
         
-        // Setup mobile touch support
+        // Skonfiguruj obsługę dotyku na urządzeniach mobilnych
         setupMobileTouch();
         
-        // Apply typography fixes
+        // Zastosuj poprawki typograficzne
         setTimeout(() => {
             applyTypographyRules();
         }, 100);
@@ -1759,7 +1795,7 @@ function generateRelatedTools(currentToolId, currentToolData, toolCatalog) {
     const relatedTools = [];
     const maxTools = SEE_ALSO_CONFIG.MAX_TOOLS;
 
-    // Early termination function to improve performance
+    // Funkcja wczesnego zakończenia dla poprawy wydajności
     const addToolsWithLimit = (toolsToAdd) => {
         const remainingSlots = maxTools - relatedTools.length;
         if (remainingSlots <= 0) return false;
@@ -1769,7 +1805,7 @@ function generateRelatedTools(currentToolId, currentToolData, toolCatalog) {
         return relatedTools.length < maxTools;
     };
 
-    // Priority 1: Same subcategory (excluding current tool)
+    // Priorytet 1: Ta sama podkategoria (bez bieżącego narzędzia)
     const sameSubcategoryTools = currentSubcategory.tools
         .filter(tool => tool.id !== currentToolId && tool.enabled !== false)
         .map(tool => ({
@@ -1783,7 +1819,7 @@ function generateRelatedTools(currentToolId, currentToolData, toolCatalog) {
         return relatedTools.slice(0, maxTools);
     }
 
-    // Priority 2: Same category, different subcategories
+    // Priorytet 2: Ta sama kategoria, inne podkategorie
     for (const subcategory of currentCategory.subcategories) {
         if (subcategory.name === currentSubcategory.name) continue;
         
@@ -1801,7 +1837,7 @@ function generateRelatedTools(currentToolId, currentToolData, toolCatalog) {
         }
     }
 
-    // Priority 3: Related categories (if still need more tools)
+    // Priorytet 3: Powiązane kategorie (jeśli nadal brakuje narzędzi)
     const relatedCategories = findRelatedCategories(currentCategory.category, toolCatalog);
     
     for (const category of relatedCategories) {
@@ -1821,17 +1857,17 @@ function generateRelatedTools(currentToolId, currentToolData, toolCatalog) {
         }
     }
 
-    // Sort by priority and return
+    // Posortuj wg priorytetu i zwróć wynik
     return relatedTools
         .sort((a, b) => a.priority - b.priority)
         .slice(0, maxTools);
 }
 
 function findRelatedCategories(currentCategoryName, toolCatalog) {
-    // Extract all category names from the actual data to avoid hardcoding
+    // Wyodrębnij nazwy kategorii z danych, aby uniknąć sztywnych wartości
     const allCategories = toolCatalog.map(cat => cat.category);
     
-    // Define category relationships based on actual data
+    // Zdefiniuj powiązania kategorii na podstawie faktycznych danych
     const categoryRelationships = {
         'Elektronarzędzia': ['Sprzęt budowlany i ogrodniczy', 'Narzędzia pomiarowe'],
         'Sprzęt budowlany i ogrodniczy': ['Elektronarzędzia', 'Mycie i sprzątanie'],
@@ -1843,7 +1879,7 @@ function findRelatedCategories(currentCategoryName, toolCatalog) {
 
     const relatedCategoryNames = categoryRelationships[currentCategoryName] || [];
     
-    // Filter to only include categories that actually exist in the data
+    // Przefiltruj tak, by zostawić tylko kategorie istniejące w danych
     const validRelatedNames = relatedCategoryNames.filter(name => allCategories.includes(name));
     
     return toolCatalog.filter(category => 
@@ -1855,13 +1891,13 @@ function renderSeeAlsoCards(relatedTools) {
     const track = document.getElementById('zobacz-takze-track');
     if (!track) return;
 
-    // Clear existing content
+    // Wyczyść istniejącą zawartość
     track.innerHTML = '';
 
-    // Create loading state
+    // Utwórz stan ładowania
     track.innerHTML = '<div class="loading-state">Ładowanie powiązanych narzędzi...</div>';
 
-    // Use setTimeout to show loading briefly (better UX)
+    // Użyj setTimeout, aby krótko pokazać stan ładowania (lepszy UX)
     setTimeout(() => {
         const fragment = document.createDocumentFragment();
 
@@ -1873,14 +1909,14 @@ function renderSeeAlsoCards(relatedTools) {
         track.innerHTML = '';
         track.appendChild(fragment);
 
-        // Setup lazy loading for images
+        // Skonfiguruj leniwe ładowanie obrazów
         setupLazyLoading();
         
-        // Update navigation state after rendering
+        // Zaktualizuj stan nawigacji po renderowaniu
         setTimeout(() => {
             const carousel = document.getElementById('zobacz-takze-carousel');
             if (carousel) {
-                // Trigger navigation state update
+                // Wywołaj aktualizację stanu nawigacji
                 const event = new Event('scroll');
                 carousel.dispatchEvent(event);
             }
@@ -1905,7 +1941,7 @@ function createSeeAlsoCard(tool, category, subcategory) {
     let priceText = 'Zapytaj o cenę';
     if (tool.pricing && typeof tool.pricing === 'object') {
         const firstPrice = Object.values(tool.pricing).find(price => 
-            typeof price === 'number' || (typeof price === 'string' && price !== 'Dodaj cenę')
+            typeof price === 'number' || (typeof price === 'string' && price !== 'Zapytaj o cenę')
         );
         
         if (firstPrice && typeof firstPrice === 'number') {
@@ -1945,23 +1981,23 @@ function setupCarouselNavigation() {
     let currentIndex = 0;
     let isAnimating = false;
 
-    // Debounced scroll handler for performance
+    // Zdebounce'owany handler przewijania dla wydajności
     const handleScroll = debounce(() => {
         updateNavigationState();
     }, 100);
 
-    // Update navigation button states
+    // Aktualizuj stan przycisków nawigacji
     function updateNavigationState() {
         const scrollLeft = carousel.scrollLeft;
         const maxScroll = carousel.scrollWidth - carousel.clientWidth;
         const tolerance = SEE_ALSO_CONFIG.SCROLL_TOLERANCE;
 
-        // If there's not enough content to scroll, disable both buttons
+        // Jeśli zawartości jest za mało do przewinięcia – wyłącz oba przyciski
         if (maxScroll <= tolerance) {
             prevButton.disabled = true;
             nextButton.disabled = true;
         } else {
-            // Normal logic when there's content to scroll
+            // Standardowa logika, gdy jest co przewijać
             prevButton.disabled = scrollLeft <= tolerance;
             nextButton.disabled = scrollLeft >= maxScroll - tolerance;
         }
@@ -1970,7 +2006,7 @@ function setupCarouselNavigation() {
         nextButton.classList.toggle('disabled', nextButton.disabled);
     }
 
-    // Smooth scroll function
+    // Funkcja płynnego przewijania
     function smoothScroll(direction) {
         if (isAnimating) return;
         
@@ -1987,7 +2023,7 @@ function setupCarouselNavigation() {
         let targetScroll;
         if (direction === 'next') {
             targetScroll = currentScroll + scrollDistance;
-            // If we're close to the end, scroll to the very end to show the last card fully
+            // Jeżeli jesteśmy blisko końca, przewiń do samego końca, aby ostatnia karta była w pełni widoczna
             if (targetScroll > maxScroll - scrollDistance) {
                 targetScroll = maxScroll;
             }
@@ -1995,7 +2031,7 @@ function setupCarouselNavigation() {
             targetScroll = currentScroll - scrollDistance;
         }
 
-        // Ensure we don't scroll beyond bounds
+        // Upewnij się, że nie przewiniemy poza zakres
         targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
 
         carousel.scrollTo({
@@ -2003,20 +2039,20 @@ function setupCarouselNavigation() {
             behavior: 'smooth'
         });
 
-        // Reset animation flag after scroll completes
+        // Zresetuj flagę animacji po zakończeniu przewijania
         setTimeout(() => {
             isAnimating = false;
             updateNavigationState();
         }, SEE_ALSO_CONFIG.ANIMATION_DURATION);
     }
 
-    // Add accessibility attributes
+    // Dodaj atrybuty dostępności (ARIA)
     prevButton.setAttribute('aria-label', 'Poprzednie narzędzia');
     nextButton.setAttribute('aria-label', 'Następne narzędzia');
     carousel.setAttribute('role', 'region');
     carousel.setAttribute('aria-label', 'Powiązane narzędzia');
 
-    // Function to clear text selection globally
+    // Funkcja globalnego czyszczenia zaznaczenia tekstu
     function clearTextSelection() {
         if (window.getSelection) {
             const selection = window.getSelection();
@@ -2029,7 +2065,7 @@ function setupCarouselNavigation() {
         }
     }
 
-    // Function to temporarily disable text selection
+    // Funkcja tymczasowego wyłączenia zaznaczania tekstu
     function disableTextSelection() {
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
@@ -2037,7 +2073,7 @@ function setupCarouselNavigation() {
         document.body.style.msUserSelect = 'none';
     }
 
-    // Function to re-enable text selection
+    // Funkcja ponownego włączenia zaznaczania tekstu
     function enableTextSelection() {
         document.body.style.userSelect = '';
         document.body.style.webkitUserSelect = '';
@@ -2045,7 +2081,7 @@ function setupCarouselNavigation() {
         document.body.style.msUserSelect = '';
     }
 
-    // Button event listeners
+    // Listenery przycisków
     prevButton.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -2066,7 +2102,7 @@ function setupCarouselNavigation() {
         setTimeout(enableTextSelection, SEE_ALSO_CONFIG.ANIMATION_DURATION + 50);
     });
 
-    // Prevent selection on mousedown
+    // Zapobiegaj zaznaczaniu przy mousedown
     prevButton.addEventListener('mousedown', (e) => {
         e.preventDefault();
     });
@@ -2075,10 +2111,10 @@ function setupCarouselNavigation() {
         e.preventDefault();
     });
 
-    // Scroll event listener
+    // Listener zdarzenia przewijania (scroll)
     carousel.addEventListener('scroll', handleScroll);
 
-    // Keyboard navigation
+    // Nawigacja klawiaturą
     carousel.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
             e.preventDefault();
@@ -2089,16 +2125,16 @@ function setupCarouselNavigation() {
         }
     });
 
-    // Initial state update with multiple attempts
+    // Początkowa aktualizacja stanu (kilka prób dla pewności)
     setTimeout(updateNavigationState, 100);
     setTimeout(updateNavigationState, 300);
     setTimeout(updateNavigationState, 500);
 
-    // Store cleanup function for potential future use
+    // Zachowaj funkcję sprzątającą na przyszłość
     const resizeHandler = debounce(updateNavigationState, 200);
     window.addEventListener('resize', resizeHandler);
     
-    // Store cleanup function on the element for potential cleanup
+    // Dołącz funkcję sprzątającą do elementu, aby móc ją wywołać później
     carousel.seeAlsoCleanup = () => {
         window.removeEventListener('resize', resizeHandler);
         carousel.removeEventListener('scroll', handleScroll);
@@ -2106,15 +2142,15 @@ function setupCarouselNavigation() {
 }
 
 function setupMobileTouch() {
-    // Rely on native momentum and CSS scroll-snap on mobile to avoid JS-induced jank.
-    // No custom touch handlers are required.
-    // Intentionally left blank.
+    // Oprzyj się na natywnym momentum i CSS scroll-snap na urządzeniach mobilnych,
+    // aby uniknąć zacięć powodowanych przez JS. Nie są wymagane własne handlery dotyku.
+    // Celowo pozostawione puste.
 }
 
 function setupLazyLoading() {
     const images = document.querySelectorAll('.zobacz-takze-card img[loading="lazy"]');
     
-    // Simple intersection observer for lazy loading
+    // Prosty IntersectionObserver do leniwego ładowania
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

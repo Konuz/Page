@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <!-- Tracking scripts are loaded after cookie consent via script.js -->
+    <!-- Skrypty śledzące są ładowane po wyrażeniu zgody (via script.js) -->
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com; img-src 'self' data: https:;">
+    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com; img-src 'self' data: https:;">
     <title>O nas - ToolShare</title>
     <meta name="description" content="Kim jesteśmy? Lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, działamy na terenie gminy Czernica. Atrakcyjne ceny, łatwy kontakt, 7 dni w tygodniu.">
     <link rel="canonical" href="https://toolshare.com.pl/o-nas.html">
@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Tracking noscript fallbacks removed to respect consent -->
+    <!-- Usunięto noscript trackingu, aby respektować zgodę -->
 
     <nav class="navbar">
         <div class="container">
@@ -79,7 +79,7 @@
         </div>
     </nav>
 
-    <!-- Search Bar -->
+    <!-- Pasek wyszukiwania -->
     <div id="search-container" class="search-container hidden">
         <div class="search-wrapper">
             <div class="search-input-group">
@@ -93,10 +93,10 @@
         </div>
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Menu mobilne -->
     <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
     <div class="mobile-menu-container" id="mobile-menu-container">
-        <!-- Main menu panel -->
+        <!-- Panel głównego menu -->
         <div class="mobile-menu-panel active" id="main-menu-panel">
             <div class="mobile-menu-header">
                 <div class="mobile-menu-title">Menu</div>
@@ -114,7 +114,7 @@
             </ul>
         </div>
         
-        <!-- Tools menu panel -->
+        <!-- Panel menu narzędzi -->
         <div class="mobile-menu-panel" id="tools-menu-panel">
             <div class="mobile-menu-header">
                 <button class="mobile-menu-back" data-back="main-menu">
@@ -127,7 +127,7 @@
             </ul>
         </div>
         
-        <!-- Category menu panel -->
+        <!-- Panel menu kategorii -->
         <div class="mobile-menu-panel" id="category-menu-panel">
             <div class="mobile-menu-header">
                 <button class="mobile-menu-back" data-back="tools-menu">

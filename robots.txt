@@ -1,9 +1,15 @@
 User-agent: *
+
+# Allow all pages (template pages handled by noindex meta tags)
 Allow: /
 
-# Canonical homepage - prevent indexing duplicate
-Disallow: /index.html
+# Block only technical files that should never be crawled
+Disallow: /script.js
+Disallow: /style.css
+Disallow: /data.json
+Disallow: /node_modules/
 
+# Allow sitemap
 Sitemap: https://toolshare.com.pl/sitemap.xml
 
 

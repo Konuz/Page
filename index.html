@@ -5,26 +5,49 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4a261">
+    <meta name="msapplication-TileColor" content="#f4a261">
+    <meta name="format-detection" content="telephone=no">
     <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com; img-src 'self' data: https:;">
-    <meta name="description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
+    <meta name="description" content="ToolShare – wypożyczalnia narzędzi Czernica. Profesjonalny sprzęt budowlany i ogrodniczy od ręki. Odbiór w Chrząstawie Wielkiej 7 dni w tygodniu. Sprawdź dostępność online!">
+    <meta name="author" content="ToolShare">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="keywords" content="wypożyczalnia narzędzi, narzędzia budowlane, Czernica, Chrząstawa Wielka, wynajem narzędzi, sprzęt budowlany">
+    <meta name="geo.region" content="PL-DS">
+    <meta name="geo.placename" content="Chrząstawa Wielka">
+    <meta name="geo.position" content="51.0938405;17.2914599">
+    <meta name="ICBM" content="51.0938405, 17.2914599">
     <link rel="canonical" href="https://toolshare.com.pl/">
+    <link rel="alternate" hreflang="pl-PL" href="https://toolshare.com.pl/">
+    <link rel="alternate" hreflang="x-default" href="https://toolshare.com.pl/">
     <meta property="og:locale" content="pl_PL">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="ToolShare">
-    <meta property="og:title" content="ToolShare – Wypożyczalnia Narzędzi | Czernica">
-    <meta property="og:description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
-    <meta property="og:url" content="https://toolshare.com.pl/index.html">
+    <meta property="og:title" content="ToolShare – Wypożyczalnia Narzędzi Czernica | Chrząstawa Wielka">
+    <meta property="og:description" content="ToolShare – wypożyczalnia narzędzi Czernica. Profesjonalny sprzęt budowlany i ogrodniczy od ręki. Odbiór w Chrząstawie Wielkiej 7 dni w tygodniu. Sprawdź dostępność online!">
+    <meta property="og:url" content="https://toolshare.com.pl/">
     <meta property="og:image" content="https://toolshare.com.pl/images/logo.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ToolShare - Wypożyczalnia Narzędzi Czernica Logo">
+    <meta property="business:contact_data:street_address" content="ul. Sportowa 9">
+    <meta property="business:contact_data:locality" content="Chrząstawa Wielka">
+    <meta property="business:contact_data:postal_code" content="55-003">
+    <meta property="business:contact_data:country_name" content="Polska">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ToolShare – Wypożyczalnia Narzędzi | Czernica">
-    <meta name="twitter:description" content="ToolShare – lokalna wypożyczalnia narzędzi. Odbiór w Chrząstawie Wielkiej, region działania: gmina Czernica. Szybki odbiór, elastyczne godziny, atrakcyjne ceny i lokalna obsługa.">
+    <meta name="twitter:title" content="ToolShare – Wypożyczalnia Narzędzi Czernica | Chrząstawa Wielka">
+    <meta name="twitter:description" content="ToolShare – wypożyczalnia narzędzi Czernica. Profesjonalny sprzęt budowlany i ogrodniczy od ręki. Odbiór w Chrząstawie Wielkiej 7 dni w tygodniu. Sprawdź dostępność online!">
     <meta name="twitter:image" content="https://toolshare.com.pl/images/logo.webp">
+    <meta name="twitter:image:alt" content="ToolShare - Wypożyczalnia Narzędzi Czernica Logo">
     <meta name="referrer" content="no-referrer-when-downgrade">
-    <title>ToolShare - Wypożyczalnia Narzędzi</title>
+    <title>ToolShare - Wypożyczalnia Narzędzi Czernica | Chrząstawa Wielka</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
     <script>
+        // Canonical URL redirect - jeśli ktoś wejdzie przez /index.html, przekieruj na root
+        if (window.location.pathname === '/index.html') {
+            window.location.replace(window.location.origin + '/');
+        }
+        
         // Natychmiastowa obsługa błędów CORS przed załadowaniem innych skryptów
         // UWAGA: Ten skrypt prawdopodobnie nie będzie potrzebny na hostingu HTTPS
         window.addEventListener('error', function(e) {

@@ -76,17 +76,107 @@ console.log('Skrypt załadowany!');
     
 })();
 
-// ===== Pomocnicze funkcje śledzenia (globalne, dostępne na każdej stronie) =====
-function loadScript(src, attrs = {}) {
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = true;
-    Object.entries(attrs).forEach(([k, v]) => s.setAttribute(k, v));
-    document.head.appendChild(s);
-    return s;
+// ===== COOKIE MANAGER =====
+class CookieManager {
+    static TRACKING_PATTERNS = ['_ga', '_fb', '_clck', '_clsk'];
+    static CONSENT_KEY = 'cookieConsent';
+    
+    // Get consent status from localStorage
+    static getConsentStatus() {
+        return localStorage.getItem(this.CONSENT_KEY);
+    }
+    
+    // Set consent status in localStorage
+    static setConsentStatus(status) {
+        localStorage.setItem(this.CONSENT_KEY, status);
+        console.log(`🍪 Cookie consent set to: ${status}`);
+    }
+    
+    // Check if specific tracking cookies exist
+    static hasTrackingCookies(patterns = this.TRACKING_PATTERNS) {
+        return document.cookie
+            .split(';')
+            .some(cookie => {
+                const name = cookie.trim().split('=')[0];
+                return patterns.some(pattern => name.includes(pattern));
+            });
+    }
+    
+    // Get specific cookies by pattern
+    static getCookiesByPattern(patterns) {
+        return document.cookie
+            .split(';')
+            .filter(cookie => {
+                const name = cookie.trim().split('=')[0];
+                return patterns.some(pattern => name.includes(pattern));
+            })
+            .map(cookie => cookie.trim());
+    }
+    
+    // Remove tracking cookies (GDPR compliance)
+    static removeTrackingCookies(patterns = this.TRACKING_PATTERNS) {
+        let removedCount = 0;
+        
+        document.cookie.split(";").forEach(cookie => {
+            const eqPos = cookie.indexOf("=");
+            const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+            
+            if (patterns.some(pattern => name.includes(pattern))) {
+                // Remove for current path
+                document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+                // Remove for current domain
+                document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+                removedCount++;
+            }
+        });
+        
+        console.log(`🗑️ Removed ${removedCount} tracking cookies`);
+        return removedCount;
+    }
+    
+    // Check if consent matches cookie state
+    static validateConsentState() {
+        const consent = this.getConsentStatus();
+        const shouldHaveCookies = consent === 'accepted';
+        const hasCookies = this.hasTrackingCookies();
+        
+        return {
+            consent,
+            shouldHaveCookies,
+            hasCookies,
+            isValid: shouldHaveCookies === hasCookies,
+            timestamp: new Date().toISOString()
+        };
+    }
+    
+    // Get Clarity-specific cookies
+    static getClarityCookies() {
+        return this.getCookiesByPattern(['_clck', '_clsk']);
+    }
+    
+    // Check if Clarity cookies exist
+    static hasClarityCookies() {
+        return this.hasTrackingCookies(['_clck', '_clsk']);
+    }
 }
 
-function ensureFbqStub() {
+// ===== ANALYTICS NAMESPACE =====
+const Analytics = {
+    // Core script loading functionality
+    loadScript(src, attrs = {}) {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        Object.entries(attrs).forEach(([k, v]) => s.setAttribute(k, v));
+        return new Promise((resolve, reject) => {
+            s.onload = () => resolve(src);
+            s.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+            document.head.appendChild(s);
+        });
+    },
+
+    // Facebook Pixel Stub Function
+    ensureFbqStub() {
     if (typeof window.fbq === 'undefined') {
         (function(f,b,e,v,n,t,s){
             if(f.fbq)return; n=f.fbq=function(){ n.callMethod ?
@@ -96,43 +186,235 @@ function ensureFbqStub() {
             s.parentNode.insertBefore(t,s);
         })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
     }
-}
+    },
 
-function loadTrackingScripts() {
+    // Specialized tracking loaders
+    async loadGTM() {
+        try {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            await Analytics.loadScript('https://www.googletagmanager.com/gtm.js?id=GTM-WLNRPMGP');
+        
+            // Update consent if gtag is available
+            if (typeof window.gtag !== 'undefined') {
+                window.gtag('consent', 'update', {
+                    'analytics_storage': 'granted',
+                    'ad_storage': 'granted',
+                    'functionality_storage': 'granted',
+                    'personalization_storage': 'granted',
+                    'security_storage': 'granted'
+                });
+            }
+            return { success: true, service: 'GTM' };
+        } catch (error) {
+            return { success: false, service: 'GTM', error: error.message };
+        }
+    },
+
+    async loadFacebookPixel() {
+        try {
+            Analytics.ensureFbqStub();
+            window.fbq('init', '1469053347622952');
+            window.fbq('track', 'PageView');
+            
+            // Grant consent if available
+            if (typeof window.fbq !== 'undefined') {
+                window.fbq('consent', 'grant');
+            }
+            return { success: true, service: 'Facebook Pixel' };
+        } catch (error) {
+            return { success: false, service: 'Facebook Pixel', error: error.message };
+        }
+    },
+
+    async loadMicrosoftClarity() {
+        try {
+            // Load Clarity script
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "t5f2ixde6f");
+            
+            // Set consent with proper error handling
+            await setClarityConsent(true);
+            
+            // Validate after initialization
+            setTimeout(async () => {
+                try {
+                    await validateClarityConsent();
+                } catch(e) {
+                    console.warn('⚠️ Validation failed:', e.message);
+                }
+            }, 5000);
+            
+            return { success: true, service: 'Microsoft Clarity' };
+        } catch (error) {
+            return { success: false, service: 'Microsoft Clarity', error: error.message };
+        }
+    }
+};
+
+// Main tracking loader function (uses Analytics namespace)
+async function loadTrackingScripts() {
     if (window.__trackingLoaded) return;
     window.__trackingLoaded = true;
 
-    // GTM (GA4 przez GTM) – załaduj dopiero po zgodzie
-    window.dataLayer = window.dataLayer || [];
-    // Odtworzenie semantyki oficjalnego snippetu: znacznik startu i event 'gtm.js'
-    try { window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); } catch(_) {}
-    loadScript('https://www.googletagmanager.com/gtm.js?id=GTM-WLNRPMGP');
+    // Load all trackers in parallel with individual error handling
+    const trackingResults = await Promise.allSettled([
+        Analytics.loadGTM(),
+        Analytics.loadFacebookPixel(), 
+        Analytics.loadMicrosoftClarity()
+    ]);
 
-    // Meta Pixel – stub + skrypt, a następnie ewentualna zgoda
-    ensureFbqStub();
-    try { window.fbq('init', '1469053347622952'); window.fbq('track', 'PageView'); } catch(_) {}
+    // Process results and log outcomes
+    const successful = [];
+    const failed = [];
+    
+    trackingResults.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+            const { success, service, error } = result.value;
+            if (success) {
+                successful.push(service);
+            } else {
+                failed.push(`${service}: ${error}`);
+            }
+        } else {
+            failed.push(`Unknown tracker: ${result.reason}`);
+        }
+    });
+    
+    if (successful.length > 0) {
+        console.log(`✅ Tracking loaded: ${successful.join(', ')}`);
+    }
+    if (failed.length > 0) {
+        console.warn(`⚠️ Tracking failed: ${failed.join('; ')}`);
+    }
+}
 
-    // Google Consent Mode update jeśli gtag już dostępny (GTM mógł go zainicjalizować)
+// Funkcja do komunikacji statusu zgody z Microsoft Clarity
+function setClarityConsent(granted, maxAttempts = 5, currentAttempt = 1) {
+    return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+            reject(new Error('setClarityConsent timeout after 10 seconds'));
+        }, 10000);
+
+        function attemptConsent() {
+            try {
+                if (typeof window.clarity !== 'undefined' && typeof window.clarity === 'function') {
+                    clearTimeout(timeout);
+                    if (granted) {
+                        window.clarity('consent', 'grant');
+                        console.log('📤 Microsoft Clarity: Grant consent sent');
+                    } else {
+                        window.clarity('consent', 'deny');
+                        console.log('📤 Microsoft Clarity: Deny consent sent');
+                    }
+                    resolve(true);
+                } else if (currentAttempt < maxAttempts) {
+                    // Exponential backoff: 500ms, 1s, 2s, 4s
+                    const delay = 500 * Math.pow(2, currentAttempt - 1);
+                    setTimeout(() => {
+                        setClarityConsent(granted, maxAttempts, currentAttempt + 1)
+                            .then(resolve)
+                            .catch(reject);
+                    }, delay);
+                } else {
+                    clearTimeout(timeout);
+                    reject(new Error(`Microsoft Clarity not available after ${maxAttempts} attempts`));
+                }
+            } catch(e) {
+                clearTimeout(timeout);
+                reject(e);
+            }
+        }
+
+        attemptConsent();
+    });
+}
+
+// Funkcja do ponownego wyświetlenia popup zgody
+function showCookieSettings() {
+    const cookiePopup = document.getElementById('cookie-popup');
+    if (cookiePopup) {
+        cookiePopup.classList.remove('hidden');
+        cookiePopup.style.display = 'block';
+    }
+}
+
+// Funkcja do obsługi zmiany zgody z accepted na rejected
+function revokeCookieConsent() {
+    // Usuń wszystkie cookies trackingowe używając CookieManager
+    const removedCount = CookieManager.removeTrackingCookies();
+    
+    // Poinformuj trackery o odwołaniu zgody
+    setClarityConsent(false).catch(e => {
+        console.warn('⚠️ Microsoft Clarity consent revocation failed:', e.message);
+    });
+    if (typeof window.fbq !== 'undefined') {
+        try { window.fbq('consent', 'revoke'); } catch(_) {}
+    }
     if (typeof window.gtag !== 'undefined') {
         window.gtag('consent', 'update', {
-            'analytics_storage': 'granted',
-            'ad_storage': 'granted',
-            'functionality_storage': 'granted',
-            'personalization_storage': 'granted',
-            'security_storage': 'granted'
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'functionality_storage': 'denied',
+            'personalization_storage': 'denied',
+            'security_storage': 'denied'
         });
     }
-    // Meta Pixel consent
-    if (typeof window.fbq !== 'undefined') {
-        try { window.fbq('consent', 'grant'); } catch(_) {}
+}
+
+// Funkcja walidacji statusu zgody Microsoft Clarity
+async function validateClarityConsent() {
+    try {
+        if (typeof window.clarity === 'undefined') {
+            console.warn('⚠️ Microsoft Clarity: Skrypt nie jest załadowany');
+            return false;
+        }
+
+        const consentStatus = CookieManager.getConsentStatus();
+        const shouldHaveCookies = consentStatus === 'accepted';
+        const hasClarityCookies = CookieManager.hasClarityCookies();
+        
+        if (shouldHaveCookies === hasClarityCookies) {
+            const status = shouldHaveCookies ? 'zgoda udzielona i cookies aktywne' : 'zgoda cofnięta i cookies nieaktywne';
+            console.log(`✅ Microsoft Clarity: ${status}`);
+            return true;
+        }
+        
+        if (shouldHaveCookies && !hasClarityCookies) {
+            // Cookies mogą się pojawić z opóźnieniem - czekaj chwilę
+            console.log('🔄 Microsoft Clarity: Oczekiwanie na inicjalizację cookies...');
+            
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            const finalCookiesExist = CookieManager.hasClarityCookies();
+            if (finalCookiesExist) {
+                console.log('✅ Microsoft Clarity: Cookies aktywne po opóźnieniu');
+                return true;
+            } else {
+                console.warn('⚠️ Microsoft Clarity: Cookies nadal nieaktywne po oczekiwaniu');
+                return false;
+            }
+        }
+        
+        console.warn('⚠️ Microsoft Clarity: Niezgodność między zgodą a cookies', {
+            consent: consentStatus,
+            hasCookies: hasClarityCookies
+        });
+        return false;
+        
+    } catch(e) {
+        console.error('❌ Microsoft Clarity: Błąd walidacji zgody:', e);
+        return false;
     }
-    console.log('✅ Tracking scripts loaded after consent');
 }
 
 // Automatyczne ładowanie trackerów przy starcie strony, jeśli zgoda została już udzielona (nawet bez widocznego popupu)
 (function() {
     try {
-        const consent = localStorage.getItem('cookieConsent');
+        const consent = CookieManager.getConsentStatus();
         if (consent === 'accepted') {
             loadTrackingScripts();
         }
@@ -303,7 +585,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ===== Meta Pixel: Contact event tracking =====
 function trackContactEvent(source) {
     try {
-        const consent = localStorage.getItem('cookieConsent');
+        const consent = CookieManager.getConsentStatus();
         if (consent !== 'accepted') return;
         if (typeof window.fbq === 'undefined') return;
         const params = source ? { content_name: source } : undefined;
@@ -314,29 +596,35 @@ function trackContactEvent(source) {
 
 function initializeContactEventTracking() {
     try {
-        const contactSelectors = [
-            'a[href^="tel:"]',
-            'a[href^="mailto:"]',
-            'a[href*="#contact"]',
-            '#call-button',
-            '.phone-option'
-        ];
-        const elements = document.querySelectorAll(contactSelectors.join(','));
-        if (!elements || elements.length === 0) return;
-
-        elements.forEach(el => {
-            el.addEventListener('click', () => {
-                const href = el.getAttribute('href') || '';
-                let source = 'contact';
-                if (href.startsWith('tel:')) source = `tel:${href.replace('tel:', '')}`;
-                else if (href.startsWith('mailto:')) source = `mailto:${href.replace('mailto:', '')}`;
-                else if (href.includes('#contact')) source = 'contact_section_link';
-                else if (el.id === 'call-button') source = 'open_phone_modal';
-                else if (el.classList && el.classList.contains('phone-option')) source = 'phone_option';
-                trackContactEvent(source);
-            }, { passive: true });
-        });
-    } catch (_) {}
+        // Event delegation - single listener on document root
+        document.addEventListener('click', (event) => {
+            const el = event.target.closest('a[href^="tel:"], a[href^="mailto:"], a[href*="#contact"], #call-button, .phone-option');
+            
+            if (!el) return;
+            
+            // Determine event source based on element properties
+            const href = el.getAttribute('href') || '';
+            let source = 'contact';
+            
+            if (href.startsWith('tel:')) {
+                source = `tel:${href.replace('tel:', '')}`;
+            } else if (href.startsWith('mailto:')) {
+                source = `mailto:${href.replace('mailto:', '')}`;
+            } else if (href.includes('#contact')) {
+                source = 'contact_section_link';
+            } else if (el.id === 'call-button') {
+                source = 'open_phone_modal';
+            } else if (el.classList?.contains('phone-option')) {
+                source = 'phone_option';
+            }
+            
+            trackContactEvent(source);
+        }, { passive: true });
+        
+        console.log('📞 Contact event tracking initialized with event delegation');
+    } catch (e) {
+        console.warn('⚠️ Failed to initialize contact event tracking:', e.message);
+    }
 }
 
 function applyTypographyRules() {
@@ -1654,7 +1942,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tryb domyślny: nic nie ładujemy przed zgodą
 
     // Sprawdź czy użytkownik już podjął decyzję
-    const consent = localStorage.getItem('cookieConsent');
+    const consent = CookieManager.getConsentStatus();
     if (consent) {
         cookiePopup.classList.add('hidden');
         
@@ -1681,7 +1969,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Akceptacja cookies
     if (acceptBtn) {
         acceptBtn.addEventListener('click', function() {
-            localStorage.setItem('cookieConsent', 'accepted');
+            CookieManager.setConsentStatus('accepted');
             hidePopup();
             console.log('Cookies zostały zaakceptowane');
             
@@ -1693,11 +1981,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Odrzucenie cookies
     if (rejectBtn) {
         rejectBtn.addEventListener('click', function() {
-            localStorage.setItem('cookieConsent', 'rejected');
+            CookieManager.setConsentStatus('rejected');
             hidePopup();
             console.log('Cookies zostały odrzucone');
             
+            // Poinformuj Microsoft Clarity o odrzuceniu zgody
+            setClarityConsent(false).catch(e => {
+                console.warn('⚠️ Microsoft Clarity consent denial failed:', e.message);
+            });
+            
             // Nic nie ładujemy – pozostaje wyłączone
+        });
+    }
+    
+    // Obsługa linku "Ustawienia cookies" w stopce
+    const cookieSettingsLink = document.getElementById('cookie-settings-link');
+    if (cookieSettingsLink) {
+        cookieSettingsLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const currentConsent = CookieManager.getConsentStatus();
+            if (currentConsent === 'accepted') {
+                // Jeśli aktualnie zaakceptowane, cofnij zgodę przed pokazaniem popup
+                revokeCookieConsent();
+                CookieManager.setConsentStatus('rejected');
+            }
+            
+            showCookieSettings();
         });
     }
 });

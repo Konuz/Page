@@ -156,6 +156,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://toolshare.com.pl/tool.html?toolId=szlifierka-mimosrodowa-cedrus</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Pistolety%20malarskie</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -361,12 +366,12 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Podkaszarki</loc>
+    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Kosy%20i%20podkaszarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=podkaszarka-akumulatorowa-cedrus-1</loc>
+    <loc>https://toolshare.com.pl/tool.html?toolId=kosa-akumulatorowa-cedrus-1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>

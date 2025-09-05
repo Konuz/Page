@@ -110,8 +110,8 @@
                 { "id": "kosiarka-akumulatorowa-cedrus", "name": "Kosiarka akumulatorowa Cedrus", "image": "images/kosiarka_akumulatorowa_cedrus_60V_LM560S-P25.webp", "pricing": {"1-3 Dni": 170, "4-7 Dni": 135, "Sobota + Niedziela": 275, "Kaucja *": 500} },
                 { "id": "kosiarka-automatyczna-cedrus", "name": "Kosiarka automatyczna Cedrus", "image": "images/kosiarka_automatyczna_cedrus_C-MOW-M6+.webp", "pricing": {"1-3 Dni": 135, "4-7 Dni": 110, "Sobota + Niedziela": 220, "Kaucja *": 400} }
             ] },
-            { "name": "Podkaszarki", "tools": [
-                { "id": "podkaszarka-akumulatorowa-cedrus-1", "name": "Podkaszarka akumulatorowa Cedrus", "image": "images/podkaszarka-akumulatorowa-Cedrus-60V-BC420L-B.webp", "pricing": {"1-3 Dni": 95, "4-7 Dni": 75, "Sobota + Niedziela": 155, "Kaucja *": 280} },
+            { "name": "Kosy i podkaszarki", "tools": [
+                { "id": "kosa-akumulatorowa-cedrus-1", "name": "Kosa akumulatorowa Cedrus", "image": "images/kosa-akumulatorowa-Cedrus-60V-BC420L-B.webp", "pricing": {"1-3 Dni": 95, "4-7 Dni": 75, "Sobota + Niedziela": 155, "Kaucja *": 280} },
                 { "id": "podkaszarka-akumulatorowa-cedrus-2", "name": "Podkaszarka akumulatorowa Cedrus", "image": "images/podkaszarka-akumulatorowa-Cedrus-CEDST300LIX2.webp", "pricing": {"1-3 Dni": 25, "4-7 Dni": 20, "Sobota + Niedziela": 35, "Kaucja *": 60} }
             ] },
             { "name": "Nożyce ogrodowe", "tools": [

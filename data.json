@@ -36,7 +36,8 @@
                 { "id": "ukosnica-metabo", "name": "Ukośnica Metabo", "image": "images/ukosnica_metabo.webp", "pricing": {"1-3 Dni": 60, "4-7 Dni": 50, "Sobota + Niedziela": 100, "Kaucja *": 175} }
             ] },
             { "name": "Szlifierki", "tools": [
-                { "id": "szlifierka-metabo", "name": "Szlifierka Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": 35, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": 105} }
+                { "id": "szlifierka-metabo", "name": "Szlifierka kątowa Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": 35, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": 105} },
+                { "id": "szlifierka-mimosrodowa-cedrus", "name": "Szlifierka mimośrodowa Cedrus", "image": "images/cedrus_cedos125li.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 20, "Kaucja *": 25} }
             ] },
             { "name": "Pistolety malarskie", "tools": [
                 { "id": "pistolet-do-malowania-cedrus", "name": "Pistolet do malowania Cedrus", "image": "images/pistolet-do-malowania-Cedrus-CEDSP1000LI.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 15, "Kaucja *": 25} }

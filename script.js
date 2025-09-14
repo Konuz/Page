@@ -76,6 +76,116 @@ console.log('Skrypt załadowany!');
     
 })();
 
+// ===== LIMIT VISIBLE TOOLS TO 12 WITH SCROLL (desktop) =====
+function applyGridScrollLimit() {
+    try {
+        const isDesktop = window.innerWidth >= 992; // align with CSS breakpoint
+        const grids = document.querySelectorAll('.tools-grid');
+        grids.forEach(grid => {
+            // get direct child elements (cards)
+            const cards = Array.from(grid.children).filter(el => el && el.nodeType === 1 && el.offsetParent !== null);
+            if (!isDesktop || cards.length <= 12) {
+                grid.style.maxHeight = '';
+                grid.style.overflowY = '';
+                return;
+            }
+            const twelfth = cards[11]; // 12th visible item
+            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+            const bottom = twelfth.getBoundingClientRect().bottom + window.scrollY;
+            const visibleHeight = Math.ceil(bottom - gridTop);
+            grid.style.maxHeight = visibleHeight + 'px';
+            grid.style.overflowY = 'auto';
+        });
+    } catch (_) {}
+}
+
+function initGridScrollLimitObserver() {
+    try {
+        const grids = document.querySelectorAll('.tools-grid');
+        if (!grids.length) return;
+        const observer = new MutationObserver(() => {
+            // Defer to let layout settle
+            requestAnimationFrame(applyGridScrollLimit);
+        });
+        grids.forEach(grid => observer.observe(grid, { childList: true }));
+        // Initial apply
+        applyGridScrollLimit();
+        // Re-apply on resize (debounced)
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(applyGridScrollLimit, 150);
+        });
+    } catch (_) {}
+}
+
+// Kick off after DOM is ready; also safe to call multiple times
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGridScrollLimitObserver);
+} else {
+    initGridScrollLimitObserver();
+}
+
+// ===== Limit submenu visible items to 12 with scroll =====
+function applySubmenuVisibleLimit(contentEl, visibleCount = 12) {
+    try {
+        if (!contentEl) return;
+        const links = Array.from(contentEl.querySelectorAll('a'));
+        if (links.length <= visibleCount) {
+            contentEl.style.maxHeight = '';
+            contentEl.style.overflowY = '';
+            return;
+        }
+        const measure = () => {
+            // Ensure a stable measurement independent of prior scroll state
+            // Do NOT change scrollTop here to avoid jumpiness on click/focus.
+            const nth = links[visibleCount - 1];
+            if (!nth) return;
+            // Use offset-based calculation to avoid viewport/layout jitter
+            // Distance from the top edge of the container to the bottom edge of the Nth item
+            const h = Math.ceil((nth.offsetTop - contentEl.offsetTop) + nth.offsetHeight);
+            if (h > 0) {
+                contentEl.style.maxHeight = h + 'px';
+                contentEl.style.overflowY = 'auto';
+                contentEl.style.webkitOverflowScrolling = 'touch';
+                // Mark as initialized to avoid repeated recalculations on focus/click
+                contentEl.dataset.heightInitialized = '1';
+            }
+        };
+        // Defer to next frame to ensure styles are applied
+        requestAnimationFrame(measure);
+    } catch (_) {}
+}
+
+function initSubmenuVisibleLimit(visibleCount = 12) {
+    try {
+        const containers = document.querySelectorAll('#nav-categories .sub-dropdown');
+        if (!containers.length) return;
+        containers.forEach(sub => {
+            const content = sub.querySelector('.sub-dropdown-content');
+            if (!content) return;
+            // On open via hover or focus, apply limit once. Subsequent focus shouldn't scroll.
+            const handler = () => {
+                if (!content.dataset.heightInitialized) {
+                    applySubmenuVisibleLimit(content, visibleCount);
+                }
+            };
+            sub.addEventListener('mouseenter', handler);
+            sub.addEventListener('focusin', handler);
+        });
+        // Also recompute on resize (debounced)
+        let timer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                document
+                    .querySelectorAll('#nav-categories .sub-dropdown .sub-dropdown-content')
+                    .forEach(el => applySubmenuVisibleLimit(el, visibleCount));
+            }, 150);
+        });
+    } catch (_) {}
+}
+
 // ===== COOKIE MANAGER =====
 class CookieManager {
     static TRACKING_PATTERNS = ['_ga', '_fb', '_clck', '_clsk'];
@@ -440,9 +550,84 @@ function fixPolishOrphans(text) {
     return result;
 }
 
+// Zamień ścieżki względne na root-relative, aby działały przy "ładnych" URL-ach
+function toRootPath(path) {
+    if (!path) return '/images/placeholder.webp';
+    try {
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
+        return '/' + path.replace(/^\/+/, '');
+    } catch (_) {
+        return '/images/placeholder.webp';
+    }
+}
+
+// Slug helper: polish diacritics → ASCII, spaces → hyphens
+function slugify(input) {
+    if (!input) return '';
+    const map = { 'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ż':'z','ź':'z',
+                  'Ą':'a','Ć':'c','Ę':'e','Ł':'l','Ń':'n','Ó':'o','Ś':'s','Ż':'z','Ź':'z' };
+    const replaced = String(input).split('').map(ch => map[ch] || ch).join('');
+    return replaced.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+}
+
+function buildPrettyPath(categoryName, subcategoryName, toolId) {
+    const parts = ['','narzedzia'];
+    if (categoryName) parts.push(slugify(categoryName));
+    if (subcategoryName) parts.push(slugify(subcategoryName));
+    if (toolId) parts.push(encodeURIComponent(toolId));
+    return parts.join('/');
+}
+
+function resolveCategory(toolCatalog, input) {
+    if (!toolCatalog || !input) return null;
+    return toolCatalog.find(c => c.category === input || slugify(c.category) === input) || null;
+}
+
+function resolveSubcategory(category, input) {
+    if (!category || !input) return null;
+    return (category.subcategories || []).find(s => s.name === input || slugify(s.name) === input) || null;
+}
+
+// Odczyt parametrów trasy z query lub z 'ładnej' ścieżki
+function getRouteParams() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        let category = params.get('category');
+        let subcategory = params.get('subcategory');
+        let toolId = params.get('toolId');
+
+        if (!category && !subcategory && !toolId) {
+            const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+            // Obsługa prefiksu /narzedzia w ładnych URL-ach
+            const isPretty = parts[0] === 'narzedzia';
+            const base = isPretty ? parts.slice(1) : parts;
+            if (base.length >= 1) category = base[0];
+            if (base.length >= 2) subcategory = base[1];
+            if (base.length >= 3) toolId = base[2];
+        }
+
+        return { category, subcategory, toolId };
+    } catch (_) {
+        return { category: null, subcategory: null, toolId: null };
+    }
+}
+
+// Czy możemy bezpiecznie używać ładnych ścieżek (bez query) w pasku adresu?
+function canUsePrettyUrls() {
+    try {
+        const { protocol, hostname } = window.location;
+        if (protocol === 'file:') return false;
+        if (!hostname) return false;
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) return false;
+        return hostname === 'toolshare.com.pl' || hostname === 'www.toolshare.com.pl';
+    } catch (_) {
+        return false;
+    }
+}
+
 async function fetchData() {
     try {
-        const response = await fetch('data.json');
+        const response = await fetch('/data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -502,6 +687,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeSeoManager(toolCatalog);
     initScrollAnimations();
     initializeContactEventTracking();
+    normalizeFooterCopyright();
 
     // Zastosuj zasady typografii po wszystkich inicjalizacjach
     setTimeout(() => {
@@ -567,16 +753,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const startLink = document.getElementById('start-link');
     if (startLink) {
         startLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Sprawdzamy, czy jesteśmy na stronie głównej
-            if (document.getElementById('why-us')) {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            const isHome = !!document.getElementById('why-us');
+            if (isHome) {
+                // Tylko na stronie głównej nadpisujemy zachowanie dla płynnego scrollu
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // Jeśli na podstronie, przejdź do strony głównej
-                window.location.href = 'index.html';
+                // Na podstronach pozwalamy przeglądarce wykonać domyślną nawigację (href="/")
+                // e.preventDefault() tutaj nie jest wywoływane, by uniknąć pozostania w katalogu.
             }
         });
     }
@@ -833,7 +1017,7 @@ function populateMobileMenuSubcategories(category) {
         listItem.className = 'mobile-menu-item';
         
         const link = document.createElement('a');
-        link.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
+        link.href = buildPrettyPath(category.category, subcategory.name);
         link.className = 'mobile-menu-link';
         link.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
         
@@ -886,7 +1070,7 @@ function renderNavigationCategories(toolCatalog) {
 
     toolCatalog.forEach(category => {
         const link = document.createElement('a');
-        link.href = `category.html?category=${encodeURIComponent(category.category)}`;
+        link.href = buildPrettyPath(category.category);
         link.textContent = stripHtmlTags(category.category);
         link.setAttribute('role', 'menuitem');
         navContainer.appendChild(link);
@@ -901,14 +1085,14 @@ function renderCategories(toolCatalog) {
 
     toolCatalog.forEach(category => {
         const cardLink = document.createElement('a');
-        cardLink.href = `category.html?category=${encodeURIComponent(category.category)}`;
+        cardLink.href = buildPrettyPath(category.category);
         cardLink.className = 'category-card'; 
 
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'card-image-wrapper';
 
         const img = document.createElement('img');
-        img.src = category.image;
+        img.src = toRootPath(category.image);
         img.alt = category.category;
         img.className = 'category-card-img';
         img.loading = 'lazy';
@@ -948,10 +1132,10 @@ function createInteractiveBreadcrumb(text, linkUrl, siblings, type, parentCatego
         siblings.forEach(sibling => {
             const siblingLink = document.createElement('a');
             if (type === 'category') {
-                siblingLink.href = `category.html?category=${encodeURIComponent(sibling.category)}`;
+                siblingLink.href = buildPrettyPath(sibling.category);
                 siblingLink.textContent = sibling.category;
             } else if (type === 'subcategory') {
-                siblingLink.href = `subcategory.html?category=${encodeURIComponent(parentCategoryForSiblings)}&subcategory=${encodeURIComponent(sibling.name)}`;
+                siblingLink.href = buildPrettyPath(parentCategoryForSiblings, sibling.name);
                 siblingLink.textContent = sibling.name;
             }
             dropdownContent.appendChild(siblingLink);
@@ -971,26 +1155,35 @@ function createSeparator() {
 
 function renderSubcategories(toolCatalog) {
     document.body.classList.add('subpage');
-    const params = new URLSearchParams(window.location.search);
-    const categoryName = params.get('category');
+    const { category: categoryParam } = getRouteParams();
     const contentGrid = document.getElementById('subcategory-grid');
     const titleElement = document.getElementById('category-title');
     const breadcrumbContainer = document.querySelector('.breadcrumb');
 
-    if (!categoryName || !contentGrid || !titleElement || !breadcrumbContainer) return;
+    if (!categoryParam || !contentGrid || !titleElement || !breadcrumbContainer) return;
 
-    const category = toolCatalog.find(c => c.category === categoryName);
+    const category = resolveCategory(toolCatalog, categoryParam);
     if (!category) {
         contentGrid.innerHTML = '<p>Kategoria nie została znaleziona.</p>';
         return;
     }
 
     titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(category.category));
+
+    // Uładnij adres URL w pasku adresu dla SEO/UX (bez query string)
+    try {
+        if (canUsePrettyUrls()) {
+            const prettyPath = buildPrettyPath(category.category);
+            if (window.location.pathname !== prettyPath) {
+                history.replaceState(null, '', prettyPath);
+            }
+        }
+    } catch (_) {}
     
     // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
-    homeLink.href = 'index.html';
+    homeLink.href = '/';
     homeLink.textContent = 'Strona główna';
     breadcrumbContainer.appendChild(homeLink);
     breadcrumbContainer.appendChild(createSeparator());
@@ -1003,7 +1196,7 @@ function renderSubcategories(toolCatalog) {
     contentGrid.innerHTML = '';
     category.subcategories.forEach(sub => {
         const cardLink = document.createElement('a');
-        cardLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`;
+        cardLink.href = buildPrettyPath(category.category, sub.name);
         cardLink.className = 'subcategory-card'; 
         cardLink.innerHTML = `<h3>${fixPolishOrphans(stripHtmlTags(sub.name))}</h3>`;
         contentGrid.appendChild(cardLink);
@@ -1013,18 +1206,16 @@ function renderSubcategories(toolCatalog) {
 
 function renderTools(toolCatalog) {
     document.body.classList.add('subpage');
-    const params = new URLSearchParams(window.location.search);
-    const categoryName = params.get('category');
-    const subcategoryName = params.get('subcategory');
+    const { category: categoryParam2, subcategory: subcategoryParam2 } = getRouteParams();
 
     const contentGrid = document.getElementById('tools-grid');
     const titleElement = document.getElementById('subcategory-title');
     const breadcrumbContainer = document.querySelector('.breadcrumb');
 
-    if (!categoryName || !subcategoryName || !contentGrid || !titleElement || !breadcrumbContainer) return;
+    if (!categoryParam2 || !subcategoryParam2 || !contentGrid || !titleElement || !breadcrumbContainer) return;
 
-    const category = toolCatalog.find(c => c.category === categoryName);
-    const subcategory = category ? category.subcategories.find(s => s.name === subcategoryName) : null;
+    const category = resolveCategory(toolCatalog, categoryParam2);
+    const subcategory = category ? resolveSubcategory(category, subcategoryParam2) : null;
 
     if (!subcategory) {
         contentGrid.innerHTML = '<p>Podkategoria nie została znaleziona.</p>';
@@ -1033,16 +1224,26 @@ function renderTools(toolCatalog) {
 
     titleElement.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
 
+    // Uładnij adres URL w pasku adresu (kategoria/podkategoria)
+    try {
+        if (canUsePrettyUrls()) {
+            const prettyPath = buildPrettyPath(category.category, subcategory.name);
+            if (window.location.pathname !== prettyPath) {
+                history.replaceState(null, '', prettyPath);
+            }
+        }
+    } catch (_) {}
+
     // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
-    homeLink.href = 'index.html';
+    homeLink.href = '/';
     homeLink.textContent = 'Strona główna';
     breadcrumbContainer.appendChild(homeLink);
     breadcrumbContainer.appendChild(createSeparator());
     
     const categorySiblings = toolCatalog.filter(c => c.category !== category.category);
-    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
+    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), buildPrettyPath(category.category), categorySiblings, 'category');
     breadcrumbContainer.appendChild(categoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
 
@@ -1062,13 +1263,13 @@ function renderTools(toolCatalog) {
     enabledTools.forEach(tool => {
         const toolCard = document.createElement('a');
         toolCard.className = 'tool-card';
-        toolCard.href = `tool.html?toolId=${tool.id}`;
+        toolCard.href = buildPrettyPath(category.category, subcategory.name, tool.id);
 
         const imageWrapper = document.createElement('div');
         imageWrapper.className = 'card-image-wrapper';
 
         const img = document.createElement('img');
-        img.src = tool.image;
+        img.src = toRootPath(tool.image);
         img.alt = tool.name;
         img.className = 'tool-card-img';
         img.loading = 'lazy';
@@ -1088,8 +1289,7 @@ function renderTools(toolCatalog) {
 
 function renderToolDetails(toolCatalog) {
     document.body.classList.add('subpage');
-    const params = new URLSearchParams(window.location.search);
-    const toolId = params.get('toolId');
+    const { toolId } = getRouteParams();
 
     if (!toolId) return;
 
@@ -1116,21 +1316,31 @@ function renderToolDetails(toolCatalog) {
         return;
     }
 
+    // Uładnij adres URL w pasku adresu (kategoria/podkategoria/narzędzie)
+    try {
+        if (canUsePrettyUrls()) {
+            const prettyPath = buildPrettyPath(category.category, subcategory.name, tool.id);
+            if (window.location.pathname !== prettyPath) {
+                history.replaceState(null, '', prettyPath);
+            }
+        }
+    } catch (_) {}
+
     // Renderowanie nawigacji okruszkowej (breadcrumb)
     breadcrumbContainer.innerHTML = '';
     const homeLink = document.createElement('a');
-    homeLink.href = 'index.html';
+    homeLink.href = '/';
     homeLink.textContent = 'Strona główna';
     breadcrumbContainer.appendChild(homeLink);
     breadcrumbContainer.appendChild(createSeparator());
 
     const categorySiblings = toolCatalog.filter(c => c.category !== category.category);
-    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), `category.html?category=${encodeURIComponent(category.category)}`, categorySiblings, 'category');
+    const categoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(category.category), buildPrettyPath(category.category), categorySiblings, 'category');
     breadcrumbContainer.appendChild(categoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
     
     const subcategorySiblings = category.subcategories.filter(s => s.name !== subcategory.name);
-    const subcategoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(subcategory.name), `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`, subcategorySiblings, 'subcategory', category.category);
+    const subcategoryCrumb = createInteractiveBreadcrumb(stripHtmlTags(subcategory.name), buildPrettyPath(category.category, subcategory.name), subcategorySiblings, 'subcategory', category.category);
     breadcrumbContainer.appendChild(subcategoryCrumb);
     breadcrumbContainer.appendChild(createSeparator());
 
@@ -1148,7 +1358,7 @@ function renderToolDetails(toolCatalog) {
     }
 
     const imageElement = document.getElementById('tool-image');
-    imageElement.src = tool.image;
+    imageElement.src = toRootPath(tool.image);
     imageElement.alt = tool.name;
 
     // Uzupełnij tabelę z cennikiem
@@ -1213,7 +1423,7 @@ function initializeDropdown(toolCatalog) {
 
         // Link główny kategorii
         const categoryLink = document.createElement('a');
-        categoryLink.href = `category.html?category=${encodeURIComponent(category.category)}`;
+        categoryLink.href = buildPrettyPath(category.category);
         categoryLink.innerHTML = `
             ${fixPolishOrphans(stripHtmlTags(category.category))}
             <i class="fas fa-chevron-right" style="font-size: 0.8em;"></i>
@@ -1227,7 +1437,7 @@ function initializeDropdown(toolCatalog) {
         
         category.subcategories.forEach(subcategory => {
             const subcategoryLink = document.createElement('a');
-            subcategoryLink.href = `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
+            subcategoryLink.href = buildPrettyPath(category.category, subcategory.name);
             subcategoryLink.innerHTML = fixPolishOrphans(stripHtmlTags(subcategory.name));
             subDropdownContent.appendChild(subcategoryLink);
         });
@@ -1242,8 +1452,24 @@ function initializeDropdown(toolCatalog) {
     // Zastosuj zasady typografii po stworzeniu dropdown menu
     setTimeout(() => {
         applyTypographyRules();
+        // Limituj widoczne elementy submenu do 12 i dodaj scroll
+        initSubmenuVisibleLimit(12);
     }, 50);
 }
+
+// ===== Footer copyright normalize (remove hardcoded year) =====
+function normalizeFooterCopyright() {
+    try {
+        const nodes = document.querySelectorAll('.footer .footer-info p');
+        nodes.forEach(p => {
+            const txt = (p.textContent || '').trim();
+            if (txt.includes('ToolShare - wypożyczalnia narzędzi')) {
+                p.innerHTML = '&copy; ToolShare - wypożyczalnia narzędzi';
+            }
+        });
+    } catch (_) {}
+}
+
 
 // Usunięto pustą funkcję zgodności initializeHamburger – logikę obsługuje initializeMobileMenu
 
@@ -1265,7 +1491,9 @@ function initializeThemeSwitcher() {
 
 function initializeSeoManager(toolCatalog) {
     try {
-        upsertMetaRobots();
+        const setMetaRobots = (value) => {
+            upsertMetaByName('robots', value);
+        };
         const url = new URL(window.location.href);
         const isCategoryPage = !!document.getElementById('category-title');
         const isSubcategoryPage = !!document.getElementById('subcategory-title');
@@ -1275,6 +1503,8 @@ function initializeSeoManager(toolCatalog) {
         if (isHomePage) {
             ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
             updateCanonical('https://toolshare.com.pl/');
+            upsertMetaByProperty('og:type', 'website');
+            setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
         }
 
         if (!toolCatalog || !toolCatalog.length) {
@@ -1282,13 +1512,19 @@ function initializeSeoManager(toolCatalog) {
         }
 
         if (isCategoryPage) {
-            const categoryName = new URLSearchParams(url.search).get('category');
-            const category = toolCatalog.find(c => c.category === categoryName);
+            // Domyślnie nie indeksuj dopóki parametry niepoprawne
+            setMetaRobots('noindex, follow');
+            let categoryName = new URLSearchParams(url.search).get('category');
+            if (!categoryName) {
+                const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+                if (parts[0] === 'narzedzia') categoryName = parts[1]; else categoryName = parts[0];
+            }
+            const category = resolveCategory(toolCatalog, categoryName);
             if (!category) return;
 
-            const pageUrl = `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}`;
+            const pageUrl = `https://toolshare.com.pl/${buildPrettyPath(category.category)}`;
             const description = `${stripHtmlTags(category.category)} do wypożyczenia w gminie Czernica (Chrząstawa Wielka). Atrakcyjne ceny i elastyczne godziny odbioru.`;
-            const dynamicTitle = `${stripHtmlTags(category.category)} – wypożyczalnia narzędzi Czernica | ToolShare`;
+            const dynamicTitle = `${stripHtmlTags(category.category)} – wypożyczalnia narzędzi Chrząstawa Wielka | ToolShare`;
 
             // Tytuł i meta tagi
             if (document.title) {
@@ -1296,6 +1532,7 @@ function initializeSeoManager(toolCatalog) {
             }
             upsertMetaByName('description', description);
             ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
+            upsertMetaByProperty('og:type', 'website');
             upsertMetaByProperty('og:title', dynamicTitle);
             upsertMetaByProperty('og:description', description);
             upsertMetaByProperty('og:url', pageUrl);
@@ -1303,6 +1540,7 @@ function initializeSeoManager(toolCatalog) {
             upsertMetaByName('twitter:description', description);
             upsertMetaByName('twitter:image', 'https://toolshare.com.pl/images/logo.webp');
             updateCanonical(pageUrl);
+            setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
             const breadcrumbItems = [
                 { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
@@ -1313,7 +1551,7 @@ function initializeSeoManager(toolCatalog) {
             const itemList = buildItemList(
                 category.subcategories.map(sub => ({
                     name: stripHtmlTags(sub.name),
-                    url: `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`
+                    url: `https://toolshare.com.pl/${buildPrettyPath(category.category, sub.name)}`
                 })),
                 pageUrl
             );
@@ -1321,16 +1559,31 @@ function initializeSeoManager(toolCatalog) {
         }
 
         if (isSubcategoryPage) {
-            const params = new URLSearchParams(url.search);
-            const categoryName = params.get('category');
-            const subcategoryName = params.get('subcategory');
-            const category = toolCatalog.find(c => c.category === categoryName);
-            const subcategory = category?.subcategories.find(s => s.name === subcategoryName);
+            // Domyślnie nie indeksuj dopóki parametry niepoprawne
+            setMetaRobots('noindex, follow');
+            let categoryName, subcategoryName;
+            {
+                const params = new URLSearchParams(url.search);
+                categoryName = params.get('category');
+                subcategoryName = params.get('subcategory');
+                if (!categoryName || !subcategoryName) {
+                    const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+                    if (parts[0] === 'narzedzia') {
+                        if (!categoryName && parts.length >= 2) categoryName = parts[1];
+                        if (!subcategoryName && parts.length >= 3) subcategoryName = parts[2];
+                    } else {
+                        if (!categoryName && parts.length >= 1) categoryName = parts[0];
+                        if (!subcategoryName && parts.length >= 2) subcategoryName = parts[1];
+                    }
+                }
+            }
+            const category = resolveCategory(toolCatalog, categoryName);
+            const subcategory = category ? resolveSubcategory(category, subcategoryName) : null;
             if (!subcategory) return;
 
-            const pageUrl = `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}`;
+            const pageUrl = `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name)}`;
             const description = `${stripHtmlTags(subcategory.name)} do wypożyczenia – gmina Czernica. Odbiór w Chrząstawie Wielkiej, szybki kontakt, szybka obsługa.`;
-            const dynamicTitle = `${stripHtmlTags(subcategory.name)} – wypożyczalnia narzędzi Czernica | ToolShare`;
+            const dynamicTitle = `${stripHtmlTags(subcategory.name)} – wypożyczalnia narzędzi Chrząstawa Wielka | ToolShare`;
 
             // Tytuł i meta tagi
             if (document.title) {
@@ -1338,6 +1591,7 @@ function initializeSeoManager(toolCatalog) {
             }
             upsertMetaByName('description', description);
             ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
+            upsertMetaByProperty('og:type', 'website');
             upsertMetaByProperty('og:title', dynamicTitle);
             upsertMetaByProperty('og:description', description);
             upsertMetaByProperty('og:url', pageUrl);
@@ -1345,10 +1599,11 @@ function initializeSeoManager(toolCatalog) {
             upsertMetaByName('twitter:description', description);
             upsertMetaByName('twitter:image', 'https://toolshare.com.pl/images/logo.webp');
             updateCanonical(pageUrl);
+            setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
             const breadcrumbItems = [
                 { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
-                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}` },
+                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/${buildPrettyPath(category.category)}` },
                 { name: stripHtmlTags(subcategory.name), url: pageUrl }
             ];
             injectJsonLd(buildBreadcrumbList(breadcrumbItems));
@@ -1357,7 +1612,7 @@ function initializeSeoManager(toolCatalog) {
             const itemList = buildItemList(
                 enabledTools.map(t => ({
                     name: stripHtmlTags(t.name),
-                    url: `https://toolshare.com.pl/tool.html?toolId=${encodeURIComponent(t.id)}`
+                    url: `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name, t.id)}`
                 })),
                 pageUrl
             );
@@ -1365,21 +1620,27 @@ function initializeSeoManager(toolCatalog) {
         }
 
         if (isToolPage) {
-            const params = new URLSearchParams(url.search);
-            const toolId = params.get('toolId');
+            // Domyślnie nie indeksuj dopóki parametry niepoprawne
+            setMetaRobots('noindex, follow');
+            let toolId = new URLSearchParams(url.search).get('toolId');
+            if (!toolId) {
+                const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
+                if (parts.length >= 3) toolId = parts[2];
+            }
             const toolCtx = findToolById(toolId, toolCatalog);
             const tool = toolCtx?.tool;
             const category = toolCtx?.category;
             const subcategory = toolCtx?.subcategory;
             if (!tool) return;
 
-            const pageUrl = `https://toolshare.com.pl/tool.html?toolId=${encodeURIComponent(tool.id)}`;
+            const pageUrl = `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name, tool.id)}`;
             const firstPrice = getFirstNumericPrice(tool?.pricing);
             const descriptionBase = `${stripHtmlTags(tool.name)} do wypożyczenia. ${stripHtmlTags(category.category)} › ${stripHtmlTags(subcategory.name)}. Odbiór w Chrząstawie Wielkiej, elastyczne godziny.`;
             const description = firstPrice ? `${descriptionBase} Ceny od ${firstPrice} zł/dzień.` : descriptionBase;
 
             upsertMetaByName('description', description);
             ensureOgTwitterDefaults(absoluteUrl(tool.image));
+            upsertMetaByProperty('og:type', 'product');
             upsertMetaByProperty('og:title', document.title || 'Narzędzie – ToolShare');
             upsertMetaByProperty('og:description', description);
             upsertMetaByProperty('og:url', pageUrl);
@@ -1388,10 +1649,32 @@ function initializeSeoManager(toolCatalog) {
             upsertMetaByName('twitter:image', absoluteUrl(tool.image));
             updateCanonical(pageUrl);
 
+            // Product JSON-LD
+            try {
+                const product = {
+                    '@context': 'https://schema.org',
+                    '@type': 'Product',
+                    name: stripHtmlTags(tool.name),
+                    image: [absoluteUrl(tool.image)],
+                    category: `${stripHtmlTags(category.category)} > ${stripHtmlTags(subcategory.name)}`,
+                    url: pageUrl,
+                    offers: {
+                        '@type': 'Offer',
+                        priceCurrency: 'PLN',
+                        price: firstPrice || undefined,
+                        availability: 'https://schema.org/InStock',
+                        url: pageUrl
+                    }
+                };
+                injectJsonLd(product);
+            } catch (_) {}
+
+            setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+
             const breadcrumbItems = [
                 { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
-                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/category.html?category=${encodeURIComponent(category.category)}` },
-                { name: stripHtmlTags(subcategory.name), url: `https://toolshare.com.pl/subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(subcategory.name)}` },
+                { name: stripHtmlTags(category.category), url: `https://toolshare.com.pl/${buildPrettyPath(category.category)}` },
+                { name: stripHtmlTags(subcategory.name), url: `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name)}` },
                 { name: stripHtmlTags(tool.name), url: pageUrl }
             ];
             injectJsonLd(buildBreadcrumbList(breadcrumbItems));
@@ -1893,7 +2176,7 @@ function initializeSearch(toolCatalog) {
                     saveToSearchHistory(toolResult.tool.name);
                 }
                 
-                window.location.href = `tool.html?toolId=${toolId}`;
+                window.location.href = `/tool.html?toolId=${toolId}`;
             });
             
             item.addEventListener('mouseenter', () => {
@@ -2041,8 +2324,7 @@ function initializeSeeAlso(toolCatalog) {
     const seeAlsoSection = document.getElementById('zobacz-takze-section');
     if (!seeAlsoSection) return;
 
-    const params = new URLSearchParams(window.location.search);
-    const currentToolId = params.get('toolId');
+    const { toolId: currentToolId } = getRouteParams();
     
     if (!currentToolId) return;
 
@@ -2238,12 +2520,12 @@ function renderSeeAlsoCards(relatedTools) {
 function createSeeAlsoCard(tool, category, subcategory) {
     const card = document.createElement('a');
     card.className = 'zobacz-takze-card';
-    card.href = `tool.html?toolId=${tool.id}`;
+    card.href = buildPrettyPath(category?.category, subcategory?.name, tool.id);
     card.setAttribute('data-tool-id', tool.id);
 
     // Validate tool data and provide fallbacks
     const toolName = tool.name || 'Nienazwane narzędzie';
-    const toolImage = tool.image || 'images/placeholder.webp';
+    const toolImage = toRootPath(tool.image || 'images/placeholder.webp');
     const categoryName = category?.category || 'Nieznana kategoria';
     const subcategoryName = subcategory?.name || 'Nieznana podkategoria';
 
@@ -2266,7 +2548,7 @@ function createSeeAlsoCard(tool, category, subcategory) {
 
     card.innerHTML = `
         <div class="zobacz-takze-card-image">
-            <img src="${toolImage}" alt="${safeToolName}" loading="lazy" class="card-img" onerror="this.src='images/placeholder.webp'">
+            <img src="${toolImage}" alt="${safeToolName}" loading="lazy" class="card-img" onerror="this.src='/images/placeholder.webp'">
             <div class="card-overlay">
                 <span class="card-price">${priceText}</span>
             </div>

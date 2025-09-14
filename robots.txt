@@ -3,11 +3,14 @@ User-agent: *
 # Allow all pages (template pages handled by noindex meta tags)
 Allow: /
 
-# Block only technical files that should never be crawled
-Disallow: /script.js
-Disallow: /style.css
-Disallow: /data.json
+# Block only build/dev artifacts
 Disallow: /node_modules/
+Disallow: /cookie-popup.html
+
+# Allow rendering-critical assets
+Allow: /script.js
+Allow: /style.css
+Allow: /data.json
 
 # Allow sitemap
 Sitemap: https://toolshare.com.pl/sitemap.xml

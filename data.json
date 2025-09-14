@@ -4,7 +4,7 @@
         "image": "images/ukosnica_metabo.webp",
         "subcategories": [
             { "name": "Bruzdownice", "tools": [
-                { "id": "bruzdownica", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 80, "Kaucja *": 150} }
+                { "id": "bruzdownica-einhell", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 80, "Kaucja *": 150} }
             ] },
             { "name": "Frezarki", "tools": [
                 { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 80, "Kaucja *": 140} }

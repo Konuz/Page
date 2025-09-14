@@ -1867,101 +1867,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     gap: 0.5rem;
 }
 
-.dropdown-arrow {
-    font-size: 0.8em;
-    transition: transform 0.3s ease;
-}
+/* Deduped: removed repeated dropdown rules; canonical definitions appear earlier. */
 
-.dropdown-content {
-    display: block;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 10px 45px 10px 14px;
-    text-decoration: none;
-    white-space: normal;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 4px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-    /* Zasady typograficzne dla polskiego tekstu */
-    hyphens: auto;
-    overflow-wrap: break-word;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-[data-theme="dark"] .dropdown-content a:hover {
-    background-color: #374151; /* gray-700 */
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.dropdown:hover .dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.sub-dropdown {
-    position: relative;
-}
-
-.sub-dropdown .sub-dropdown-content {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -1px; /* Adjust for border */
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-}
-
-.sub-dropdown:hover .sub-dropdown-content {
-    display: block;
-}
-
-.sub-dropdown-content a {
-    color: black;
-    padding: 10px 45px 10px 14px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    margin: 4px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
-
-.sub-dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Strzałka rozwijanego menu */
-.dropdown .breadcrumb-arrow {
-    transition: transform 0.3s ease;
-}
+/* Deduped: removed repeated .sub-dropdown styles (kept canonical block above) */
 
 /* Okruszki nawigacyjne (breadcrumb) */
 .breadcrumb {
@@ -2227,43 +2135,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     color: var(--primary-color);
 }
 
-.sub-dropdown {
-    position: relative;
-}
-
-.sub-dropdown .sub-dropdown-content {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -1px; /* Adjust for border */
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-}
-
-.sub-dropdown:hover .sub-dropdown-content {
-    display: block;
-}
-
-.sub-dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-}
-
-.sub-dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-/* Strzałka rozwijanego menu */
-.dropdown .breadcrumb-arrow {
-    transition: transform 0.3s ease;
-}
+/* Deduped: removed repeated .sub-dropdown styles (kept canonical block above) */
 
 .theme-toggle-btn {
     background: none;
@@ -2800,6 +2672,18 @@ body.subpage main {
     z-index: 1;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
+    /* Rounded corners + smooth scrolling without visible scrollbar */
+    overflow-x: hidden;
+    overflow-y: auto; /* JS may also set this inline when limiting height */
+    scrollbar-width: none;            /* Firefox: hide scrollbar */
+    -ms-overflow-style: none;         /* IE/old Edge */
+    clip-path: inset(0 round var(--border-radius)); /* enforce rounded corners */
+}
+
+/* Chrome/Safari/Edge: hide scrollbar but keep scroll */
+.sub-dropdown .sub-dropdown-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 .sub-dropdown:hover .sub-dropdown-content {
@@ -3731,3 +3615,5 @@ a,
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
 }
+
+/* Ukryj ewentualne pozostale akapity fallback (stare pliki) */

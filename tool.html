@@ -8,8 +8,8 @@
     <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://www.clarity.ms https://scripts.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com https://www.clarity.ms https://*.clarity.ms; img-src 'self' data: https:;">
     <title id="page-title">Narzędzie – ToolShare</title>
     <meta name="description" content="Wypożycz narzędzie w ToolShare – szybki odbiór, elastyczne godziny, lokalna obsługa i atrakcyjne ceny. Sprawdzone, gotowe do pracy urządzenia." id="meta-description">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://toolshare.com.pl/tool.html" id="canonical-url">
+    <meta name="robots" content="noindex, follow">
+    
     <meta property="og:locale" content="pl_PL">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="ToolShare">
@@ -19,7 +19,18 @@
     <meta property="og:image" content="https://toolshare.com.pl/images/logo.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <!-- Fallback OG tags for SSR/prerender -->
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
+    <meta property="og:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
+    <meta property="og:url" content="https://toolshare.com.pl/narzedzia/">
+    <meta property="og:image" content="https://toolshare.com.pl/images/hero.webp">
     <meta name="twitter:card" content="summary_large_image">
+    <!-- Fallback meta description for SSR/prerender -->
+    <meta name="description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy. Sprawdź ceny i warunki wynajmu." id="meta-description-fallback">
+    <!-- Fallback Twitter tags for SSR/prerender -->
+    <meta name="twitter:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
+    <meta name="twitter:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
     <meta name="twitter:title" content="Narzędzie – ToolShare" id="twitter-title">
     <meta name="twitter:description" content="Wypożycz narzędzie – ToolShare. Atrakcyjne ceny i lokalna obsługa." id="twitter-description">
     <meta name="twitter:image" content="https://toolshare.com.pl/images/logo.webp">
@@ -39,17 +50,17 @@
 
     <nav class="navbar">
         <div class="container">
-            <a href="index.html" class="logo" aria-label="Strona główna ToolShare"><img src="images/logo.webp" alt="ToolShare Logo"></a>
+            <a href="/" class="logo" aria-label="Strona główna ToolShare"><img src="images/logo.webp" alt="ToolShare Logo"></a>
             <div class="nav-right">
                 <div class="nav-links">
-                    <a href="index.html" class="nav-link" id="start-link">Strona Główna</a>
+                    <a href="/" class="nav-link" id="start-link">Strona Główna</a>
                     <div class="dropdown">
-                        <a href="index.html#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
+                        <a href="/#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
                         <div class="dropdown-content" id="nav-categories">
                             <!-- Kategorie będą wstawiane tutaj przez JS -->
                         </div>
                     </div>
-                    <a href="index.html#contact">Kontakt</a>
+                    <a href="/#contact">Kontakt</a>
                 </div>
                 <div class="nav-actions">
                     <button id="search-toggle" class="search-toggle-btn" aria-label="Wyszukaj narzędzia">
@@ -94,13 +105,13 @@
             </div>
             <ul class="mobile-menu-list">
                 <li class="mobile-menu-item">
-                    <a href="index.html" class="mobile-menu-link">Strona Główna</a>
+                    <a href="/" class="mobile-menu-link">Strona Główna</a>
                 </li>
                 <li class="mobile-menu-item">
                     <a href="#" class="mobile-menu-link has-submenu" data-submenu="tools-menu">Narzędzia</a>
                 </li>
                 <li class="mobile-menu-item">
-                    <a href="index.html#contact" class="mobile-menu-link">Kontakt</a>
+                    <a href="/#contact" class="mobile-menu-link">Kontakt</a>
                 </li>
             </ul>
         </div>
@@ -135,7 +146,15 @@
     <main>
         <section id="tool-details-section" class="content-section">
             <div class="container">
-                <nav id="breadcrumb-nav" class="breadcrumb"></nav>
+                <nav id="breadcrumb-nav" class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Strona główna</a>
+                    <span class="breadcrumb-separator">></span>
+                    <a href="/narzedzia/">[CategoryName]</a>
+                    <span class="breadcrumb-separator">></span>
+                    <a href="/narzedzia/">[SubcategoryName]</a>
+                    <span class="breadcrumb-separator">></span>
+                    <span class="breadcrumb-current">[ToolName]</span>
+                </nav>
                 <h1 id="tool-name" class="tool-page-title">Nazwa Narzędzia</h1>
                 <div id="tool-details-content" class="tool-details-grid">
                     <div> <!-- Kolumna ze zdjęciem -->
@@ -226,7 +245,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-info">
-                <p>&copy; 2025 ToolShare - wypożyczalnia narzędzi</p>
+                <p>&copy; ToolShare - wypożyczalnia narzędzi</p>
             </div>
             <div class="footer-links">
                 <a href="o-nas.html">O nas</a>

@@ -8,6 +8,23 @@ function absoluteUrl(urlPath) {
   return new URL(urlPath, base).toString();
 }
 
+function slugify(input) {
+  if (!input) return '';
+  const map = {
+    'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ż':'z','ź':'z',
+    'Ą':'a','Ć':'c','Ę':'e','Ł':'l','Ń':'n','Ó':'o','Ś':'s','Ż':'z','Ź':'z'
+  };
+  const replaced = String(input)
+    .split('')
+    .map(ch => map[ch] || ch)
+    .join('');
+  return replaced
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 function xmlEscape(text) {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -29,7 +46,7 @@ function main() {
   const sitemapPath = path.join(projectRoot, 'sitemap.xml');
 
   const staticUrls = [
-    { loc: absoluteUrl('index.html'), changefreq: 'daily', priority: '1.0' },
+    { loc: absoluteUrl(''), changefreq: 'daily', priority: '1.0' },
     { loc: absoluteUrl('o-nas.html'), changefreq: 'monthly', priority: '0.3' },
     { loc: absoluteUrl('polityka-prywatnosci.html'), changefreq: 'yearly', priority: '0.1' },
     { loc: absoluteUrl('regulamin.html'), changefreq: 'yearly', priority: '0.1' },
@@ -41,19 +58,20 @@ function main() {
     const catalog = JSON.parse(raw);
 
     catalog.forEach((category) => {
-      const catUrl = absoluteUrl(`category.html?category=${encodeURIComponent(category.category)}`);
+      const catSlug = `narzedzia/${slugify(category.category)}`;
+      const catUrl = absoluteUrl(catSlug);
       dynamicUrls.push({ loc: catUrl, changefreq: 'weekly', priority: '0.6' });
 
       (category.subcategories || []).forEach((sub) => {
-        const subUrl = absoluteUrl(
-          `subcategory.html?category=${encodeURIComponent(category.category)}&subcategory=${encodeURIComponent(sub.name)}`
-        );
+        const subSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}`;
+        const subUrl = absoluteUrl(subSlug);
         dynamicUrls.push({ loc: subUrl, changefreq: 'weekly', priority: '0.6' });
 
         (sub.tools || [])
           .filter((t) => t.enabled !== false)
           .forEach((tool) => {
-            const toolUrl = absoluteUrl(`tool.html?toolId=${encodeURIComponent(tool.id)}`);
+            const toolSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}/${encodeURIComponent(tool.id)}`;
+            const toolUrl = absoluteUrl(toolSlug);
             dynamicUrls.push({ loc: toolUrl, changefreq: 'weekly', priority: '0.6' });
           });
       });

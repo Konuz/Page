@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://toolshare.com.pl/index.html</loc>
+    <loc>https://toolshare.com.pl/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -21,507 +21,507 @@
     <priority>0.1</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Elektronarz%C4%99dzia</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Bruzdownice</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/bruzdownice</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=bruzdownica</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/bruzdownice/bruzdownica-einhell</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Frezarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/frezarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=frezarka-dewalt-dw-682</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/frezarki/frezarka-dewalt-dw-682</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=M%C5%82otowiertarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/mlotowiertarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=mlotowiertarka-ryobi</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/mlotowiertarki/mlotowiertarka-ryobi</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=mlotowiertarka-macallister</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/mlotowiertarki/mlotowiertarka-macallister</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=mlotowiertarka-udarowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/mlotowiertarki/mlotowiertarka-udarowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Pilarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pilarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pila-bosch-gts-254</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pilarki/pila-bosch-gts-254</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pilarka-einhell-te-cs-18</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pilarki/pilarka-einhell-te-cs-18</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pilarka-parkside</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pilarki/pilarka-parkside</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Pi%C5%82y%20%C5%82a%C5%84cuchowe</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pily-lancuchowe</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pila-lancuchowa-elektryczna</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pily-lancuchowe/pila-lancuchowa-elektryczna</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=mini-pila-ferm</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pily-lancuchowe/mini-pila-ferm</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pila-na-wysiegniku-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pily-lancuchowe/pila-na-wysiegniku-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pilarka-akumulatorowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pily-lancuchowe/pilarka-akumulatorowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Pistolety%20malarskie</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pistolety-malarskie</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=pistolet-do-malowania-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/pistolety-malarskie/pistolet-do-malowania-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Szlifierki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/szlifierki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=szlifierka-metabo</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/szlifierki/szlifierka-metabo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=szlifierka-mimosrodowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/szlifierki/szlifierka-mimosrodowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Uko%C5%9Bnice</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/ukosnice</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=ukosnica-metabo</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/ukosnice/ukosnica-metabo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Wkr%C4%99tarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/wkretarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=wkretarka-graphite</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/wkretarki/wkretarka-graphite</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=wkretarka-ryobi</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/wkretarki/wkretarka-ryobi</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Elektronarz%C4%99dzia&amp;subcategory=Wyrzynarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/wyrzynarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=wyrzynarka-macallister</loc>
+    <loc>https://toolshare.com.pl/narzedzia/elektronarzedzia/wyrzynarki/wyrzynarka-macallister</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Narz%C4%99dzia%20pomiarowe</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Narz%C4%99dzia%20pomiarowe&amp;subcategory=Dalmierze%20i%20lasery</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/dalmierze-i-lasery</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=dalmierz-laserowy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/dalmierze-i-lasery/dalmierz-laserowy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=laser-bosch-pll-360</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/dalmierze-i-lasery/laser-bosch-pll-360</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Narz%C4%99dzia%20pomiarowe&amp;subcategory=%C5%81aty%20budowlane</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/laty-budowlane</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=lata-budowlana-3m</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/laty-budowlane/lata-budowlana-3m</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Narz%C4%99dzia%20pomiarowe&amp;subcategory=Poziomice</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/poziomice</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=poziomice-tradycyjne</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/poziomice/poziomice-tradycyjne</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Narz%C4%99dzia%20pomiarowe&amp;subcategory=Tachimetry</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/tachimetry</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=tachimetr-dtm-624r</loc>
+    <loc>https://toolshare.com.pl/narzedzia/narzedzia-pomiarowe/tachimetry/tachimetr-dtm-624r</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Mycie%20i%20sprz%C4%85tanie</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Mycie%20i%20sprz%C4%85tanie&amp;subcategory=Myjki%20ci%C5%9Bnieniowe</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/myjki-cisnieniowe</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=karcher-k5</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/myjki-cisnieniowe/karcher-k5</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=myjka-cisnieniowa-cedrus-1</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/myjki-cisnieniowe/myjka-cisnieniowa-cedrus-1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=myjka-cisnieniowa-cedrus-2</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/myjki-cisnieniowe/myjka-cisnieniowa-cedrus-2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Mycie%20i%20sprz%C4%85tanie&amp;subcategory=Odkurzacze</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/odkurzacze</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=odkurzacz-karcher-n7</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/odkurzacze/odkurzacz-karcher-n7</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=odkurzacz-pioracy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/odkurzacze/odkurzacz-pioracy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=odkurzacz-akumulatorowy-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/mycie-i-sprzatanie/odkurzacze/odkurzacz-akumulatorowy-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Aeratory</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/aeratory</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=aerator-reczny</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/aeratory/aerator-reczny</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Betoniarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/betoniarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=betoniarka-200</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/betoniarki/betoniarka-200</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Dmuchawy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/dmuchawy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=dmuchawa-akumulatorowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/dmuchawy/dmuchawa-akumulatorowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Glebogryzarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/glebogryzarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=glebogryzarka-cedrus-glx540</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/glebogryzarki/glebogryzarka-cedrus-glx540</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Grille</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/grille</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=grill-gazowy-landmann</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/grille/grill-gazowy-landmann</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Kosiarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosiarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=kosiarka-akumulatorowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosiarki/kosiarka-akumulatorowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=kosiarka-automatyczna-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosiarki/kosiarka-automatyczna-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Kosy%20i%20podkaszarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosy-i-podkaszarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=kosa-akumulatorowa-cedrus-1</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosy-i-podkaszarki/kosa-akumulatorowa-cedrus-1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=podkaszarka-akumulatorowa-cedrus-2</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/kosy-i-podkaszarki/podkaszarka-akumulatorowa-cedrus-2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Kraw%C4%99dziarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/krawedziarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=krawedziarka-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/krawedziarki/krawedziarka-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=%C5%81opaty%20i%20szpadle</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/lopaty-i-szpadle</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=szpadel-fiskars</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/lopaty-i-szpadle/szpadel-fiskars</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=szpadel-drenarski</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/lopaty-i-szpadle/szpadel-drenarski</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=noz-do-darni</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/lopaty-i-szpadle/noz-do-darni</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=M%C5%82oty</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/mloty</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=mlot-wyburzeniowy-5kg</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/mloty/mlot-wyburzeniowy-5kg</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=No%C5%BCyce%20ogrodowe</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/nozyce-ogrodowe</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=nozyce-akumulatorowe-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/nozyce-ogrodowe/nozyce-akumulatorowe-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Opryskiwacze</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/opryskiwacze</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=opryskiwacz-akumulatorowy-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/opryskiwacze/opryskiwacz-akumulatorowy-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Siewniki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/siewniki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=siewnik-reczny</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/siewniki/siewnik-reczny</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Sto%C5%82y%20i%20krzes%C5%82a</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/stoly-i-krzesla</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=stoly-krzesla-rozkladane</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/stoly-i-krzesla/stoly-krzesla-rozkladane</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Wertykulator</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/wertykulator</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=wertykulator-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/wertykulator/wertykulator-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Zag%C4%99szczarki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/zageszczarki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=zageszczarka-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/zageszczarki/zageszczarka-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20budowlany%20i%20ogrodniczy&amp;subcategory=Inne</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/inne</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=wyrywacz-chwastow-fiskars</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/inne/wyrywacz-chwastow-fiskars</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=urzadzenie-wielofunkcyjne-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/inne/urzadzenie-wielofunkcyjne-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=szczotka-akumulatorowa-cedrus</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-budowlany-i-ogrodniczy/inne/szczotka-akumulatorowa-cedrus</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Sprz%C4%99t%20pomocniczy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20pomocniczy&amp;subcategory=Drabiny</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy/drabiny</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=drabina-3-czesciowa</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy/drabiny/drabina-3-czesciowa</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=drabina-1m</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy/drabiny/drabina-1m</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Sprz%C4%99t%20pomocniczy&amp;subcategory=Taczki</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy/taczki</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=taczka-budowlana</loc>
+    <loc>https://toolshare.com.pl/narzedzia/sprzet-pomocniczy/taczki/taczka-budowlana</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/category.html?category=Akcesoria%20samochodowe</loc>
+    <loc>https://toolshare.com.pl/narzedzia/akcesoria-samochodowe</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Akcesoria%20samochodowe&amp;subcategory=Baga%C5%BCnik%20dachowy</loc>
+    <loc>https://toolshare.com.pl/narzedzia/akcesoria-samochodowe/bagaznik-dachowy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=box-dachowy-travel-400-volvo</loc>
+    <loc>https://toolshare.com.pl/narzedzia/akcesoria-samochodowe/bagaznik-dachowy/box-dachowy-travel-400-volvo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/subcategory.html?category=Akcesoria%20samochodowe&amp;subcategory=Lod%C3%B3wka%20turystyczna</loc>
+    <loc>https://toolshare.com.pl/narzedzia/akcesoria-samochodowe/lodowka-turystyczna</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolshare.com.pl/tool.html?toolId=lodowka-turystyczna-8l</loc>
+    <loc>https://toolshare.com.pl/narzedzia/akcesoria-samochodowe/lodowka-turystyczna/lodowka-turystyczna-8l</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>

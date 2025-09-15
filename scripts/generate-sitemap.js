@@ -30,20 +30,24 @@ function xmlEscape(text) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+    .replace(/\"/g, '&quot;')
     .replace(/'/g, '&apos;');
 }
 
-function formatUrl(loc, changefreq = 'weekly', priority = '0.6') {
+function formatUrlWithAlternates(loc, alternates = [], lastmod = null, changefreq = 'weekly', priority = '0.6') {
   const safeLoc = xmlEscape(loc);
-  return `  <url>\n    <loc>${safeLoc}</loc>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+  const alt = alternates.map(a => `    <xhtml:link rel="alternate" hreflang="${a.lang}" href="${xmlEscape(a.href)}"/>`).join('\n');
+  const lm = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : '';
+  return `  <url>\n    <loc>${safeLoc}</loc>${lm}\n${alt ? alt + '\n' : ''}    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
 }
 
 function main() {
   // Project root is one level up from this script directory
   const projectRoot = path.resolve(__dirname, '..');
   const dataPath = path.join(projectRoot, 'data.json');
-  const sitemapPath = path.join(projectRoot, 'sitemap.xml');
+  const sitemapIndexPath = path.join(projectRoot, 'sitemap.xml');
+  const sitemapsDir = path.join(projectRoot, 'sitemaps');
+  fs.mkdirSync(sitemapsDir, { recursive: true });
 
   const staticUrls = [
     { loc: absoluteUrl(''), changefreq: 'daily', priority: '1.0' },
@@ -81,19 +85,33 @@ function main() {
   }
 
   const all = [...staticUrls, ...dynamicUrls];
-  const body = all
-    .map((u) => formatUrl(u.loc, u.changefreq, u.priority))
+  const today = new Date().toISOString().split('T')[0];
+
+  const altFor = (url) => [
+    { lang: 'pl', href: url.endsWith('/') ? url : url + '/' },
+    { lang: 'x-default', href: absoluteUrl('') }
+  ];
+
+  const urlset = all
+    .map((u) => formatUrlWithAlternates(u.loc, altFor(u.loc), today, u.changefreq, u.priority))
     .join('\n');
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n` +
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    `${body}\n` +
+  const sitemapPl = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
+    `${urlset}\n` +
     `</urlset>\n`;
 
-  fs.writeFileSync(sitemapPath, xml, 'utf8');
-  console.log(`Sitemap written to ${sitemapPath} with ${all.length} URLs.`);
+  const sitemapPlPath = path.join(sitemapsDir, 'sitemap-pl.xml');
+  fs.writeFileSync(sitemapPlPath, sitemapPl, 'utf8');
+
+  const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `  <sitemap>\n    <loc>${xmlEscape(absoluteUrl('sitemaps/sitemap-pl.xml'))}</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>\n` +
+    `</sitemapindex>\n`;
+
+  fs.writeFileSync(sitemapIndexPath, sitemapIndex, 'utf8');
+  console.log(`Sitemap index written to ${sitemapIndexPath}. Per-language: ${sitemapPlPath}`);
 }
 
 main();
-
 

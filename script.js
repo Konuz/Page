@@ -76,6 +76,29 @@ console.log('Skrypt załadowany!');
     
 })();
 
+// ===== SEO: canonical and robots handling for pretty URLs =====
+(function() {
+    try {
+        var path = window.location.pathname || '';
+        // If we're on pretty URLs under /narzedzia/, ensure indexable and set canonical
+        if (path.startsWith('/narzedzia/')) {
+            // 1) robots index,follow
+            var robots = document.querySelector('meta[name="robots"]');
+            if (robots) robots.setAttribute('content', 'index,follow');
+            // 2) canonical normalized (ensure trailing slash for non-file paths)
+            var hasExt = /\.[a-z0-9]{2,5}$/i.test(path);
+            var normalized = window.location.origin + path + (hasExt || path.endsWith('/') ? '' : '/');
+            var canon = document.querySelector('link[rel="canonical"]');
+            if (!canon) {
+                canon = document.createElement('link');
+                canon.setAttribute('rel', 'canonical');
+                document.head.appendChild(canon);
+            }
+            canon.setAttribute('href', normalized);
+        }
+    } catch (_) {}
+})();
+
 // ===== LIMIT VISIBLE TOOLS TO 12 WITH SCROLL (desktop) =====
 function applyGridScrollLimit() {
     try {

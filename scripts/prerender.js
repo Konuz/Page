@@ -65,6 +65,15 @@ function setRobots(html, value) {
   return upsertMetaByName(html, 'robots', value);
 }
 
+// Insert hreflang alternates (removes existing alternates first)
+function setHreflang(html, map) {
+  let out = html.replace(/<link[^>]+rel=["']alternate["'][^>]*>\s*/ig, '');
+  const tags = Object.entries(map)
+    .map(([lang, href]) => `    <link rel="alternate" hreflang="${lang}" href="${href}">`)
+    .join('\n');
+  return out.replace(/<head[^>]*>/i, m => `${m}\n${tags}`);
+}
+
 function replacePlaceholders(html, map) {
   let out = html;
   Object.entries(map).forEach(([k, v]) => {
@@ -118,6 +127,7 @@ function generate() {
     catHtml = upsertMetaByName(catHtml, 'description', `Lista narzędzi w kategorii ${catName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
     catHtml = setRobots(catHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     catHtml = setCanonical(catHtml, catUrl);
+    catHtml = setHreflang(catHtml, { 'pl': catUrl + '/', 'x-default': absoluteUrl('') });
     catHtml = upsertMetaByProp(catHtml, 'og:type', 'website');
     catHtml = upsertMetaByProp(catHtml, 'og:title', `Wypożyczalnia narzędzi – ${catName} | ToolShare`);
     catHtml = upsertMetaByProp(catHtml, 'og:description', `Lista narzędzi w kategorii ${catName}. Sprawdź dostępność i ceny wynajmu.`);
@@ -150,6 +160,7 @@ function generate() {
       subHtml = upsertMetaByName(subHtml, 'description', `Lista narzędzi w podkategorii ${subName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
       subHtml = setRobots(subHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
       subHtml = setCanonical(subHtml, subUrl);
+      subHtml = setHreflang(subHtml, { 'pl': subUrl + '/', 'x-default': absoluteUrl('') });
       subHtml = upsertMetaByProp(subHtml, 'og:type', 'website');
       subHtml = upsertMetaByProp(subHtml, 'og:title', `Wypożyczalnia narzędzi – ${subName} | ToolShare`);
       subHtml = upsertMetaByProp(subHtml, 'og:description', `Lista narzędzi w podkategorii ${subName}. Sprawdź dostępność i ceny wynajmu.`);
@@ -186,6 +197,7 @@ function generate() {
           toolHtml = upsertMetaByName(toolHtml, 'description', toolDesc);
           toolHtml = setRobots(toolHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           toolHtml = setCanonical(toolHtml, toolUrl);
+          toolHtml = setHreflang(toolHtml, { 'pl': toolUrl + '/', 'x-default': absoluteUrl('') });
           toolHtml = upsertMetaByProp(toolHtml, 'og:type', 'product');
           toolHtml = upsertMetaByProp(toolHtml, 'og:title', `${toolName} – wynajem | ToolShare`);
           toolHtml = upsertMetaByProp(toolHtml, 'og:description', toolDesc);

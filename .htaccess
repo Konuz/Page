@@ -14,6 +14,9 @@ RewriteRule ^ https://toolshare.com.pl%{REQUEST_URI} [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+index\.html\s [NC]
 RewriteRule ^index\.html$ / [R=301,L,NE]
 
+# Avoid 403 on physical dir by redirecting section root to a landing category
+RewriteRule ^narzedzia/?$ /narzedzia/elektronarzedzia/ [R=301,L]
+
 # 301 from .html query to slug paths
 # /category.html?category=Kategoria -> /narzedzia/slug(kategoria)
 RewriteCond %{THE_REQUEST} \s/+category\.html [NC]
@@ -42,3 +45,5 @@ RewriteRule ^narzedzia/([^/]+)/([^/]+)/?$ subcategory.html?category=$1&subcatego
 # /narzedzia/kategoria/podkategoria/narzedzie → tool.html
 RewriteRule ^narzedzia/([^/]+)/([^/]+)/([^/]+)/?$ tool.html?toolId=$3 [QSA,B,L]
 
+# Normalize mislinked legal/about pages nested under category paths
+RewriteRule ^narzedzia/.*/(o-nas|polityka-prywatnosci|regulamin)\.html$ /$1.html [R=301,L]

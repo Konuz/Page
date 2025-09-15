@@ -1,18 +1,24 @@
 User-agent: *
 
-# Allow all pages (template pages handled by noindex meta tags)
+# Polityka crawl: pozwól na kluczowe sekcje, zablokuj śmieciowe parametry
 Allow: /
+Allow: /narzedzia/
 
-# Block only build/dev artifacts
+# Blokady artefaktów build/dev
 Disallow: /node_modules/
 Disallow: /cookie-popup.html
 
-# Allow rendering-critical assets
+# Ograniczenia parametrów (uniknięcie duplikacji i crawl traps)
+Disallow: /*?*utm_
+Disallow: /*?*sort=
+Disallow: /*?*color=
+
+# Zasoby krytyczne do renderu
 Allow: /script.js
 Allow: /style.css
 Allow: /data.json
 
-# Allow sitemap
+# Mapa witryny
 Sitemap: https://toolshare.com.pl/sitemap.xml
 
 

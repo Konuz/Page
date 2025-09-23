@@ -362,10 +362,14 @@ function generate() {
         '                </a>'
       ].join('\n');
     }).join('\n');
-    tmplHome = tmplHome.replace(
-      /(<div id=\"tools-grid\" class=\"tools-grid\">)[\s\S]*?(<\/div>)/,
-      (m, p1, p2) => `${p1}\n${cards}\n            ${p2}`
-    );
+    if (tmplHome.includes('<!-- HOME_TOOLS_GRID -->')) {
+      tmplHome = tmplHome.replace('<!-- HOME_TOOLS_GRID -->', `\n${cards}\n                `);
+    } else {
+      tmplHome = tmplHome.replace(
+        /(<div id=\"tools-grid\" class=\"tools-grid\">)[\s\S]*?(<\/div>)/,
+        (m, p1, p2) => `${p1}\n${cards}\n            ${p2}`
+      );
+    }
     fs.writeFileSync(path.join(projectRoot, 'index.html'), tmplHome, 'utf8');
   } catch (_) {}
 }

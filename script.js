@@ -1572,7 +1572,9 @@ function initializeSeoManager(toolCatalog) {
                 { name: 'Strona główna', url: 'https://toolshare.com.pl/' },
                 { name: stripHtmlTags(category.category), url: pageUrl }
             ];
-            injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+            if (!hasJsonLdType('BreadcrumbList')) {
+                injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+            }
 
             const itemList = buildItemList(
                 category.subcategories.map(sub => ({
@@ -1642,7 +1644,9 @@ function initializeSeoManager(toolCatalog) {
                 })),
                 pageUrl
             );
-            injectJsonLd(itemList);
+            if (!hasJsonLdType('ItemList')) {
+                injectJsonLd(itemList);
+            }
         }
 
         if (isToolPage) {
@@ -1692,7 +1696,9 @@ function initializeSeoManager(toolCatalog) {
                         url: pageUrl
                     }
                 };
-                injectJsonLd(product);
+                if (!hasJsonLdType('Product')) {
+                    injectJsonLd(product);
+                }
             } catch (_) {}
 
             setMetaRobots('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
@@ -1703,7 +1709,9 @@ function initializeSeoManager(toolCatalog) {
                 { name: stripHtmlTags(subcategory.name), url: `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name)}` },
                 { name: stripHtmlTags(tool.name), url: pageUrl }
             ];
-            injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+            if (!hasJsonLdType('BreadcrumbList')) {
+                injectJsonLd(buildBreadcrumbList(breadcrumbItems));
+            }
         }
     } catch (_) {}
 }
@@ -1787,6 +1795,26 @@ function injectJsonLd(object) {
     script.type = 'application/ld+json';
     script.text = JSON.stringify(object);
     document.head.appendChild(script);
+}
+
+// Check if JSON-LD of given @type already exists in the document
+function hasJsonLdType(type) {
+    try {
+        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+        for (const s of scripts) {
+            try {
+                const data = JSON.parse(s.textContent || '{}');
+                const t = data['@type'] || (data['@graph'] && data['@graph'][0] && data['@graph'][0]['@type']);
+                if (!t) continue;
+                if (Array.isArray(t)) {
+                    if (t.includes(type)) return true;
+                } else if (typeof t === 'string' && t.toLowerCase() === type.toLowerCase()) {
+                    return true;
+                }
+            } catch (_) { /* ignore parse errors */ }
+        }
+    } catch (_) {}
+    return false;
 }
 
 function absoluteUrl(path) {

@@ -1119,6 +1119,9 @@ function renderCategories(toolCatalog) {
         img.alt = category.category;
         img.className = 'category-card-img';
         img.loading = 'lazy';
+        img.width = 300;
+        img.height = 200;
+        img.decoding = 'async';
 
         imageWrapper.appendChild(img);
 

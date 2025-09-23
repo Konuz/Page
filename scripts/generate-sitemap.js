@@ -1,8 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+function getBaseUrl() {
+  let base = process.env.BASE_URL || 'https://toolshare.com.pl/';
+  if (!base.endsWith('/')) base += '/';
+  return base;
+}
+
 function absoluteUrl(urlPath) {
-  const base = 'https://toolshare.com.pl/';
+  const base = getBaseUrl();
   if (!urlPath) return base;
   if (/^https?:\/\//i.test(urlPath)) return urlPath;
   return new URL(urlPath, base).toString();
@@ -62,19 +68,19 @@ function main() {
     const catalog = JSON.parse(raw);
 
     catalog.forEach((category) => {
-      const catSlug = `narzedzia/${slugify(category.category)}`;
+      const catSlug = `narzedzia/${slugify(category.category)}/`;
       const catUrl = absoluteUrl(catSlug);
       dynamicUrls.push({ loc: catUrl, changefreq: 'weekly', priority: '0.6' });
 
       (category.subcategories || []).forEach((sub) => {
-        const subSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}`;
+        const subSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}/`;
         const subUrl = absoluteUrl(subSlug);
         dynamicUrls.push({ loc: subUrl, changefreq: 'weekly', priority: '0.6' });
 
         (sub.tools || [])
           .filter((t) => t.enabled !== false)
           .forEach((tool) => {
-            const toolSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}/${encodeURIComponent(tool.id)}`;
+            const toolSlug = `narzedzia/${slugify(category.category)}/${slugify(sub.name)}/${encodeURIComponent(tool.id)}/`;
             const toolUrl = absoluteUrl(toolSlug);
             dynamicUrls.push({ loc: toolUrl, changefreq: 'weekly', priority: '0.6' });
           });
@@ -87,10 +93,14 @@ function main() {
   const all = [...staticUrls, ...dynamicUrls];
   const today = new Date().toISOString().split('T')[0];
 
-  const altFor = (url) => [
-    { lang: 'pl', href: url.endsWith('/') ? url : url + '/' },
-    { lang: 'x-default', href: absoluteUrl('') }
-  ];
+  const altFor = (url) => {
+    const hasExt = /\.[a-z0-9]{2,5}$/i.test(url);
+    const href = hasExt ? url : (url.endsWith('/') ? url : (url + '/'));
+    return [
+      { lang: 'pl', href },
+      { lang: 'x-default', href: absoluteUrl('') }
+    ];
+  };
 
   const urlset = all
     .map((u) => formatUrlWithAlternates(u.loc, altFor(u.loc), today, u.changefreq, u.priority))
@@ -114,4 +124,3 @@ function main() {
 }
 
 main();
-

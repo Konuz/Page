@@ -1,9 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
+// Base URL (configurable for staging)
+function getBaseUrl() {
+  let base = process.env.BASE_URL || 'https://toolshare.com.pl/';
+  if (!base.endsWith('/')) base += '/';
+  return base;
+}
+
 // Absolute URL helper
 function absoluteUrl(urlPath) {
-  const base = 'https://toolshare.com.pl/';
+  const base = getBaseUrl();
   if (!urlPath) return base;
   if (/^https?:\/\//i.test(urlPath)) return urlPath;
   return new URL(urlPath, base).toString();
@@ -106,11 +113,72 @@ function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
 const projectRoot = path.resolve(__dirname, '..');
 const outRoot = path.join(projectRoot, 'narzedzia');
 
+// Build simple static navigation links (top-level categories only)
+function buildStaticNavigation(catalog) {
+  try {
+    return (catalog || []).map(cat => {
+      const name = String(cat.category).trim();
+      const slug = slugify(name);
+      return `                            <a href="/narzedzia/${slug}/" role="menuitem">${name}</a>`;
+    }).join('\n');
+  } catch (_) {
+    return '';
+  }
+}
+
+function injectStaticNavigation(html, catalog) {
+  const nav = buildStaticNavigation(catalog);
+  let out = html.replace('<!-- STATIC_NAVIGATION -->', nav);
+  // Also handle templates without placeholder by targeting the nav container region
+  out = out.replace(
+    /(<div class=\"dropdown-content\" id=\"nav-categories\">)[\s\S]*?(<\/div>)/,
+    (m, p1, p2) => `${p1}\n${nav}\n${p2}`
+  );
+  return out;
+}
+
+function jsonLdScript(obj) {
+  return `    <script type=\"application/ld+json\">\n${JSON.stringify(obj)}\n    </script>`;
+}
+
+function injectBreadcrumbSchema(html, items) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, item: it.url }))
+  };
+  let out = html.replace('<!-- BREADCRUMB_SCHEMA -->', jsonLdScript(schema));
+  if (out === html) {
+    // no placeholder; append before </head>
+    out = html.replace(/<\/head>/i, match => `${jsonLdScript(schema)}\n${match}`);
+  }
+  return out;
+}
+
+function injectItemListSchema(html, entries, pageUrl) {
+  const schema = {
+    '@context': 'https://schema.org', '@type': 'ItemList', url: pageUrl,
+    itemListElement: entries.map((e, i) => ({ '@type': 'ListItem', position: i + 1, url: e.url, name: e.name }))
+  };
+  if (html.includes('<!-- BREADCRUMB_SCHEMA -->')) {
+    return html.replace('<!-- BREADCRUMB_SCHEMA -->', (m) => `${m}\n${jsonLdScript(schema)}`);
+  }
+  return html.replace(/<\/head>/i, match => `${jsonLdScript(schema)}\n${match}`);
+}
+
+function injectProductSchema(html, product) {
+  if (html.includes('<!-- STRUCTURED_DATA -->')) {
+    return html.replace('<!-- STRUCTURED_DATA -->', jsonLdScript(product));
+  }
+  return html.replace(/<\/head>/i, match => `${jsonLdScript(product)}\n${match}`);
+}
+
 function generate() {
   const dataPath = path.join(projectRoot, 'data.json');
   const tmplCategory = readTemplate('category.html');
   const tmplSubcategory = readTemplate('subcategory.html');
   const tmplTool = readTemplate('tool.html');
+  let tmplHome = readTemplate('index.html');
 
   const raw = fs.readFileSync(dataPath, 'utf8');
   const catalog = JSON.parse(raw);
@@ -118,7 +186,7 @@ function generate() {
   catalog.forEach((category) => {
     const catName = String(category.category).trim();
     const catSlug = slugify(catName);
-    const catUrl = absoluteUrl(`narzedzia/${catSlug}`);
+    const catUrl = absoluteUrl(`narzedzia/${catSlug}/`);
     const catImg = category.image ? absoluteUrl(category.image) : absoluteUrl('images/hero.webp');
 
     // Category page
@@ -127,7 +195,7 @@ function generate() {
     catHtml = upsertMetaByName(catHtml, 'description', `Lista narzędzi w kategorii ${catName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
     catHtml = setRobots(catHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     catHtml = setCanonical(catHtml, catUrl);
-    catHtml = setHreflang(catHtml, { 'pl': catUrl + '/', 'x-default': absoluteUrl('') });
+    catHtml = setHreflang(catHtml, { 'pl': catUrl, 'x-default': absoluteUrl('') });
     catHtml = upsertMetaByProp(catHtml, 'og:type', 'website');
     catHtml = upsertMetaByProp(catHtml, 'og:title', `Wypożyczalnia narzędzi – ${catName} | ToolShare`);
     catHtml = upsertMetaByProp(catHtml, 'og:description', `Lista narzędzi w kategorii ${catName}. Sprawdź dostępność i ceny wynajmu.`);
@@ -138,6 +206,13 @@ function generate() {
     catHtml = upsertMetaByName(catHtml, 'twitter:image', catImg);
     catHtml = replacePlaceholders(catHtml, { 'CategoryName': catName });
     catHtml = setH1(catHtml, 'category-title', catName);
+    catHtml = injectStaticNavigation(catHtml, catalog);
+
+    // Breadcrumb JSON-LD (SSR)
+    catHtml = injectBreadcrumbSchema(catHtml, [
+      { name: 'Strona główna', url: absoluteUrl('') },
+      { name: catName, url: catUrl }
+    ]);
 
     // Cleanup fallback duplicate blocks
     catHtml = cleanupFallback(catHtml);
@@ -150,7 +225,7 @@ function generate() {
     (category.subcategories || []).forEach((sub) => {
       const subName = String(sub.name).trim();
       const subSlug = slugify(subName);
-      const subUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}`);
+      const subUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/`);
       // Prefer sub image from first tool else category
       const firstTool = (sub.tools || []).find(t => t && (t.enabled !== false));
       const subImg = firstTool?.image ? absoluteUrl(firstTool.image) : catImg;
@@ -160,7 +235,7 @@ function generate() {
       subHtml = upsertMetaByName(subHtml, 'description', `Lista narzędzi w podkategorii ${subName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
       subHtml = setRobots(subHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
       subHtml = setCanonical(subHtml, subUrl);
-      subHtml = setHreflang(subHtml, { 'pl': subUrl + '/', 'x-default': absoluteUrl('') });
+      subHtml = setHreflang(subHtml, { 'pl': subUrl, 'x-default': absoluteUrl('') });
       subHtml = upsertMetaByProp(subHtml, 'og:type', 'website');
       subHtml = upsertMetaByProp(subHtml, 'og:title', `Wypożyczalnia narzędzi – ${subName} | ToolShare`);
       subHtml = upsertMetaByProp(subHtml, 'og:description', `Lista narzędzi w podkategorii ${subName}. Sprawdź dostępność i ceny wynajmu.`);
@@ -173,6 +248,18 @@ function generate() {
       // Adjust breadcrumb category link to pretty URL
       subHtml = subHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
       subHtml = setH1(subHtml, 'subcategory-title', subName);
+      subHtml = injectStaticNavigation(subHtml, catalog);
+
+      // Inject Breadcrumb + ItemList JSON-LD (SSR)
+      subHtml = injectBreadcrumbSchema(subHtml, [
+        { name: 'Strona główna', url: absoluteUrl('') },
+        { name: catName, url: catUrl },
+        { name: subName, url: subUrl }
+      ]);
+      const toolsForList = (sub.tools || [])
+        .filter(t => t && t.enabled !== false)
+        .map(t => ({ name: String(t.name).trim(), url: absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(String(t.id))}/`) }));
+      subHtml = injectItemListSchema(subHtml, toolsForList, subUrl);
 
       subHtml = cleanupFallback(subHtml);
 
@@ -186,7 +273,7 @@ function generate() {
         .forEach((tool) => {
           const toolId = String(tool.id);
           const toolName = String(tool.name).trim();
-          const toolUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(toolId)}`);
+          const toolUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(toolId)}/`);
           const toolImg = tool.image ? absoluteUrl(tool.image) : subImg;
           const price = firstNumericPrice(tool.pricing);
           const toolDescBase = `Informacje o narzędziu ${toolName}. ${catName} – ${subName}. Odbiór w Chrzęstawie Wielkiej, elastyczne godziny.`;
@@ -197,7 +284,7 @@ function generate() {
           toolHtml = upsertMetaByName(toolHtml, 'description', toolDesc);
           toolHtml = setRobots(toolHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           toolHtml = setCanonical(toolHtml, toolUrl);
-          toolHtml = setHreflang(toolHtml, { 'pl': toolUrl + '/', 'x-default': absoluteUrl('') });
+          toolHtml = setHreflang(toolHtml, { 'pl': toolUrl, 'x-default': absoluteUrl('') });
           toolHtml = upsertMetaByProp(toolHtml, 'og:type', 'product');
           toolHtml = upsertMetaByProp(toolHtml, 'og:title', `${toolName} – wynajem | ToolShare`);
           toolHtml = upsertMetaByProp(toolHtml, 'og:description', toolDesc);
@@ -217,6 +304,32 @@ function generate() {
           // Ensure H1 if present follows toolName
           toolHtml = toolHtml.replace(/(<h1[^>]*id=["']tool-name["'][^>]*>)[\s\S]*?(<\/h1>)/i, `$1${toolName}$2`);
 
+          // SSR Product + Breadcrumb JSON-LD and static nav
+          try {
+            const priceVal = firstNumericPrice(tool.pricing);
+            const product = {
+              '@context': 'https://schema.org',
+              '@type': 'Product',
+              name: toolName,
+              image: [toolImg],
+              category: `${catName} > ${subName}`,
+              url: toolUrl,
+              offers: {
+                '@type': 'Offer', priceCurrency: 'PLN',
+                price: typeof priceVal === 'number' ? priceVal : undefined,
+                availability: 'https://schema.org/InStock', url: toolUrl
+              }
+            };
+            toolHtml = injectProductSchema(toolHtml, product);
+            toolHtml = injectBreadcrumbSchema(toolHtml, [
+              { name: 'Strona główna', url: absoluteUrl('') },
+              { name: catName, url: catUrl },
+              { name: subName, url: subUrl },
+              { name: toolName, url: toolUrl }
+            ]);
+          } catch (_) {}
+
+          toolHtml = injectStaticNavigation(toolHtml, catalog);
           toolHtml = cleanupFallback(toolHtml);
 
           const toolDir = path.join(subDir, toolId);
@@ -225,6 +338,36 @@ function generate() {
         });
     });
   });
+
+  // Inject SSR homepage categories and static nav
+  try {
+    // Static nav
+    tmplHome = tmplHome.replace(
+      /(<div class=\"dropdown-content\" id=\"nav-categories\">)[\s\S]*?(<\/div>)/,
+      (m, p1, p2) => `${p1}\n${buildStaticNavigation(catalog)}\n${p2}`
+    );
+    // Category cards in #tools-grid
+    const cards = (catalog || []).map(cat => {
+      const name = String(cat.category).trim();
+      const slug = slugify(name);
+      const imgSrc = cat.image ? `/${cat.image}` : '/images/hero.webp';
+      return [
+        '                <a href="/narzedzia/' + slug + '/" class="category-card">',
+        '                    <div class="card-image-wrapper">',
+        `                        <img src="${imgSrc}" alt="${name}" loading="lazy" width="300" height="200" decoding="async">`,
+        '                    </div>',
+        '                    <div class="category-card-title">',
+        `                        <h3>${name}</h3>`,
+        '                    </div>',
+        '                </a>'
+      ].join('\n');
+    }).join('\n');
+    tmplHome = tmplHome.replace(
+      /(<div id=\"tools-grid\" class=\"tools-grid\">)[\s\S]*?(<\/div>)/,
+      (m, p1, p2) => `${p1}\n${cards}\n            ${p2}`
+    );
+    fs.writeFileSync(path.join(projectRoot, 'index.html'), tmplHome, 'utf8');
+  } catch (_) {}
 }
 
 function main() {

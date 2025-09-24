@@ -1,0 +1,170 @@
+[
+    {
+        "category": "Elektronarzędzia",
+        "image": "images/ukosnica_metabo.webp",
+        "subcategories": [
+            { "name": "Bruzdownice", "tools": [
+                { "id": "bruzdownica-einhell", "name": "Bruzdownica Einhell", "image": "images/bruzdownica_einhell.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 80, "Kaucja *": 150} }
+            ] },
+            { "name": "Frezarki", "tools": [
+                { "id": "frezarka-dewalt-dw-682", "name": "Frezarka DeWalt", "image": "images/frezarka_dewalt_dw682.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 80, "Kaucja *": 140} }
+            ] },
+            { "name": "Młotowiertarki", "tools": [
+                { "id": "mlotowiertarka-ryobi", "name": "Młotowiertarka Ryobi", "image": "images/mlotowiertarka_ryobi.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 70, "Kaucja *": 130} },
+                { "id": "mlotowiertarka-macallister", "name": "Młotowiertarka MacAllister", "image": "images/mlotowiertarka_macallister.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 50, "Kaucja *": 90} },
+                { "id": "mlotowiertarka-udarowa-cedrus", "name": "Młotowiertarka Cedrus", "image": "images/mloto–wiertarka_udarowa_cedrus_CEDRH2.2LI.webp", "pricing": {"1-3 Dni": 25, "4-7 Dni": 20, "Sobota + Niedziela": 45, "Kaucja *": 80} }
+            ] },
+            { "name": "Pilarki", "tools": [
+                { "id": "pila-bosch-gts-254", "name": "Piła stołowa Bosch", "image": "images/pila_stolowa_Bosch.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": 195} },
+                { "id": "pilarka-einhell-te-cs-18", "name": "Pilarka Einhell", "image": "images/pilarka_einhell_te_cs_18.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 20, "Sobota + Niedziela": 45, "Kaucja *": 85} },
+                { "id": "pilarka-parkside", "name": "Pilarka Parkside", "image": "images/pilarka_parkside.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 20, "Sobota + Niedziela": 45, "Kaucja *": 85} }
+            ] },
+            { "name": "Piły łańcuchowe", "tools": [
+                { "id": "pila-lancuchowa-elektryczna", "name": "Piła łańcuchowa elektryczna NAC", "image": "images/pila_elektryczna_NAC_CE20_40_OS_H.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 35, "Kaucja *": 65} },
+                { "id": "mini-pila-ferm", "name": "Mini piła łańcuchowa Ferm", "image": "images/mini_pila_ferm.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 35} },
+                { "id": "pila-na-wysiegniku-cedrus", "name": "Piła na wysięgniku Cedrus", "image": "images/pila_na_wysiegniku_Cedrus_CEDPW425.webp", "pricing": {"1-3 Dni": 75, "4-7 Dni": 60, "Sobota + Niedziela": 115, "Kaucja *": 210} },
+                { "id": "pilarka-akumulatorowa-cedrus", "name": "Piła akumulatorowa Cedrus", "image": "images/pilarka_akumulatorowa_Cedrus_60V_CHS350-B4.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 80, "Kaucja *": 150} }
+            ] },
+            { "name": "Pistolety malarskie", "tools": [
+                { "id": "pistolet-do-malowania-cedrus", "name": "Pistolet do malowania Cedrus", "image": "images/pistolet-do-malowania-Cedrus-CEDSP1000LI.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 15, "Kaucja *": 25} }
+            ] },
+            { "name": "Szlifierki", "tools": [
+                { "id": "szlifierka-metabo", "name": "Szlifierka kątowa Metabo", "image": "images/szlifierka_metabo.webp", "pricing": {"1-3 Dni": 35, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": 105} },
+                { "id": "szlifierka-mimosrodowa-cedrus", "name": "Szlifierka mimośrodowa Cedrus", "image": "images/cedrus_cedos125li.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 20, "Kaucja *": 25} }
+            ] },
+            { "name": "Ukośnice", "tools": [
+                { "id": "ukosnica-metabo", "name": "Ukośnica Metabo", "image": "images/ukosnica_metabo.webp", "pricing": {"1-3 Dni": 60, "4-7 Dni": 50, "Sobota + Niedziela": 100, "Kaucja *": 175} }
+            ] },
+            { "name": "Wkrętarki", "tools": [
+                { "id": "wkretarka-graphite", "name": "Wkrętarka Graphite", "image": "images/wkretarka_graphite.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 35, "Sobota + Niedziela": 70, "Kaucja *": 130} },
+                { "id": "wkretarka-ryobi", "name": "Wkrętarka Ryobi", "image": "images/wkretarka_ryobi.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 80, "Kaucja *": 140} }
+            ] },
+            { "name": "Wyrzynarki", "tools": [
+                { "id": "wyrzynarka-macallister", "name": "Wyrzynarka MacAllister", "image": "images/wyrzynarka_macallister.webp", "pricing": {"1-3 Dni": 40, "4-7 Dni": 30, "Sobota + Niedziela": 70, "Kaucja *": 125} }
+            ] }
+        ]
+    },
+    {
+        "category": "Narzędzia pomiarowe",
+        "image": "images/laser_bosch_pll_360.webp",
+        "subcategories": [
+            { "name": "Dalmierze i lasery", "tools": [
+                { "id": "dalmierz-laserowy", "name": "Dalmierz laserowy Pro", "image": "images/dalmierz_laserowy_pro.webp", "pricing": {"1-3 Dni": 25, "4-7 Dni": 20, "Sobota + Niedziela": 35, "Kaucja *": 60} },
+                { "id": "laser-bosch-pll-360", "name": "Laser Bosch", "image": "images/laser_bosch_pll_360.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": 160} }
+            ] },
+            { "name": "Łaty budowlane", "tools": [
+                { "id": "lata-budowlana-3m", "name": "Łata budowlana 3 m", "image": "images/lata_budowlana_3m.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 30, "Kaucja *": 55} }
+            ] },
+            { "name": "Poziomice", "tools": [
+                { "id": "poziomice-tradycyjne", "name": "Poziomice tradycyjne", "image": "images/poziomice.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 20, "Kaucja *": 35} }
+            ] },
+            { "name": "Tachimetry", "tools": [
+                { "id": "tachimetr-dtm-624r", "name": "Tachimetr DTM 624R", "image": "images/tachimetr_dtm_624r.webp", "pricing": {"1-3 Dni": 250, "4-7 Dni": 200, "Sobota + Niedziela": 450, "Kaucja *": 790} }
+            ] }
+        ]
+    },
+    {
+        "category": "Mycie i sprzątanie",
+        "image": "images/karcher_k5.webp",
+        "subcategories": [
+            { "name": "Myjki ciśnieniowe", "tools": [
+                { "id": "karcher-k5", "name": "Myjka ciśnieniowa Karcher K5", "image": "images/karcher_k5.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 90, "Kaucja *": 160} },
+                { "id": "myjka-cisnieniowa-cedrus-1", "name": "Myjka ciśnieniowa Cedrus", "image": "images/myjka_cisnieniowa_cedrus_CEDMC150.webp", "pricing": {"1-3 Dni": 75, "4-7 Dni": 60, "Sobota + Niedziela": 110, "Kaucja *": 210} },
+                { "id": "myjka-cisnieniowa-cedrus-2", "name": "Myjka ciśnieniowa Cedrus", "image": "images/myjka_cisnieniowa_cedrus_CEDWP160LI.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 40} }
+            ] },
+            { "name": "Odkurzacze", "tools": [
+                { "id": "odkurzacz-karcher-n7", "name": "Odkurzacz budowlany Karcher N7", "image": "images/karcher_nt_451.webp", "pricing": {"1-3 Dni": 50, "4-7 Dni": 40, "Sobota + Niedziela": 85, "Kaucja *": 150} },
+                { "id": "odkurzacz-pioracy", "name": "Odkurzacz piorący", "image": "images/placeholder.webp", "pricing": {"1-3 Dni": "Zapytaj o cenę", "4-7 Dni": "Zapytaj o cenę", "Sobota + Niedziela": "Zapytaj o cenę", "Kaucja *": "Zapytaj o cenę"} },
+                { "id": "odkurzacz-akumulatorowy-cedrus", "name": "Odkurzacz akumulatorowy Cedrus", "image": "images/odkurzacz_akumulatorowy_Cedrus_CEDVC15LI.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 40} }
+            ] }
+        ]
+    },
+    {
+        "category": "Sprzęt budowlany i ogrodniczy",
+        "image": "images/betoniarka.webp",
+        "subcategories": [
+            { "name": "Aeratory", "tools": [
+                { "id": "aerator-reczny", "name": "Aerator ręczny", "image": "images/aerator_reczny.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 30, "Kaucja *": 40} }
+            ] },
+            { "name": "Betoniarki", "tools": [
+                { "id": "betoniarka-200", "name": "Betoniarka 200 litrów na 230V", "image": "images/betoniarka.webp", "pricing": {"1-3 Dni": 70, "4-7 Dni": 55, "Sobota + Niedziela": 110, "Kaucja *": 200} }
+            ] },
+            { "name": "Dmuchawy", "tools": [
+                { "id": "dmuchawa-akumulatorowa-cedrus", "name": "Dmuchawa akumulatorowa Cedrus", "image": "images/dmuchawa_akumulatorowa_cedrus_60V_BL210-P.webp", "pricing": {"1-3 Dni": 40, "4-7 Dni": 30, "Sobota + Niedziela": 60, "Kaucja *": 110} }
+            ] },
+            { "name": "Glebogryzarki", "tools": [
+                { "id": "glebogryzarka-cedrus-glx540", "name": "Glebogryzarka Cedrus", "image": "images/glebogryzarka_cedrus_glx540.webp", "pricing": {"1-3 Dni": 280, "4-7 Dni": 220, "Sobota + Niedziela": 400, "Kaucja *": 600} }
+            ] },
+            { "name": "Grille", "tools": [
+                { "id": "grill-gazowy-landmann", "name": "Grill gazowy Landmann", "image": "images/grill_gazowy_triton_max.webp", "pricing": {"1-3 Dni": 250, "4-7 Dni": 200, "Sobota + Niedziela": 400, "Kaucja *": 500} }
+            ] },
+            { "name": "Kosiarki", "tools": [
+                { "id": "kosiarka-akumulatorowa-cedrus", "name": "Kosiarka akumulatorowa Cedrus", "image": "images/kosiarka_akumulatorowa_cedrus_60V_LM560S-P25.webp", "pricing": {"1-3 Dni": 170, "4-7 Dni": 135, "Sobota + Niedziela": 275, "Kaucja *": 500} },
+                { "id": "kosiarka-automatyczna-cedrus", "name": "Kosiarka automatyczna Cedrus", "image": "images/kosiarka_automatyczna_cedrus_C-MOW-M6+.webp", "pricing": {"1-3 Dni": 135, "4-7 Dni": 110, "Sobota + Niedziela": 220, "Kaucja *": 400} }
+            ] },
+            { "name": "Kosy i podkaszarki", "tools": [
+                { "id": "kosa-akumulatorowa-cedrus-1", "name": "Kosa akumulatorowa Cedrus", "image": "images/kosa-akumulatorowa-Cedrus-60V-BC420L-B.webp", "pricing": {"1-3 Dni": 95, "4-7 Dni": 75, "Sobota + Niedziela": 155, "Kaucja *": 280} },
+                { "id": "podkaszarka-akumulatorowa-cedrus-2", "name": "Podkaszarka akumulatorowa Cedrus", "image": "images/podkaszarka-akumulatorowa-Cedrus-CEDST300LIX2.webp", "pricing": {"1-3 Dni": 25, "4-7 Dni": 20, "Sobota + Niedziela": 35, "Kaucja *": 60} }
+            ] },
+            { "name": "Krawędziarki", "tools": [
+                { "id": "krawedziarka-cedrus", "name": "Krawędziarka Cedrus", "image": "images/krawedziarka_cedrus_CEDRUW01.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 20, "Kaucja *": 35} }
+            ] },
+            { "name": "Łopaty i szpadle", "tools": [
+                { "id": "szpadel-fiskars", "name": "Szpadel Fiskars", "image": "images/szpadel_fiskars.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 25} },
+                { "id": "szpadel-drenarski", "name": "Szpadel drenarski", "image": "images/szpadel_drenarski.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 25} },
+                { "id": "noz-do-darni", "name": "Nóż do darni", "image": "images/noz_do_darni.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 25} }
+            ] },
+            { "name": "Młoty", "tools": [
+                { "id": "mlot-wyburzeniowy-5kg", "name": "Młot wyburzeniowy 5kg", "image": "images/mlot_wyburzeniowy.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 45} }
+            ] },
+            { "name": "Nożyce ogrodowe", "tools": [
+                { "id": "nozyce-akumulatorowe-cedrus", "name": "Nożyce akumulatorowe Cedrus", "image": "images/nozyce_akumulatorowe_Cedrus_60V_HT640-P.webp", "pricing": {"1-3 Dni": 45, "4-7 Dni": 40, "Sobota + Niedziela": 75, "Kaucja *": 135} }
+            ] },
+            { "name": "Opryskiwacze", "tools": [
+                { "id": "opryskiwacz-akumulatorowy-cedrus", "name": "Opryskiwacz akumulatorowy Cedrus", "image": "images/opryskiwacz_akumulatorowy_Cedrus_CEDSC15LI.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 20, "Kaucja *": 35} }
+            ] },
+            { "name": "Siewniki", "tools": [
+                { "id": "siewnik-reczny", "name": "Siewnik ręczny", "image": "images/siewnik_reczny.webp", "pricing": {"1-3 Dni": 10, "4-7 Dni": 5, "Sobota + Niedziela": 15, "Kaucja *": 25} }
+            ] },
+            { "name": "Stoły i krzesła", "tools": [
+                { "id": "stoly-krzesla-rozkladane", "name": "Stoły i krzesła rozkładane", "image": "images/placeholder.webp", "pricing": {"1-3 Dni": "Zapytaj o cenę", "4-7 Dni": "Zapytaj o cenę", "Sobota + Niedziela": "Zapytaj o cenę", "Kaucja *": "Zapytaj o cenę"} }
+            ] },
+            { "name": "Wertykulator", "tools": [
+                { "id": "wertykulator-cedrus", "name": "Wertykulator Cedrus", "image": "images/wertykulator-Cedrus-CEDWR02R.webp", "pricing": {"1-3 Dni": 120, "4-7 Dni": 100, "Sobota + Niedziela": 200, "Kaucja *": 360} }
+            ] },
+            { "name": "Zagęszczarki", "tools": [
+                { "id": "zageszczarka-cedrus", "name": "Zagęszczarka Cedrus", "image": "images/zageszczarka-Cedrus-CEDZG02-79-kg.webp", "pricing": {"1-3 Dni": 125, "4-7 Dni": 105, "Sobota + Niedziela": 200, "Kaucja *": 375} }
+            ] },
+            { "name": "Inne", "tools": [
+                { "id": "wyrywacz-chwastow-fiskars", "name": "Wyrywacz do chwastów Fiskars", "image": "images/wyrywacz_fiskars.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 10, "Sobota + Niedziela": 25, "Kaucja *": 25} },
+                { "id": "urzadzenie-wielofunkcyjne-cedrus", "name": "Urządzenie wielofunkcyjne Cedrus", "image": "images/urzadzenie-wielofunkcyjne-spalinowe-Cedrus-CEDUW552.webp", "pricing": {"1-3 Dni": 55, "4-7 Dni": 45, "Sobota + Niedziela": 90, "Kaucja *": 160} },
+                { "id": "szczotka-akumulatorowa-cedrus", "name": "Szczotka akumulatorowa Cedrus", "image": "images/szczotka-akumulatorowa-do-czyszczenia-spoin-Cedrus-CEDPC160LI.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 30, "Kaucja *": 60} }
+            ] }
+        ]
+    },
+    {
+        "category": "Sprzęt pomocniczy",
+        "image": "images/drabina_3czesciowa.webp",
+        "subcategories": [
+            { "name": "Drabiny", "tools": [
+                { "id": "drabina-3-czesciowa", "name": "Drabina 3-częściowa", "image": "images/drabina_3czesciowa.webp", "pricing": {"1-3 Dni": 30, "4-7 Dni": 25, "Sobota + Niedziela": 55, "Kaucja *": 95} },
+                { "id": "drabina-1m", "name": "Drabina 1 m", "image": "images/drabina.webp", "pricing": {"1-3 Dni": 15, "4-7 Dni": 12, "Sobota + Niedziela": 25, "Kaucja *": 45} }
+            ] },
+            { "name": "Taczki", "tools": [
+                { "id": "taczka-budowlana", "name": "Taczki budowlane", "image": "images/taczka.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 30, "Kaucja *": 50} }
+            ] }
+        ]
+    },
+    {
+        "category": "Akcesoria samochodowe",
+        "image": "images/box_dachowy_travel_400_Volvo.webp",
+        "subcategories": [
+            { "name": "Bagażnik dachowy", "tools": [
+                { "id": "box-dachowy-travel-400-volvo", "name": "Bagażnik dachowy Volvo z belkami", "image": "images/box_dachowy_travel_400_Volvo.webp", "pricing": {"1-3 Dni": 200, "4-7 Dni": 150, "Sobota + Niedziela": 350, "Kaucja *": 500} }
+            ] },
+            { "name": "Lodówka turystyczna", "tools": [
+                { "id": "lodowka-turystyczna-8l", "name": "Lodówka turystyczna 8l", "image": "images/lodowka_turystyczna_8l.webp", "pricing": {"1-3 Dni": 20, "4-7 Dni": 15, "Sobota + Niedziela": 30, "Kaucja *": 50} }
+            ] }
+        ]
+    }
+] 

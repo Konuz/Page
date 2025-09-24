@@ -1,0 +1,76 @@
+Manual użytkownika – ToolShare CMS
+==================================
+
+1. Logowanie
+-------------
+- Adres panelu: /admin/login.php.
+- Wprowadź nazwę użytkownika (domyślnie "admin") oraz hasło.
+- Po pięciu błędnych logowaniach konto blokuje się na 15 minut.
+
+2. Struktura panelu
+-------------------
+- Zakładka "Narzędzia" – lista wszystkich pozycji z możliwością wyszukiwania, filtrowania, edycji, klonowania i usuwania.
+- Zakładka "Kategorie" – zarządzanie kategoriami i podkategoriami (dodawanie, edycja, usuwanie).
+- Zakładka "Backupy" – tworzenie i przywracanie kopii zapasowych.
+- Zakładka "Aktywność" – dziennik operacji z filtrowaniem po dacie i użytkowniku.
+
+3. Dodawanie nowego narzędzia
+------------------------------
+1. Przejdź do zakładki "Narzędzia" i kliknij "Dodaj narzędzie".
+2. Wybierz kategorię i podkategorię z list rozwijanych.
+3. Uzupełnij nazwę, ID (małe litery + myślniki), ścieżkę obrazu oraz opcjonalny opis i kaucję.
+4. Dodaj wiersze cennika – każdy wiersz to nazwa okresu oraz cena (liczba lub tekst).
+5. Zaznacz widoczność ("Widoczne w katalogu") i zapisz formularz.
+6. Po zapisie system automatycznie odświeży statyczne strony i mapę witryny.
+
+4. Edycja i klonowanie narzędzi
+--------------------------------
+- W zakładce "Narzędzia" użyj przycisku "Edytuj" przy wybranej pozycji, aby zmienić dane.
+- Przycisk "Klonuj" tworzy nową pozycję z danymi bieżącego narzędzia (zmień ID przed zapisem).
+- "Usuń" usuwa narzędzie (wymaga potwierdzenia).
+
+5. Operacje masowe
+-------------------
+- Zaznacz narzędzia po lewej stronie tabeli i użyj przycisków "Aktywuj zaznaczone" lub "Ukryj zaznaczone".
+- Operacje bulk wyłączają/włączają widoczność bez potrzeby edycji każdego wpisu.
+
+6. Import i eksport
+--------------------
+- "Eksportuj JSON" – pobiera aktualny katalog w formacie data.json.
+- "Eksportuj CSV" – tworzy arkusz z kolumnami: kategoria, podkategoria, tool_id, nazwa, etykieta ceny, wartość.
+- "Importuj" – wklej zawartość JSON i zatwierdź; system waliduje dane i nadpisuje katalog.
+
+7. Kategorie i podkategorie
+----------------------------
+- Dodawanie kategorii: zakładka "Kategorie" → "Dodaj kategorię".
+- Podkategorie: przycisk "Dodaj podkategorię" w modalnym oknie kategorii.
+- Zmiana nazwy kategorii generuje nowy slug – powiązane strony regenerują się automatycznie.
+
+8. Backup i przywracanie
+-------------------------
+- "Utwórz backup" w zakładce "Backupy" zapisuje kopię data.json w `storage/backups/`.
+- Przywrócenie kopii podmienia dane i ponownie generuje statyczne strony.
+- Każda operacja jest logowana w dzienniku aktywności.
+
+9. Dziennik działań
+--------------------
+- Zakładka "Aktywność" pokazuje historię logowań i zmian (data, użytkownik, IP, opis).
+- Użyj filtrów (data, użytkownik) aby zawęzić wyniki.
+
+10. Generatory i logi
+----------------------
+- Po każdej zmianie wywoływane są skrypty: `scripts/build-static.php` (strony) i `scripts/generate-sitemap.php` (sitemap).
+- Wyniki zapisują się w `storage/logs/build-YYYY-MM-DD.log` – sprawdź w razie problemów.
+
+11. Najlepsze praktyki
+-----------------------
+- Po większych zmianach sprawdź ręcznie losową stronę narzędzia oraz sitemapę.
+- Regularnie czyść stare backupy (starsze niż 30 dni) i zapisuj nowe hasło administratora w bezpiecznym miejscu.
+- W razie awarii skorzystaj z manualnego rollbacku: podmień `data.json` na plik z `storage/backups/` i uruchom generatory.
+
+12. Szybkie skróty
+-------------------
+- `/admin/index.php` – narzędzia.
+- `/admin/categories.php` – kategorie.
+- `/admin/backups.php` – kopie zapasowe.
+- `/admin/activity.php` – dziennik.

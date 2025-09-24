@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <!-- Skrypty śledzące są ładowane po wyrażeniu zgody (via script.js) -->
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://www.clarity.ms https://scripts.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com https://www.clarity.ms https://*.clarity.ms; img-src 'self' data: https:;">
+    <title id="page-title">Narzędzie – ToolShare</title>
+    <meta name="description" content="Wypożycz narzędzie w ToolShare – szybki odbiór, elastyczne godziny, lokalna obsługa i atrakcyjne ceny. Sprawdzone, gotowe do pracy urządzenia." id="meta-description">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- Canonical and hreflang (prerender nadpisze wartości absolutne) -->
+    <link rel="canonical" href="https://toolshare.com.pl/narzedzia/">
+    <link rel="alternate" hreflang="pl" href="https://toolshare.com.pl/narzedzia/">
+    <link rel="alternate" hreflang="x-default" href="https://toolshare.com.pl/">
+    
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ToolShare">
+    <meta property="og:title" content="Narzędzie – ToolShare" id="og-title">
+    <meta property="og:description" content="Wypożycz narzędzie w ToolShare – elastyczne godziny, lokalna obsługa i atrakcyjne ceny." id="og-description">
+    <meta property="og:url" content="https://toolshare.com.pl/tool.html" id="og-url">
+    <meta property="og:image" content="https://toolshare.com.pl/images/logo.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <!-- Fallback OG tags for SSR/prerender -->
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
+    <meta property="og:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
+    <meta property="og:url" content="https://toolshare.com.pl/narzedzia/">
+    <meta property="og:image" content="https://toolshare.com.pl/images/hero.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Fallback meta description for SSR/prerender -->
+    <meta name="description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy. Sprawdź ceny i warunki wynajmu." id="meta-description-fallback">
+    <!-- Fallback Twitter tags for SSR/prerender -->
+    <meta name="twitter:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
+    <meta name="twitter:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
+    <meta name="twitter:title" content="Narzędzie – ToolShare" id="twitter-title">
+    <meta name="twitter:description" content="Wypożycz narzędzie – ToolShare. Atrakcyjne ceny i lokalna obsługa." id="twitter-description">
+    <meta name="twitter:image" content="https://toolshare.com.pl/images/logo.webp">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <link rel="icon" href="favicon.png?v=2" sizes="any">
+    <link rel="apple-touch-icon" href="favicon.png?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"></noscript>
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Usunięto noscript trackingu, aby respektować zgodę -->
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo" aria-label="Strona główna ToolShare"><img src="images/logo.webp" alt="ToolShare Logo"></a>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="/" class="nav-link" id="start-link">Strona Główna</a>
+                    <div class="dropdown">
+                        <a href="/#tools" class="dropbtn">Narzędzia <i class="fas fa-chevron-down breadcrumb-arrow"></i></a>
+                        <div class="dropdown-content" id="nav-categories">
+                            <!-- Kategorie będą wstawiane tutaj przez JS -->
+                        </div>
+                    </div>
+                    <a href="/#contact">Kontakt</a>
+                </div>
+                <div class="nav-actions">
+                    <button id="search-toggle" class="search-toggle-btn" aria-label="Wyszukaj narzędzia">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Przełącz motyw">
+                        <i class="fas fa-sun"></i>
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="https://www.facebook.com/profile.php?id=61578827231969" class="social-icon" aria-label="Odwiedź nasz profil na Facebooku" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                    <div class="hamburger">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Pasek wyszukiwania -->
+    <div id="search-container" class="search-container hidden">
+        <div class="search-wrapper">
+            <div class="search-input-group">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" class="search-input" placeholder="Wyszukaj narzędzia..." autocomplete="off">
+                <button id="search-close" class="search-close" aria-label="Zamknij wyszukiwanie">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Menu mobilne -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    <div class="mobile-menu-container" id="mobile-menu-container">
+        <!-- Panel głównego menu -->
+        <div class="mobile-menu-panel active" id="main-menu-panel">
+            <div class="mobile-menu-header">
+                <div class="mobile-menu-title">Menu</div>
+            </div>
+            <ul class="mobile-menu-list">
+                <li class="mobile-menu-item">
+                    <a href="/" class="mobile-menu-link">Strona Główna</a>
+                </li>
+                <li class="mobile-menu-item">
+                    <a href="#" class="mobile-menu-link has-submenu" data-submenu="tools-menu">Narzędzia</a>
+                </li>
+                <li class="mobile-menu-item">
+                    <a href="/#contact" class="mobile-menu-link">Kontakt</a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Panel menu narzędzi -->
+        <div class="mobile-menu-panel" id="tools-menu-panel">
+            <div class="mobile-menu-header">
+                <button class="mobile-menu-back" data-back="main-menu">
+                    <i class="fas fa-arrow-left"></i> Wstecz
+                </button>
+                <div class="mobile-menu-title">Narzędzia</div>
+            </div>
+            <ul class="mobile-menu-list" id="tools-categories-list">
+                <!-- Kategorie będą wstawiane tutaj przez JS -->
+            </ul>
+        </div>
+        
+        <!-- Panel menu kategorii -->
+        <div class="mobile-menu-panel" id="category-menu-panel">
+            <div class="mobile-menu-header">
+                <button class="mobile-menu-back" data-back="tools-menu">
+                    <i class="fas fa-arrow-left"></i> Wstecz
+                </button>
+                <div class="mobile-menu-title" id="category-menu-title">Kategoria</div>
+            </div>
+            <ul class="mobile-menu-list" id="category-subcategories-list">
+                <!-- Podkategorie będą wstawiane tutaj przez JS -->
+            </ul>
+        </div>
+    </div>
+
+    <main>
+        <section id="tool-details-section" class="content-section">
+            <div class="container">
+                <nav id="breadcrumb-nav" class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Strona główna</a>
+                    <span class="breadcrumb-separator">></span>
+                    <a href="/narzedzia/">[CategoryName]</a>
+                    <span class="breadcrumb-separator">></span>
+                    <a href="/narzedzia/">[SubcategoryName]</a>
+                    <span class="breadcrumb-separator">></span>
+                    <span class="breadcrumb-current">[ToolName]</span>
+                </nav>
+                <h1 id="tool-name" class="tool-page-title">Nazwa Narzędzia</h1>
+                <div id="tool-details-content" class="tool-details-grid">
+                    <div> <!-- Kolumna ze zdjęciem -->
+                        <div class="tool-image-container">
+                            <img id="tool-image" src="" alt="Zdjęcie narzędzia" fetchpriority="high">
+                        </div>
+                        <p class="image-disclaimer">*Prezentowane zdjęcia są jedynie poglądowe i mogą się różnić od rzeczywistego wyglądu narzędzi.</p>
+                        <p class="deposit-note-moved">**Kaucja jest zwracana w całości po oddaniu sprawnego i czystego narzędzia.</p>
+                    </div>
+                    <div class="tool-info-container"> <!-- Kolumna z tabelą -->
+                        <div class="pricing-table-container">
+                            <h2>Cennik</h2>
+                            <table id="pricing-table">
+                                <thead>
+                                    <tr>
+                                        <th>Okres</th>
+                                        <th>Cena za dobę</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Cennik będzie wstawiany tutaj przez JS -->
+                                </tbody>
+                            </table>
+                            
+                            <!-- Przycisk wezwania do działania (CTA) -->
+                            <div class="cta-container">
+                                <button type="button" class="cta-button-pricing" id="call-button">
+                                    <i class="fas fa-phone"></i>
+                                    Zadzwoń i zarezerwuj!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal wyboru telefonu -->
+        <div id="phone-modal" class="phone-modal" style="display: none;">
+            <div class="phone-modal-overlay"></div>
+            <div class="phone-modal-content">
+                <div class="phone-modal-header">
+                    <h3>Wybierz numer telefonu</h3>
+                    <button type="button" class="phone-modal-close" id="close-phone-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="phone-modal-body">
+                    <a href="tel:+48604481600" class="phone-option">
+                        <i class="fas fa-phone"></i>
+                        <div class="phone-info">
+                            <span class="phone-name">Michał</span>
+                            <span class="phone-number">+48 604 481 600</span>
+                        </div>
+                    </a>
+                    <a href="tel:+48604481700" class="phone-option">
+                        <i class="fas fa-phone"></i>
+                        <div class="phone-info">
+                            <span class="phone-name">Marek</span>
+                            <span class="phone-number">+48 604 481 700</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sekcja „Zobacz również” -->
+        <section id="zobacz-takze-section" class="zobacz-takze-section">
+            <div class="container">
+                <h2 class="zobacz-takze-title">Zobacz również</h2>
+                <div class="zobacz-takze-carousel-container">
+                    <button class="carousel-nav-btn carousel-prev" aria-label="Poprzednie narzędzia">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="zobacz-takze-carousel" id="zobacz-takze-carousel">
+                        <div class="zobacz-takze-track" id="zobacz-takze-track">
+                            <!-- Powiązane narzędzia będą dodane przez JavaScript -->
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn carousel-next" aria-label="Następne narzędzia">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-info">
+                <p>&copy; ToolShare - wypożyczalnia narzędzi</p>
+            </div>
+            <div class="footer-links">
+                <a href="/o-nas.html">O nas</a>
+                <a href="/polityka-prywatnosci.html">Polityka Prywatności i Cookies</a>
+                <a href="/regulamin.html">Regulamin</a>
+                <a href="#" id="cookie-settings-link">Ustawienia cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" id="scrollToTopBtn" class="scroll-to-top" title="Przewiń do góry">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script src="script.js" defer></script>
+</body>
+</html> 

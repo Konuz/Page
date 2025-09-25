@@ -45,7 +45,8 @@
                 <h3 class="modal-title">Kategoria</h3>
                 <button class="modal-close" data-modal-close>&times;</button>
             </div>
-            <form id="form-category" class="form-grid">
+            <div class="modal-scrollable">
+                <form id="form-category" class="form-grid">
                 <?= cms_csrf_field() ?>
                 <input type="hidden" name="original_slug" id="category-original-slug">
                 <div class="form-group">
@@ -60,7 +61,8 @@
                     <button type="button" class="btn btn-secondary" data-modal-close>Anuluj</button>
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -72,7 +74,8 @@
                 <h3 class="modal-title">Podkategoria</h3>
                 <button class="modal-close" data-modal-close>&times;</button>
             </div>
-            <form id="form-subcategory" class="form-grid">
+            <div class="modal-scrollable">
+                <form id="form-subcategory" class="form-grid">
                 <?= cms_csrf_field() ?>
                 <input type="hidden" name="category_slug" id="subcategory-category-slug">
                 <input type="hidden" name="original_slug" id="subcategory-original-slug">
@@ -88,7 +91,8 @@
                     <button type="button" class="btn btn-secondary" data-modal-close>Anuluj</button>
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>

@@ -5,7 +5,8 @@
                 <h3 class="modal-title">Dodaj narzędzie</h3>
                 <button class="modal-close" data-modal-close>&times;</button>
             </div>
-            <form id="form-new-tool" class="form-grid">
+            <div class="modal-scrollable">
+                <form id="form-new-tool" class="form-grid">
                 <?= cms_csrf_field() ?>
                 <div class="form-group">
                     <label for="tool-category">Kategoria</label>
@@ -50,7 +51,8 @@
                     <button type="button" class="btn btn-secondary" data-modal-close>Anuluj</button>
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -62,7 +64,8 @@
                 <h3 class="modal-title">Import katalogu</h3>
                 <button class="modal-close" data-modal-close>&times;</button>
             </div>
-            <form id="form-import" class="form-grid">
+            <div class="modal-scrollable">
+                <form id="form-import" class="form-grid">
                 <?= cms_csrf_field() ?>
                 <div class="form-group">
                     <label for="import-json">Wklej plik JSON</label>
@@ -72,7 +75,8 @@
                     <button type="button" class="btn btn-secondary" data-modal-close>Anuluj</button>
                     <button type="submit" class="btn btn-primary">Importuj</button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>

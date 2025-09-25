@@ -40,11 +40,11 @@
                         <td data-label="Zaznacz">
                             <input type="checkbox" class="row-select">
                         </td>
-                        <td data-label="Narzędzie">
+                        <td data-label="Narzędzie" class="cell-truncate">
                             <strong><?= htmlspecialchars($tool['name']) ?></strong>
                         </td>
-                        <td data-label="Kategoria"><?= htmlspecialchars($category['category']) ?></td>
-                        <td data-label="Podkategoria"><?= htmlspecialchars($subcategory['name']) ?></td>
+                        <td data-label="Kategoria" class="cell-truncate"><?= htmlspecialchars($category['category']) ?></td>
+                        <td data-label="Podkategoria" class="cell-truncate"><?= htmlspecialchars($subcategory['name']) ?></td>
                         <td data-label="ID">
                             <code><?= htmlspecialchars($tool['id']) ?></code>
                         </td>

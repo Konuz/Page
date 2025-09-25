@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         history: loadHistory(),
     };
 
+    // Inicjalizacja przełącznika trybu
+    initializeThemeSwitcher();
+
     const searchInput = document.getElementById('catalog-search');
     const table = document.getElementById('catalog-table');
     const selectAll = document.getElementById('select-all');
@@ -496,3 +499,23 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/(^-|-$)+/g, '');
     }
 });
+
+// Funkcja przełącznika trybu - zgodna z główną stroną
+function initializeThemeSwitcher() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    // Pobierz aktualny motyw z localStorage lub ustaw domyślny na podstawie preferencji systemu
+    const currentTheme = localStorage.getItem('theme') ||
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    // Ustaw motyw na document
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    // Obsługa kliknięcia w przycisk przełączania motywu
+    themeToggle.addEventListener('click', () => {
+        let newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}

@@ -1,4 +1,3 @@
-console.log('ToolShare CMS loaded');
 
 // Performance optimization: Debounce function for resize handling
 function debounce(func, wait = 100) {
@@ -39,11 +38,12 @@ const cms = (() => {
             }
         };
 
-        const closeButton = fragment.querySelector('[data-modal-close]');
-        if (closeButton) {
+        const closeButtons = fragment.querySelectorAll('[data-modal-close]');
+        closeButtons.forEach(closeButton => {
             closeButton.addEventListener('click', () => closeModal(templateId));
-        }
+        });
 
+        backdrop.dataset.modalId = templateId;
         backdrop.addEventListener('click', onBackdropClick);
         document.body.appendChild(backdrop);
         modals.set(templateId, backdrop);
@@ -64,6 +64,9 @@ const cms = (() => {
 
     return { openModal, closeModal };
 })();
+
+// Eksportuj cms do window żeby był dostępny globalnie
+window.cms = cms;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Performance optimization: Cache frequently used DOM elements
@@ -118,6 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (event) => {
+        // Obsługa przycisków zamykających modal
+        const modalCloseBtn = event.target.closest('[data-modal-close]');
+        if (modalCloseBtn) {
+            const modal = modalCloseBtn.closest('[data-modal-backdrop]');
+            if (modal) {
+                const modalId = modal.dataset.modalId;
+                if (modalId) {
+                    cms.closeModal(modalId);
+                } else {
+                    // Fallback - usuń modal bezpośrednio
+                    modal.remove();
+                }
+            }
+            return;
+        }
+
         const actionBtn = event.target.closest('[data-action]');
         if (!actionBtn) return;
         const action = actionBtn.dataset.action;
@@ -166,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'create-backup':
                 createBackup();
+                break;
+            case 'browse-image':
+                browseImage(actionBtn);
                 break;
             case 'restore-backup':
                 restoreBackup(actionBtn.dataset.filename);
@@ -230,6 +252,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function openToolModal(context = null, options = {}) {
         cms.openModal('modal-new-tool', (form) => {
             if (!(form instanceof HTMLFormElement)) return;
+
+            // Zmień tytuł modala w zależności od kontekstu
+            const modalTitle = form.closest('[data-modal-backdrop]').querySelector('.modal-title');
+            if (modalTitle) {
+                if (options.clone) {
+                    modalTitle.textContent = 'Klonuj narzędzie';
+                } else if (context) {
+                    modalTitle.textContent = 'Edytuj narzędzie';
+                } else {
+                    modalTitle.textContent = 'Dodaj narzędzie';
+                }
+            }
+
             populateCategoryField(form, context?.category);
             populateSubcategoryField(form, context?.category, context?.subcategory);
             resetPricing(form);
@@ -244,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     form.querySelector('#tool-id').value = options.clone ? `${ref.tool.id}-kopiuj` : ref.tool.id;
                     form.querySelector('#tool-image').value = ref.tool.image;
                     form.querySelector('#tool-description').value = ref.tool.description || '';
-                    form.querySelector('#tool-deposit').value = ref.tool.deposit ?? '';
                     form.querySelector('input[name="enabled"]').checked = ref.tool.enabled !== false;
                     Object.entries(ref.tool.pricing || {}).forEach(([label, value]) => {
                         addPricingRow(form, label, value);
@@ -252,8 +286,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            if (!form.querySelector('.pricing-row')) {
+            // Jeśli to nowe narzędzie (brak context), dodaj standardowe pola cenowe
+            if (!context && !form.querySelector('.pricing-row')) {
                 addPricingRow(form, '1-3 Dni', '');
+                addPricingRow(form, '4-7 Dni', '');
+                addPricingRow(form, 'Sobota + Niedziela', '');
+                addPricingRow(form, 'Kaucja *', '');
             }
 
             form.addEventListener('submit', async (event) => {
@@ -304,6 +342,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (container) {
             container.innerHTML = '';
         }
+    }
+
+    function browseImage(button) {
+        const form = button.closest('form');
+        const fileInput = form.querySelector('#tool-image-file');
+        const textInput = form.querySelector('#tool-image');
+
+        fileInput.click();
+
+        fileInput.onchange = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Sprawdź czy to obraz
+                if (file.type.startsWith('image/')) {
+                    // Utwórz ścieżkę w formacie images/nazwa_pliku
+                    const fileName = file.name.toLowerCase().replace(/\s+/g, '_');
+                    textInput.value = `images/${fileName}`;
+
+                    // Opcjonalnie: pokazaj podgląd
+                } else {
+                    alert('Proszę wybrać plik obrazu (JPG, PNG, WebP, etc.)');
+                    fileInput.value = '';
+                }
+            }
+        };
     }
 
     function addPricingRow(form, label = '', value = '') {

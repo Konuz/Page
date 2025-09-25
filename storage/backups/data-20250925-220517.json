@@ -16,7 +16,7 @@
                             "Sobota + Niedziela": 80,
                             "Kaucja *": 150
                         },
-                        "enabled": true
+                        "enabled": false
                     }
                 ]
             },
@@ -33,7 +33,7 @@
                             "Sobota + Niedziela": 80,
                             "Kaucja *": 140
                         },
-                        "enabled": true
+                        "enabled": false
                     }
                 ]
             },

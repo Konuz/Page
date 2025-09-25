@@ -38,7 +38,7 @@ $csrfMetaToken = cms_csrf_token();
             <div class="admin-mobile-nav-item">
                 <form action="logout.php" method="post" style="margin:0;">
                     <?php if (function_exists('cms_csrf_field')) { echo cms_csrf_field(); } ?>
-                    <button class="btn btn-secondary" type="submit">Wyloguj</button>
+                    <button class="btn btn-secondary btn-logout" type="submit">Wyloguj</button>
                 </form>
             </div>
         </div>
@@ -66,7 +66,7 @@ $csrfMetaToken = cms_csrf_token();
                     <a href="activity.php">Aktywność</a>
                     <form action="logout.php" method="post" style="margin:0;">
                         <?php if (function_exists('cms_csrf_field')) { echo cms_csrf_field(); } ?>
-                        <button class="btn btn-secondary" type="submit">Wyloguj</button>
+                        <button class="btn btn-secondary btn-logout" type="submit">Wyloguj</button>
                     </form>
                 </nav>
             </div>

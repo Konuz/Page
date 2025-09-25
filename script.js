@@ -1,4 +1,4 @@
-console.log('Skrypt załadowany!');
+// Skrypt załadowany
 
 // Kompleksowa obsługa błędów CORS - głównie dla środowiska deweloperskiego
 (function() {
@@ -10,9 +10,6 @@ console.log('Skrypt załadowany!');
                          window.location.protocol === 'file:' ||
                          window.location.hostname.includes('192.168.');
     
-    console.log('🔧 Środowisko:', isDevelopment ? 'Development (HTTP)' : 'Production (HTTPS)');
-    console.log('ℹ️ Informacja: Błędy CORS iframe Google Maps są normalne i nie wpływają na funkcjonalność mapy');
-    console.log('📚 Źródło: Same-Origin Policy to zabezpieczenie przeglądarek - nie błąd w kodzie');
     
     // Lista wzorców błędów do ignorowania
     const ignoredErrors = [
@@ -38,7 +35,6 @@ console.log('Skrypt załadowany!');
             filename.includes('all.iife.js') ||
             filename.includes('cdnjs.cloudflare.com')) {
             
-            console.log('🔇 Ignorowany błąd CORS/external:', {
                 message: message.substring(0, 100),
                 filename: filename,
                 source: 'iframe/external',
@@ -59,7 +55,6 @@ console.log('Skrypt załadowany!');
         const reasonStr = reason.toString ? reason.toString() : String(reason);
         
         if (ignoredErrors.some(pattern => reasonStr.includes(pattern))) {
-            console.log('🔇 Ignorowany promise rejection:', reasonStr.substring(0, 100));
             event.preventDefault();
             return false;
         }
@@ -222,7 +217,6 @@ class CookieManager {
     // Set consent status in localStorage
     static setConsentStatus(status) {
         localStorage.setItem(this.CONSENT_KEY, status);
-        console.log(`🍪 Cookie consent set to: ${status}`);
     }
     
     // Check if specific tracking cookies exist
@@ -263,7 +257,6 @@ class CookieManager {
             }
         });
         
-        console.log(`🗑️ Removed ${removedCount} tracking cookies`);
         return removedCount;
     }
     
@@ -418,7 +411,6 @@ async function loadTrackingScripts() {
     });
     
     if (successful.length > 0) {
-        console.log(`✅ Tracking loaded: ${successful.join(', ')}`);
     }
     if (failed.length > 0) {
         console.warn(`⚠️ Tracking failed: ${failed.join('; ')}`);
@@ -438,10 +430,8 @@ function setClarityConsent(granted, maxAttempts = 5, currentAttempt = 1) {
                     clearTimeout(timeout);
                     if (granted) {
                         window.clarity('consent', 'grant');
-                        console.log('📤 Microsoft Clarity: Grant consent sent');
                     } else {
                         window.clarity('consent', 'deny');
-                        console.log('📤 Microsoft Clarity: Deny consent sent');
                     }
                     resolve(true);
                 } else if (currentAttempt < maxAttempts) {
@@ -512,19 +502,16 @@ async function validateClarityConsent() {
         
         if (shouldHaveCookies === hasClarityCookies) {
             const status = shouldHaveCookies ? 'zgoda udzielona i cookies aktywne' : 'zgoda cofnięta i cookies nieaktywne';
-            console.log(`✅ Microsoft Clarity: ${status}`);
             return true;
         }
         
         if (shouldHaveCookies && !hasClarityCookies) {
             // Cookies mogą się pojawić z opóźnieniem - czekaj chwilę
-            console.log('🔄 Microsoft Clarity: Oczekiwanie na inicjalizację cookies...');
             
             await new Promise(resolve => setTimeout(resolve, 3000));
             
             const finalCookiesExist = CookieManager.hasClarityCookies();
             if (finalCookiesExist) {
-                console.log('✅ Microsoft Clarity: Cookies aktywne po opóźnieniu');
                 return true;
             } else {
                 console.warn('⚠️ Microsoft Clarity: Cookies nadal nieaktywne po oczekiwaniu');
@@ -694,9 +681,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } else if (document.getElementById('about-us-title')) {
         // Strona "O nas" nie wymaga specjalnego renderowania
-        console.log('Router -> About us page');
     } else {
-        console.log('Router -> No match found for page.');
     }
 
     // Nawigacja i UI, które mogą działać bez katalogu
@@ -797,7 +782,6 @@ function trackContactEvent(source) {
         if (typeof window.fbq === 'undefined') return;
         const params = source ? { content_name: source } : undefined;
         window.fbq('track', 'Contact', params);
-        console.log('📞 Meta Pixel Contact sent', params || '');
     } catch (_) {}
 }
 
@@ -828,7 +812,6 @@ function initializeContactEventTracking() {
             trackContactEvent(source);
         }, { passive: true });
         
-        console.log('📞 Contact event tracking initialized with event delegation');
     } catch (e) {
         console.warn('⚠️ Failed to initialize contact event tracking:', e.message);
     }
@@ -1946,7 +1929,6 @@ function initializeSearch(toolCatalog) {
     const searchResults = document.getElementById('search-results');
     
     if (!searchToggle || !searchContainer || !searchInput || !searchClose || !searchResults) {
-        console.log('Search elements not found on this page - skipping initialization');
         return;
     }
     
@@ -2287,7 +2269,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (consent === 'accepted') {
             loadTrackingScripts();
         } else {
-            console.log('❌ Tracking pozostaje wyłączony (wcześniej odrzucono)');
         }
     } else {
         // Upewnij się, że popup jest widoczny
@@ -2308,7 +2289,6 @@ document.addEventListener('DOMContentLoaded', function() {
         acceptBtn.addEventListener('click', function() {
             CookieManager.setConsentStatus('accepted');
             hidePopup();
-            console.log('Cookies zostały zaakceptowane');
             
             // Załaduj i włącz trackery po akceptacji
             loadTrackingScripts();
@@ -2320,7 +2300,6 @@ document.addEventListener('DOMContentLoaded', function() {
         rejectBtn.addEventListener('click', function() {
             CookieManager.setConsentStatus('rejected');
             hidePopup();
-            console.log('Cookies zostały odrzucone');
             
             // Poinformuj Microsoft Clarity o odrzuceniu zgody
             setClarityConsent(false).catch(e => {

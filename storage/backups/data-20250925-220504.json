@@ -15,8 +15,7 @@
                             "4-7 Dni": 40,
                             "Sobota + Niedziela": 80,
                             "Kaucja *": 150
-                        },
-                        "enabled": true
+                        }
                     }
                 ]
             },

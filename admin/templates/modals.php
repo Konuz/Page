@@ -27,15 +27,17 @@
                 </div>
                 <div class="form-group">
                     <label for="tool-image">Ścieżka obrazu</label>
-                    <input type="text" class="form-control" name="image" id="tool-image" placeholder="images/narzedzie.webp" required>
+                    <div style="display: flex; gap: 0.75rem; align-items: stretch;">
+                        <input type="text" class="form-control" name="image" id="tool-image" placeholder="images/narzedzie.webp" required style="flex: 1;">
+                        <input type="file" id="tool-image-file" accept="image/*" style="display: none;">
+                        <button type="button" class="btn btn-primary" data-action="browse-image" title="Wybierz obraz">
+                            <i class="fas fa-folder-open"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="tool-description">Opis (opcjonalnie)</label>
                     <textarea class="form-control" name="description" id="tool-description" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="tool-deposit">Kaucja (liczba lub tekst)</label>
-                    <input type="text" class="form-control" name="deposit" id="tool-deposit">
                 </div>
                 <div class="form-group">
                     <label>Cennik</label>

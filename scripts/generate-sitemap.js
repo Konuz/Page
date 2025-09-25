@@ -120,7 +120,6 @@ function main() {
     `</sitemapindex>\n`;
 
   fs.writeFileSync(sitemapIndexPath, sitemapIndex, 'utf8');
-  console.log(`Sitemap index written to ${sitemapIndexPath}. Per-language: ${sitemapPlPath}`);
 }
 
 main();

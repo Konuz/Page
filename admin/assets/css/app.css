@@ -17,6 +17,8 @@
     --table-row-hover: #f8f4f0;
     --neumorphic-light-shadow: rgba(255, 255, 255, 0.9);
     --neumorphic-dark-shadow: rgba(203, 213, 225, 0.8);
+    --btn-secondary-hover-bg: #e5e7eb;
+
     /* Stare zmienne dla kompatybilności */
     --color-bg: var(--bg-color);
     --color-surface: var(--card-bg-color);
@@ -39,11 +41,13 @@
     --card-bg-color: #1f2937;
     --background-color: #111827;
     --bg-secondary: #111827;
-    --hover-color: #1f2937;
-    --table-header-bg: #1f2937;
+    --hover-color: #4b5563;
+    --table-header-bg: #374151;
     --table-row-hover: #374151;
     --neumorphic-light-shadow: rgba(45, 55, 72, 0.6);
     --neumorphic-dark-shadow: rgba(10, 15, 26, 0.8);
+    --btn-secondary-bg-dark: #374151;
+    --btn-secondary-hover-bg: #4b5563;
 
     /* Aktualizacja starych zmiennych */
     --color-bg: var(--bg-color);
@@ -53,6 +57,65 @@
     --color-muted: var(--text-light);
     --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
+
+[data-theme="dark"] .table-actions .btn,
+[data-theme="dark"] .toolbar .actions .btn {
+    background-color: var(--btn-secondary-bg-dark);
+    color: var(--text-color);
+}
+
+/* Efekty hover dla navbar w trybie ciemnym - tylko podświetlenie tekstu jak w trybie jasnym */
+[data-theme="dark"] .admin-nav a:hover {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .admin-nav .btn {
+    transition: color 0.2s ease-in-out !important, transform 0.2s ease-in-out !important;
+}
+
+[data-theme="dark"] .admin-nav .btn:hover {
+    color: var(--primary-color) !important;
+    background: none !important;
+}
+
+[data-theme="dark"] .btn-primary {
+    background: var(--color-primary) !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background: var(--color-primary-dark) !important;
+}
+
+/* Style przycisków w trybie ciemnym - analogiczne do trybu jasnego */
+[data-theme="dark"] .btn-secondary {
+    background: var(--btn-secondary-bg-dark);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: var(--btn-secondary-hover-bg);
+    color: var(--text-color);
+}
+
+/* Wszystkie przyciski w trybie ciemnym mają spójne style */
+[data-theme="dark"] .btn {
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .btn:hover {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .table-actions .btn:hover,
+[data-theme="dark"] .toolbar .actions .btn:hover {
+    background-color: var(--btn-secondary-hover-bg);
+    color: var(--text-color);
+}
+
+
+
 
 * {
     box-sizing: border-box;
@@ -147,7 +210,6 @@ a:hover {
 
 .admin-nav a:hover {
     color: var(--primary-color);
-    transform: translateY(-1px);
 }
 
 .admin-nav .btn {
@@ -166,7 +228,6 @@ a:hover {
 
 .admin-nav .btn:hover {
     color: var(--primary-color) !important;
-    transform: translateY(-1px) !important;
     background: none !important;
 }
 
@@ -179,7 +240,7 @@ a:hover {
     border: none;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     font-family: var(--font-family);
 }
 
@@ -198,7 +259,8 @@ a:hover {
 }
 
 .btn-secondary:hover {
-    background: var(--border-color);
+    background: var(--btn-secondary-hover-bg);
+    color: var(--text-color);
 }
 
 .admin-main {
@@ -232,11 +294,33 @@ a:hover {
     overflow-wrap: break-word;
 }
 
+.table tbody tr {
+    display: table-row;
+}
+
 .table th,
 .table td {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--border-color);
     text-align: left;
+    vertical-align: middle;
+    height: auto;
+}
+
+/* DESKTOP: 992px and above (default) */
+.table tbody tr {
+    min-height: 4.5rem;
+}
+
+.table tbody tr td {
+    box-sizing: border-box;
+    position: relative;
+}
+
+.table tbody tr td.table-actions {
+    height: inherit;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 /* New utility class for cells that need text truncation */
@@ -252,12 +336,43 @@ a:hover {
     color: var(--text-light);
     letter-spacing: 0.04em;
     background: var(--table-header-bg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.table tbody tr:hover {
-    background: var(--table-row-hover);
-    transition: background 0.3s ease;
+/* Lepsze stylowanie checkboxów */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    margin: 0;
 }
+
+#select-all {
+    transform: scale(1.1);
+    margin: 0;
+    display: block;
+}
+
+/* Zapobiegnij zmianie wielkości przy hover - ale zachowaj scale dla select-all */
+input[type="checkbox"]:hover {
+    transform: none;
+}
+
+#select-all:hover {
+    transform: scale(1.1);
+}
+
+/* Poprawa kontrastu w trybie ciemnym */
+[data-theme="dark"] input[type="checkbox"] {
+    filter: brightness(1.2);
+}
+
+
+
+
 
 .badge {
     display: inline-flex;
@@ -317,14 +432,27 @@ a:hover {
     box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
 }
 
+/* DESKTOP: Default table-actions styling */
 .table-actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    height: 100%;
+    gap: 0;
+    min-width: auto;
 }
 
 .table-actions .btn {
-    width: 90px;
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.5rem;
+    margin-right: 0;
+    margin-bottom: 0.75rem;
+}
+
+.table-actions .btn:last-child {
+    margin-bottom: 0;
 }
 
 
@@ -424,7 +552,6 @@ a:hover {
 
 .admin-mobile-nav a:hover,
 .admin-mobile-nav .btn:hover {
-    transform: translateY(-2px);
     box-shadow: 8px 8px 15px var(--neumorphic-dark-shadow), -8px -8px 15px var(--neumorphic-light-shadow);
 }
 
@@ -472,7 +599,7 @@ a:hover {
     right: 0;
     width: 300px;
     height: 100%;
-    background: var(--bg-color);
+    background: var(--card-bg-color); /* Dokładnie jak na głównej stronie */
     border: none;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
@@ -487,6 +614,80 @@ a:hover {
 
 .admin-mobile-nav.is-active {
     transform: translateX(0);
+}
+
+/* ===========================================
+   RESPONSIVE TABLE ACTIONS - 3 BREAKPOINTS
+   =========================================== */
+
+/* TABLET: 768px to 991px */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .table tbody tr {
+        min-height: 5rem;
+    }
+
+    .table tbody tr td.table-actions {
+        height: inherit;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .table-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        height: 100%;
+        gap: 0;
+        min-width: auto;
+    }
+
+    .table-actions .btn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.4rem 0.5rem;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .table-actions .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* MOBILE: below 768px */
+@media (max-width: 767.98px) {
+    .table tbody tr {
+        min-height: 6rem;
+    }
+
+    .table tbody tr td.table-actions {
+        height: inherit;
+        display: table-cell;
+        vertical-align: bottom;
+    }
+
+    .table-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-end;
+        height: 100%;
+        gap: 0;
+        min-width: auto;
+    }
+
+    .table-actions .btn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .table-actions .btn:last-child {
+        margin-bottom: 0;
+    }
 }
 
 @media (max-width: 992px) {
@@ -633,20 +834,38 @@ a:hover {
         margin-bottom: 0.35rem;
     }
 
-    .table-actions {
-        display: block;
+    /* Mobile specific table-actions styling */
+    .table td.table-actions {
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-end;
+        min-height: 180px;
+        padding-bottom: 1rem;
     }
 
-    .table-actions .btn {
-        display: block;
+    .table td.table-actions .table-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-end;
+        height: 100%;
+        gap: 0;
+        margin-top: auto;
+    }
+
+    .table td.table-actions .table-actions .btn {
         width: 100%;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        margin-right: 0;
         margin-bottom: 0.5rem;
-        text-align: center;
     }
 
-    .table-actions .btn:last-child {
+    .table td.table-actions .table-actions .btn:last-child {
         margin-bottom: 0;
     }
+
 
     /* Dark theme mobile modal adjustments */
     [data-theme="dark"] .modal-backdrop {
@@ -703,7 +922,7 @@ a:hover {
     }
 
     .toolbar .actions {
-        justify-content: center;
+        justify-content: flex-start;
         flex-wrap: wrap;
     }
 
@@ -754,11 +973,6 @@ a:hover {
         background-size: 16px;
     }
 
-    .table-actions .btn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.8rem;
-        margin: 0.1rem;
-    }
 }
 
 .flash {
@@ -809,14 +1023,14 @@ a:hover {
 /* Inner container ze scrollbarem */
 .modal-scrollable {
     overflow-y: auto;
-    padding: 2rem 2rem;
+    padding: 2rem 3rem 2rem 2rem; /* Zwiększony padding po prawej dla scrollbara */
     margin: 0.75rem;
     flex: 1;
     /* Custom scrollbar styling */
 }
 
 .modal-scrollable::-webkit-scrollbar {
-    width: 6px;
+    width: 12px;
 }
 
 .modal-scrollable::-webkit-scrollbar-track {
@@ -827,10 +1041,14 @@ a:hover {
 .modal-scrollable::-webkit-scrollbar-thumb {
     background: var(--text-light);
     border-radius: 3px;
+    border: 3px solid transparent;
+    background-clip: content-box;
 }
 
 .modal-scrollable::-webkit-scrollbar-thumb:hover {
     background: var(--text-color);
+    border: 3px solid transparent;
+    background-clip: content-box;
 }
 
 /* Przywróć padding dla zawartości */
@@ -879,7 +1097,7 @@ a:hover {
     position: relative;
     flex: 1;
     min-width: 200px;
-    max-width: 100%;
+    max-width: 500px;
 }
 
 .toolbar .search input {
@@ -901,6 +1119,7 @@ a:hover {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    margin-left: auto;
 }
 
 /* Przełącznik trybu jasny/ciemny - zgodny z główną stroną */
@@ -943,6 +1162,12 @@ a:hover {
 
 [data-theme="dark"] .theme-toggle-btn .fa-moon {
     display: none;
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
 }
 
 
@@ -1005,7 +1230,7 @@ a:hover {
 .admin-nav a,
 .btn,
 .hamburger-btn .bar {
-    will-change: transform, color;
+    will-change: color;
 }
 
 .admin-mobile-nav {

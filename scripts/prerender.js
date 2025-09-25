@@ -377,7 +377,6 @@ function generate() {
 function main() {
   ensureDir(outRoot);
   generate();
-  console.log('Prerender complete. Static pages generated under /narzedzia');
 }
 
 main();

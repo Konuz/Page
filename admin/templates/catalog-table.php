@@ -20,13 +20,13 @@
     <table class="table" id="catalog-table">
         <thead>
         <tr>
-            <th style="width: 3rem;"><input type="checkbox" id="select-all"></th>
+            <th style="width: 3rem; text-align: left; padding-left: 1rem;"><input type="checkbox" id="select-all"></th>
             <th>Narzędzie</th>
             <th>Kategoria</th>
             <th>Podkategoria</th>
             <th>ID</th>
             <th>Status</th>
-            <th>Akcje</th>
+            <th style="width: 120px;">Akcje</th>
         </tr>
         </thead>
         <tbody>

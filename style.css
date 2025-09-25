@@ -2238,8 +2238,25 @@ body.subpage main {
 }
 
 .mobile-menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dodatkowe reguły dla pewności */
+.mobile-menu-overlay:not(.active) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+}
+
+/* Ekstra bezpieczeństwo - całkowite ukrycie gdy kontener nieaktywny */
+.mobile-menu-container:not(.active) {
+    transform: translateX(100%) !important;
+    visibility: hidden !important;
+}
+
+.mobile-menu-overlay:not(.active) + .mobile-menu-container:not(.active) {
+    display: none !important;
 }
 
 .mobile-menu-container {
@@ -2267,7 +2284,12 @@ body.subpage main {
 }
 
 .mobile-menu-container.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+}
+
+/* Dodatkowe reguły dla pewności */
+.mobile-menu-container:not(.active) {
+    transform: translateX(100%) !important;
 }
 
 .mobile-menu-panel {
@@ -2286,8 +2308,14 @@ body.subpage main {
     contain: layout style paint;
 }
 
-.mobile-menu-panel.active {
-    transform: translateX(0);
+/* Panel jest widoczny TYLKO gdy kontener też jest aktywny */
+.mobile-menu-container.active .mobile-menu-panel.active {
+    transform: translateX(0) !important;
+}
+
+/* Gdy kontener nie jest aktywny, wszystkie panele są ukryte */
+.mobile-menu-container:not(.active) .mobile-menu-panel {
+    transform: translateX(100%) !important;
 }
 
 .mobile-menu-panel.sliding-out {

@@ -1,5 +1,28 @@
 console.log('ToolShare CMS loaded');
 
+// Performance optimization: Debounce function for resize handling
+function debounce(func, wait = 100) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// Performance optimization: Disable expensive effects during resize
+let isResizing = false;
+const optimizePerformanceDuringResize = () => {
+    isResizing = true;
+    document.body.classList.add('is-resizing');
+
+    // Re-enable effects after resize stops
+    clearTimeout(window.resizeEndTimer);
+    window.resizeEndTimer = setTimeout(() => {
+        isResizing = false;
+        document.body.classList.remove('is-resizing');
+    }, 150);
+};
+
 const cms = (() => {
     const modals = new Map();
 
@@ -43,27 +66,41 @@ const cms = (() => {
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Performance optimization: Cache frequently used DOM elements
+    const domCache = {
+        searchInput: document.getElementById('catalog-search'),
+        table: document.getElementById('catalog-table'),
+        selectAll: document.getElementById('select-all'),
+        historyList: document.getElementById('history-list'),
+        themeToggle: document.getElementById('theme-toggle'),
+        body: document.body
+    };
+
     const state = {
         catalog: window.cmsCatalog || [],
         csrf: document.querySelector('meta[name="csrf-token"]')?.content || '',
         history: loadHistory(),
+        domCache, // Add cache to state for access in other functions
     };
+
+    // Make DOM cache globally available for other functions
+    window.adminDomCache = domCache;
 
     // Inicjalizacja przełącznika trybu
     initializeThemeSwitcher();
 
-    const searchInput = document.getElementById('catalog-search');
-    const table = document.getElementById('catalog-table');
-    const selectAll = document.getElementById('select-all');
-    const historyList = document.getElementById('history-list');
+    const { searchInput, table, selectAll, historyList } = domCache;
 
     renderHistory();
 
     if (searchInput && table) {
-        searchInput.addEventListener('input', () => {
+        // Cache table rows for performance
+        const tableRows = table.querySelectorAll('tbody tr');
+
+        searchInput.addEventListener('input', debounce(() => {
             const query = searchInput.value.trim().toLowerCase();
-            filterTable(query);
-        });
+            filterTable(query, tableRows);
+        }, 150));
     }
 
     if (selectAll && table) {
@@ -138,11 +175,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function filterTable(query) {
+    function filterTable(query, cachedRows) {
         if (!table) return;
-        table.querySelectorAll('tbody tr').forEach((row) => {
+
+        // Use cached rows if available, otherwise query the DOM
+        const rows = cachedRows || table.querySelectorAll('tbody tr');
+
+        // Batch DOM operations for better performance
+        const fragment = document.createDocumentFragment();
+        const updates = [];
+
+        rows.forEach((row) => {
             const text = row.innerText.toLowerCase();
-            row.style.display = text.includes(query) ? '' : 'none';
+            const shouldShow = text.includes(query);
+
+            // Only update if visibility changes
+            const currentlyVisible = row.style.display !== 'none';
+            if (shouldShow !== currentlyVisible) {
+                updates.push({ row, display: shouldShow ? '' : 'none' });
+            }
+        });
+
+        // Apply all updates in one batch
+        updates.forEach(({ row, display }) => {
+            row.style.display = display;
         });
     }
 
@@ -502,7 +558,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Funkcja przełącznika trybu - zgodna z główną stroną
 function initializeThemeSwitcher() {
-    const themeToggle = document.getElementById('theme-toggle');
+    // Try to get from cache first, fallback to getElementById
+    const themeToggle = (window.adminDomCache && window.adminDomCache.themeToggle) ||
+                       document.getElementById('theme-toggle');
     if (!themeToggle) return;
 
     // Pobierz aktualny motyw z localStorage lub ustaw domyślny na podstawie preferencji systemu
@@ -519,3 +577,6 @@ function initializeThemeSwitcher() {
         localStorage.setItem('theme', newTheme);
     });
 }
+
+// Performance optimization: Initialize resize handler
+window.addEventListener('resize', debounce(optimizePerformanceDuringResize, 100));

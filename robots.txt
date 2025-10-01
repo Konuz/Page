@@ -4,6 +4,14 @@ User-agent: *
 Allow: /
 Allow: /narzedzia/
 
+# KRYTYCZNE: Blokada panelu administracyjnego
+Disallow: /admin/
+Disallow: /admin
+
+# Blokada plików konfiguracyjnych i danych wrażliwych
+Disallow: /data.json
+Disallow: /*.json$
+
 # Blokady artefaktów build/dev
 Disallow: /node_modules/
 Disallow: /cookie-popup.html
@@ -13,10 +21,9 @@ Disallow: /*?*utm_
 Disallow: /*?*sort=
 Disallow: /*?*color=
 
-# Zasoby krytyczne do renderu
+# Zasoby krytyczne do renderu (CSS/JS)
 Allow: /script.js
 Allow: /style.css
-Allow: /data.json
 
 # Mapa witryny
 Sitemap: https://toolshare.com.pl/sitemap.xml

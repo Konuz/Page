@@ -48,7 +48,15 @@ class JsonStorage
 
         file_put_contents($tmpFile, $json, LOCK_EX);
         if (!rename($tmpFile, $this->path)) {
-            unlink($tmpFile);
+            // Cleanup temp file z logowaniem błędów
+            $unlinkResult = @unlink($tmpFile);
+            if (!$unlinkResult) {
+                $error = error_get_last();
+                cms_log('Błąd usuwania pliku tymczasowego', [
+                    'file' => $tmpFile,
+                    'error' => $error ? $error['message'] : 'Unknown error',
+                ], 'error');
+            }
             throw new RuntimeException('Nie udało się zapisać pliku JSON.');
         }
     }

@@ -4,25 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileNav = document.getElementById('admin-mobile-nav');
     const overlay = document.getElementById('admin-menu-overlay');
 
-        hamburgerBtn: !!hamburgerBtn,
-        mobileNav: !!mobileNav,
-        overlay: !!overlay
-    });
-
-    // EMERGENCY: Wymuś ukrycie menu przy załadowaniu
+    // Ukryj menu przy załadowaniu
     const ensureCmsMenuClosed = () => {
-
         if (mobileNav) {
             mobileNav.classList.remove('is-active');
-            // Dodatkowo wymuś style inline dla pewności
-            mobileNav.style.transform = 'translateX(100%)';
         }
 
         if (overlay) {
             overlay.classList.remove('is-active');
-            // Dodatkowo wymuś style inline dla pewności
-            overlay.style.opacity = '0';
-            overlay.style.visibility = 'hidden';
         }
 
         if (hamburgerBtn) {
@@ -31,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Wymuś ukrycie natychmiast
+    // Ukryj menu natychmiast
     ensureCmsMenuClosed();
 
     const closeMenu = () => {
@@ -39,17 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay?.classList.remove('is-active');
         hamburgerBtn?.classList.remove('is-active');
         hamburgerBtn?.setAttribute('aria-expanded', 'false');
-
-        // Usuń wymuszone style po animacji
-        setTimeout(() => {
-            if (mobileNav && !mobileNav.classList.contains('is-active')) {
-                mobileNav.style.transform = '';
-            }
-            if (overlay && !overlay.classList.contains('is-active')) {
-                overlay.style.opacity = '';
-                overlay.style.visibility = '';
-            }
-        }, 300);
     };
 
     const openMenu = () => {

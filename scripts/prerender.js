@@ -103,6 +103,86 @@ function firstNumericPrice(pricing) {
   return Math.min(...vals);
 }
 
+function normalizePrice(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null;
+  }
+  return Number.isInteger(value) ? String(value) : value.toFixed(2);
+}
+
+function enabledTools(tools = []) {
+  return tools.filter(tool => tool && tool.enabled !== false);
+}
+
+function categoryToolStats(category) {
+  let toolCount = 0;
+  let minPrice = Infinity;
+  (category.subcategories || []).forEach(sub => {
+    enabledTools(sub.tools).forEach(tool => {
+      toolCount += 1;
+      const price = firstNumericPrice(tool.pricing);
+      if (typeof price === 'number' && price < minPrice) {
+        minPrice = price;
+      }
+    });
+  });
+  return {
+    toolCount,
+    minPrice: Number.isFinite(minPrice) ? minPrice : null,
+  };
+}
+
+function subcategoryToolStats(subcategory) {
+  const tools = enabledTools(subcategory.tools);
+  let minPrice = Infinity;
+  tools.forEach(tool => {
+    const price = firstNumericPrice(tool.pricing);
+    if (typeof price === 'number' && price < minPrice) {
+      minPrice = price;
+    }
+  });
+  return {
+    toolCount: tools.length,
+    minPrice: Number.isFinite(minPrice) ? minPrice : null,
+  };
+}
+
+function buildCategoryDescription(name, stats) {
+  const parts = [`Wypożycz ${name} w ToolShare Czernica.`];
+  if (stats.toolCount > 0) {
+    const countLabel = stats.toolCount === 1 ? 'narzędzie' : 'narzędzi';
+    parts.push(`${stats.toolCount} ${countLabel} dostępnych od ręki.`);
+  }
+  if (stats.minPrice !== null) {
+    parts.push(`Ceny od ${normalizePrice(stats.minPrice)} zł/dzień.`);
+  }
+  parts.push('Odbiór w Chrząstawie Wielkiej 7 dni w tygodniu.');
+  return parts.join(' ');
+}
+
+function buildSubcategoryDescription(name, stats) {
+  const parts = [`Sprawdź ${name} do wypożyczenia w ToolShare Czernica.`];
+  if (stats.toolCount > 0) {
+    const countLabel = stats.toolCount === 1 ? 'model' : 'modele';
+    parts.push(`${stats.toolCount} ${countLabel} gotowe do odbioru.`);
+  }
+  if (stats.minPrice !== null) {
+    parts.push(`Ceny startują od ${normalizePrice(stats.minPrice)} zł/dzień.`);
+  }
+  parts.push('Rezerwuj online i odbierz w Chrząstawie Wielkiej.');
+  return parts.join(' ');
+}
+
+function buildToolDescription(toolName, catName, subName, price) {
+  const parts = [`${toolName} do wynajęcia w ToolShare Czernica.`];
+  if (price !== null) {
+    parts.push(`Cena od ${normalizePrice(price)} zł za dobę.`);
+  }
+  parts.push(`Kategoria: ${catName} › ${subName}.`);
+  parts.push('Odbiór w Chrząstawie Wielkiej 7 dni w tygodniu.');
+  return parts.join(' ');
+}
+
 function readTemplate(file) {
   const p = path.join(projectRoot, file);
   return fs.readFileSync(p, 'utf8');
@@ -189,20 +269,24 @@ function generate() {
     const catUrl = absoluteUrl(`narzedzia/${catSlug}/`);
     const catImg = category.image ? absoluteUrl(category.image) : absoluteUrl('images/hero.webp');
 
+    const catStats = categoryToolStats(category);
+    const catDesc = buildCategoryDescription(catName, catStats);
+    const catTitle = `${catName} – wynajem narzędzi | ToolShare Czernica`;
+
     // Category page
-    let catHtml = tmplCategory;
-    catHtml = replaceTitle(catHtml, `Wypożyczalnia narzędzi – ${catName} | ToolShare`);
-    catHtml = upsertMetaByName(catHtml, 'description', `Lista narzędzi w kategorii ${catName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
+    let catHtml = cleanupFallback(tmplCategory);
+    catHtml = replaceTitle(catHtml, catTitle);
+    catHtml = upsertMetaByName(catHtml, 'description', catDesc);
     catHtml = setRobots(catHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     catHtml = setCanonical(catHtml, catUrl);
     catHtml = setHreflang(catHtml, { 'pl': catUrl, 'x-default': absoluteUrl('') });
-    catHtml = upsertMetaByProp(catHtml, 'og:type', 'website');
-    catHtml = upsertMetaByProp(catHtml, 'og:title', `Wypożyczalnia narzędzi – ${catName} | ToolShare`);
-    catHtml = upsertMetaByProp(catHtml, 'og:description', `Lista narzędzi w kategorii ${catName}. Sprawdź dostępność i ceny wynajmu.`);
+    catHtml = upsertMetaByProp(catHtml, 'og:type', 'CollectionPage');
+    catHtml = upsertMetaByProp(catHtml, 'og:title', catTitle);
+    catHtml = upsertMetaByProp(catHtml, 'og:description', catDesc);
     catHtml = upsertMetaByProp(catHtml, 'og:url', catUrl);
     catHtml = upsertMetaByProp(catHtml, 'og:image', catImg);
-    catHtml = upsertMetaByName(catHtml, 'twitter:title', `Wypożyczalnia narzędzi – ${catName} | ToolShare`);
-    catHtml = upsertMetaByName(catHtml, 'twitter:description', `Lista narzędzi w kategorii ${catName}. Sprawdź dostępność i ceny wynajmu.`);
+    catHtml = upsertMetaByName(catHtml, 'twitter:title', catTitle);
+    catHtml = upsertMetaByName(catHtml, 'twitter:description', catDesc);
     catHtml = upsertMetaByName(catHtml, 'twitter:image', catImg);
     catHtml = replacePlaceholders(catHtml, { 'CategoryName': catName });
     catHtml = setH1(catHtml, 'category-title', catName);
@@ -213,9 +297,6 @@ function generate() {
       { name: 'Strona główna', url: absoluteUrl('') },
       { name: catName, url: catUrl }
     ]);
-
-    // Cleanup fallback duplicate blocks
-    catHtml = cleanupFallback(catHtml);
 
     const catDir = path.join(outRoot, catSlug);
     ensureDir(catDir);
@@ -230,19 +311,23 @@ function generate() {
       const firstTool = (sub.tools || []).find(t => t && (t.enabled !== false));
       const subImg = firstTool?.image ? absoluteUrl(firstTool.image) : catImg;
 
-      let subHtml = tmplSubcategory;
-      subHtml = replaceTitle(subHtml, `Wypożyczalnia narzędzi – ${subName} | ToolShare`);
-      subHtml = upsertMetaByName(subHtml, 'description', `Lista narzędzi w podkategorii ${subName}. Kliknij, aby zobaczyć szczegóły i ceny wynajmu.`);
+      const subStats = subcategoryToolStats(sub);
+      const subDesc = buildSubcategoryDescription(subName, subStats);
+      const subTitle = `${subName} – wynajem narzędzi | ToolShare Czernica`;
+
+      let subHtml = cleanupFallback(tmplSubcategory);
+      subHtml = replaceTitle(subHtml, subTitle);
+      subHtml = upsertMetaByName(subHtml, 'description', subDesc);
       subHtml = setRobots(subHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
       subHtml = setCanonical(subHtml, subUrl);
       subHtml = setHreflang(subHtml, { 'pl': subUrl, 'x-default': absoluteUrl('') });
-      subHtml = upsertMetaByProp(subHtml, 'og:type', 'website');
-      subHtml = upsertMetaByProp(subHtml, 'og:title', `Wypożyczalnia narzędzi – ${subName} | ToolShare`);
-      subHtml = upsertMetaByProp(subHtml, 'og:description', `Lista narzędzi w podkategorii ${subName}. Sprawdź dostępność i ceny wynajmu.`);
+      subHtml = upsertMetaByProp(subHtml, 'og:type', 'CollectionPage');
+      subHtml = upsertMetaByProp(subHtml, 'og:title', subTitle);
+      subHtml = upsertMetaByProp(subHtml, 'og:description', subDesc);
       subHtml = upsertMetaByProp(subHtml, 'og:url', subUrl);
       subHtml = upsertMetaByProp(subHtml, 'og:image', subImg);
-      subHtml = upsertMetaByName(subHtml, 'twitter:title', `Wypożyczalnia narzędzi – ${subName} | ToolShare`);
-      subHtml = upsertMetaByName(subHtml, 'twitter:description', `Lista narzędzi w podkategorii ${subName}. Sprawdź dostępność i ceny wynajmu.`);
+      subHtml = upsertMetaByName(subHtml, 'twitter:title', subTitle);
+      subHtml = upsertMetaByName(subHtml, 'twitter:description', subDesc);
       subHtml = upsertMetaByName(subHtml, 'twitter:image', subImg);
       subHtml = replacePlaceholders(subHtml, { 'CategoryName': catName, 'SubcategoryName': subName });
       // Adjust breadcrumb category link to pretty URL
@@ -259,9 +344,9 @@ function generate() {
       const toolsForList = (sub.tools || [])
         .filter(t => t && t.enabled !== false)
         .map(t => ({ name: String(t.name).trim(), url: absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(String(t.id))}/`) }));
-      subHtml = injectItemListSchema(subHtml, toolsForList, subUrl);
-
-      subHtml = cleanupFallback(subHtml);
+      if (toolsForList.length) {
+        subHtml = injectItemListSchema(subHtml, toolsForList, subUrl);
+      }
 
       const subDir = path.join(catDir, subSlug);
       ensureDir(subDir);
@@ -275,22 +360,23 @@ function generate() {
           const toolName = String(tool.name).trim();
           const toolUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(toolId)}/`);
           const toolImg = tool.image ? absoluteUrl(tool.image) : subImg;
-          const price = firstNumericPrice(tool.pricing);
-          const toolDescBase = `Informacje o narzędziu ${toolName}. ${catName} – ${subName}. Odbiór w Chrzęstawie Wielkiej, elastyczne godziny.`;
-          const toolDesc = price ? `${toolDescBase} Ceny od ${price} zł/dzień.` : toolDescBase;
+          const priceValue = firstNumericPrice(tool.pricing);
+          const normalizedPrice = normalizePrice(priceValue);
+          const toolDesc = buildToolDescription(toolName, catName, subName, priceValue);
 
-          let toolHtml = tmplTool;
-          toolHtml = replaceTitle(toolHtml, `${toolName} – wynajem | ToolShare`);
+          let toolHtml = cleanupFallback(tmplTool);
+          const toolTitle = `${toolName} – wynajem narzędzi | ToolShare Czernica`;
+          toolHtml = replaceTitle(toolHtml, toolTitle);
           toolHtml = upsertMetaByName(toolHtml, 'description', toolDesc);
           toolHtml = setRobots(toolHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           toolHtml = setCanonical(toolHtml, toolUrl);
           toolHtml = setHreflang(toolHtml, { 'pl': toolUrl, 'x-default': absoluteUrl('') });
           toolHtml = upsertMetaByProp(toolHtml, 'og:type', 'product');
-          toolHtml = upsertMetaByProp(toolHtml, 'og:title', `${toolName} – wynajem | ToolShare`);
+          toolHtml = upsertMetaByProp(toolHtml, 'og:title', toolTitle);
           toolHtml = upsertMetaByProp(toolHtml, 'og:description', toolDesc);
           toolHtml = upsertMetaByProp(toolHtml, 'og:url', toolUrl);
           toolHtml = upsertMetaByProp(toolHtml, 'og:image', toolImg);
-          toolHtml = upsertMetaByName(toolHtml, 'twitter:title', `${toolName} – wynajem | ToolShare`);
+          toolHtml = upsertMetaByName(toolHtml, 'twitter:title', toolTitle);
           toolHtml = upsertMetaByName(toolHtml, 'twitter:description', toolDesc);
           toolHtml = upsertMetaByName(toolHtml, 'twitter:image', toolImg);
           toolHtml = replacePlaceholders(toolHtml, {
@@ -301,12 +387,14 @@ function generate() {
           // Adjust breadcrumb links to pretty URLs (first: category, second: subcategory)
           toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
           toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/${subSlug}/"`);
-          // Ensure H1 if present follows toolName
-          toolHtml = toolHtml.replace(/(<h1[^>]*id=["']tool-name["'][^>]*>)[\s\S]*?(<\/h1>)/i, `$1${toolName}$2`);
+          const toolH1 = normalizedPrice !== null
+            ? `Wynajem ${toolName} – od ${normalizedPrice} zł/dzień | ToolShare Czernica`
+            : `Wynajem ${toolName} | ToolShare Czernica`;
+          toolHtml = toolHtml.replace(/(<h1[^>]*id=["']tool-name["'][^>]*>)[\s\S]*?(<\/h1>)/i, `$1${toolH1}$2`);
 
           // SSR Product + Breadcrumb JSON-LD and static nav
           try {
-            const priceVal = firstNumericPrice(tool.pricing);
+            const normalizedOfferPrice = normalizePrice(priceValue);
             const product = {
               '@context': 'https://schema.org',
               '@type': 'Product',
@@ -314,9 +402,10 @@ function generate() {
               image: [toolImg],
               category: `${catName} > ${subName}`,
               url: toolUrl,
+              description: toolDesc,
               offers: {
                 '@type': 'Offer', priceCurrency: 'PLN',
-                price: typeof priceVal === 'number' ? priceVal : undefined,
+                price: normalizedOfferPrice ?? undefined,
                 availability: 'https://schema.org/InStock', url: toolUrl
               }
             };
@@ -330,8 +419,6 @@ function generate() {
           } catch (_) {}
 
           toolHtml = injectStaticNavigation(toolHtml, catalog);
-          toolHtml = cleanupFallback(toolHtml);
-
           const toolDir = path.join(subDir, toolId);
           ensureDir(toolDir);
           fs.writeFileSync(path.join(toolDir, 'index.html'), fixAssetPaths(toolHtml), 'utf8');
@@ -362,13 +449,20 @@ function generate() {
         '                </a>'
       ].join('\n');
     }).join('\n');
-    if (tmplHome.includes('<!-- HOME_TOOLS_GRID -->')) {
-      tmplHome = tmplHome.replace('<!-- HOME_TOOLS_GRID -->', `\n${cards}\n                `);
+    const markerStart = '<!-- HOME_TOOLS_GRID:START -->';
+    const markerEnd = '<!-- HOME_TOOLS_GRID:END -->';
+    const markerBlock = `                ${markerStart}\n${cards}\n                ${markerEnd}`;
+
+    if (tmplHome.includes(markerStart) && tmplHome.includes(markerEnd)) {
+      const markerRegex = new RegExp(`${markerStart}[\\s\\S]*?${markerEnd}`);
+      tmplHome = tmplHome.replace(markerRegex, markerBlock);
+    } else if (tmplHome.includes('<!-- HOME_TOOLS_GRID -->')) {
+      tmplHome = tmplHome.replace('<!-- HOME_TOOLS_GRID -->', `\n${markerBlock}\n                `);
     } else {
-      tmplHome = tmplHome.replace(
-        /(<div id=\"tools-grid\" class=\"tools-grid\">)[\s\S]*?(<\/div>)/,
-        (m, p1, p2) => `${p1}\n${cards}\n            ${p2}`
-      );
+      const gridSectionRegex = /(<div id=\"tools-grid\" class=\"tools-grid\">)([\s\S]*?)(\s*<\/div>\s*<\/section>)/;
+      if (gridSectionRegex.test(tmplHome)) {
+        tmplHome = tmplHome.replace(gridSectionRegex, (match, opening, inner, closing) => `${opening}\n${markerBlock}\n${closing}`);
+      }
     }
     fs.writeFileSync(path.join(projectRoot, 'index.html'), tmplHome, 'utf8');
   } catch (_) {}
@@ -385,9 +479,9 @@ main();
 function cleanupFallback(html) {
   let out = html;
   // Remove fallback OG block
-  out = out.replace(/<!--\s*Fallback OG tags[\s\S]*?(?=\n\s*<meta\s+name=\"twitter:card\"|\n\s*<script|\n\s*<link|\n\s*<noscript|\n\s*<\/head)/i, '');
+  out = out.replace(/<!--\s*Fallback OG tags[\s\S]*?(?=(?:\r?\n)?\s*<meta\s+name=\"twitter:card\"|(?:\r?\n)?\s*<script|(?:\r?\n)?\s*<link|(?:\r?\n)?\s*<noscript|(?:\r?\n)?\s*<\/head)/gi, '');
   // Remove fallback Twitter block
-  out = out.replace(/<!--\s*Fallback Twitter tags[\s\S]*?(?=\n\s*<script|\n\s*<link|\n\s*<noscript|\n\s*<\/head)/i, '');
+  out = out.replace(/<!--\s*Fallback Twitter tags[\s\S]*?(?=(?:\r?\n)?\s*<script|(?:\r?\n)?\s*<link|(?:\r?\n)?\s*<noscript|(?:\r?\n)?\s*<\/head)/gi, '');
   // Remove fallback meta description we injected for non-JS (keep the main description)
   out = out.replace(/<meta[^>]+id=["']meta-description-fallback["'][^>]*>\s*/ig, '');
   return out;

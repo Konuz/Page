@@ -30,11 +30,14 @@ function cms_catalog_import_json(string $json): array
 
 function cms_catalog_bulk_toggle(array &$catalog, array $toolKeys, bool $enabled): void
 {
+    // Optymalizacja: zamiana array na hash set dla O(1) lookup zamiast O(n) in_array
+    $toolKeysSet = array_flip($toolKeys);
+
     foreach ($catalog as &$category) {
         foreach ($category['subcategories'] as &$subcategory) {
             foreach ($subcategory['tools'] as &$tool) {
                 $key = sprintf('%s/%s/%s', cms_slugify($category['category']), cms_slugify($subcategory['name']), $tool['id']);
-                if (in_array($key, $toolKeys, true)) {
+                if (isset($toolKeysSet[$key])) {
                     $tool['enabled'] = $enabled;
                 }
             }
@@ -44,11 +47,14 @@ function cms_catalog_bulk_toggle(array &$catalog, array $toolKeys, bool $enabled
 
 function cms_catalog_bulk_adjust_price(array &$catalog, array $toolKeys, float $delta): void
 {
+    // Optymalizacja: zamiana array na hash set dla O(1) lookup zamiast O(n) in_array
+    $toolKeysSet = array_flip($toolKeys);
+
     foreach ($catalog as &$category) {
         foreach ($category['subcategories'] as &$subcategory) {
             foreach ($subcategory['tools'] as &$tool) {
                 $key = sprintf('%s/%s/%s', cms_slugify($category['category']), cms_slugify($subcategory['name']), $tool['id']);
-                if (!in_array($key, $toolKeys, true)) {
+                if (!isset($toolKeysSet[$key])) {
                     continue;
                 }
 

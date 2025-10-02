@@ -57,6 +57,36 @@ function cms_validate(array $data, array $rules): array
                         $errors[$field][] = 'Nieprawidłowy format.';
                     }
                     break;
+                case 'price':
+                    // Walidacja ceny: może być liczbą lub placeholder "Dodaj cenę"
+                    if ($value !== null && $value !== '' && $value !== 'Dodaj cenę') {
+                        // Usuń ewentualne spacje i przecinki
+                        $normalized = str_replace([' ', ','], ['', '.'], (string) $value);
+
+                        // Sprawdź czy to liczba
+                        if (!is_numeric($normalized)) {
+                            $errors[$field][] = 'Cena musi być liczbą lub "Dodaj cenę".';
+                            break;
+                        }
+
+                        $price = (float) $normalized;
+
+                        // Cena musi być dodatnia
+                        if ($price < 0) {
+                            $errors[$field][] = 'Cena nie może być ujemna.';
+                        }
+
+                        // Maksymalnie 2 miejsca dziesiętne
+                        if (round($price, 2) != $price) {
+                            $errors[$field][] = 'Cena może mieć maksymalnie 2 miejsca dziesiętne.';
+                        }
+
+                        // Maksymalna wartość (np. 100000 PLN)
+                        if ($price > 100000) {
+                            $errors[$field][] = 'Cena nie może przekraczać 100000 zł.';
+                        }
+                    }
+                    break;
                 case 'nullable':
                     // nic nie robimy – pozostawiamy możliwość null
                     break;

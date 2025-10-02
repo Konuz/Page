@@ -1,5 +1,5 @@
 
-// Performance optimization: Debounce function for resize handling
+// Utility: Debounce function for performance optimization
 function debounce(func, wait = 100) {
     let timeout;
     return function(...args) {
@@ -8,22 +8,10 @@ function debounce(func, wait = 100) {
     };
 }
 
-// Performance optimization: Disable expensive effects during resize
-let isResizing = false;
-const optimizePerformanceDuringResize = () => {
-    isResizing = true;
-    document.body.classList.add('is-resizing');
-
-    // Re-enable effects after resize stops
-    clearTimeout(window.resizeEndTimer);
-    window.resizeEndTimer = setTimeout(() => {
-        isResizing = false;
-        document.body.classList.remove('is-resizing');
-    }, 150);
-};
-
 const cms = (() => {
     const modals = new Map();
+    const temporaryImages = new Map(); // Śledzenie tymczasowych obrazów dla każdego modala
+    const closingModals = new Set(); // Guard przeciwko podwójnemu zamykaniu
 
     function openModal(templateId, initializer) {
         const template = document.getElementById(templateId);
@@ -48,6 +36,9 @@ const cms = (() => {
         document.body.appendChild(backdrop);
         modals.set(templateId, backdrop);
 
+        // Inicjalizuj pustą listę tymczasowych obrazów dla tego modala
+        temporaryImages.set(templateId, []);
+
         if (typeof initializer === 'function') {
             initializer(backdrop.querySelector('form') || backdrop);
         }
@@ -55,14 +46,74 @@ const cms = (() => {
         return backdrop;
     }
 
-    function closeModal(templateId) {
+    async function closeModal(templateId) {
+        // Guard przeciwko podwójnemu zamykaniu
+        if (closingModals.has(templateId)) {
+            return;
+        }
+        closingModals.add(templateId);
+
         const backdrop = modals.get(templateId);
-        if (!backdrop) return;
+        if (!backdrop) {
+            closingModals.delete(templateId);
+            return;
+        }
+
+        // Usuń tymczasowe obrazy jeśli modal został zamknięty bez zapisywania
+        await cleanupTemporaryImages(templateId);
+
         backdrop.remove();
         modals.delete(templateId);
+        temporaryImages.delete(templateId);
+        closingModals.delete(templateId);
     }
 
-    return { openModal, closeModal };
+    function addTemporaryImage(modalId, imagePath) {
+        const images = temporaryImages.get(modalId) || [];
+        if (!images.includes(imagePath)) {
+            images.push(imagePath);
+            temporaryImages.set(modalId, images);
+        }
+    }
+
+    function clearTemporaryImages(modalId) {
+        temporaryImages.set(modalId, []);
+    }
+
+    async function cleanupTemporaryImages(modalId) {
+        const images = temporaryImages.get(modalId) || [];
+        if (images.length === 0) return;
+
+        // Usuń wszystkie tymczasowe obrazy - każdy delete potrzebuje nowego tokena CSRF
+        for (const imagePath of images) {
+            try {
+                // Pobierz nowy token CSRF dla każdego żądania (tokeny są one-time)
+                const tokenResponse = await fetch('/admin/api/get-csrf-token.php');
+                const tokenData = await tokenResponse.json();
+                const csrfToken = tokenData.token;
+
+                if (!csrfToken) {
+                    console.error('Failed to get CSRF token for image cleanup');
+                    continue;
+                }
+
+                await fetch('/admin/api/delete-image.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({ path: imagePath })
+                });
+            } catch (err) {
+                console.error('Failed to delete temporary image:', imagePath, err);
+            }
+        }
+
+        temporaryImages.delete(modalId);
+    }
+
+    return { openModal, closeModal, addTemporaryImage, clearTemporaryImages };
 })();
 
 // Eksportuj cms do window żeby był dostępny globalnie
@@ -89,6 +140,94 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make DOM cache globally available for other functions
     window.adminDomCache = domCache;
 
+    const IMAGE_PATH_DISPLAY_LIMIT = 48;
+
+    function truncateImagePath(path) {
+        if (!path) return '';
+        if (path.length <= IMAGE_PATH_DISPLAY_LIMIT) {
+            return path;
+        }
+        const visible = Math.max(IMAGE_PATH_DISPLAY_LIMIT - 1, 1);
+        return `…${path.slice(-visible)}`;
+    }
+
+    function clearImagePreview(input) {
+        if (!input) return;
+        const wrapper = input.closest('.form-group, .form-field, .form-row') || input.parentElement;
+        const preview = wrapper?.querySelector('.image-preview');
+        if (preview) {
+            preview.innerHTML = '';
+        }
+    }
+
+    function showImagePreview(input, imagePath) {
+        if (!input || !imagePath) {
+            clearImagePreview(input);
+            return;
+        }
+        const fieldWrapper = input.closest('.form-group, .form-field, .form-row') || input.parentElement;
+        if (!fieldWrapper) return;
+
+        let previewContainer = fieldWrapper.querySelector('.image-preview');
+        if (!previewContainer) {
+            previewContainer = document.createElement('div');
+            previewContainer.className = 'image-preview';
+            previewContainer.style.marginTop = '0.75rem';
+            fieldWrapper.appendChild(previewContainer);
+        }
+
+        previewContainer.innerHTML = `
+            <img src="/${imagePath}" alt="Podgląd" style="max-width: 220px; max-height: 220px; border-radius: 8px; border: 1px solid var(--color-border); display: block;">
+        `;
+    }
+
+    function setImagePathValue(input, rawPath, { preview = false } = {}) {
+        if (!input) return;
+        const normalized = (rawPath || '').trim();
+        if (normalized) {
+            input.dataset.fullPath = normalized;
+            input.value = truncateImagePath(normalized);
+            input.title = normalized;
+            if (preview) {
+                showImagePreview(input, normalized);
+            }
+        } else {
+            delete input.dataset.fullPath;
+            input.value = '';
+            input.title = '';
+            if (preview) {
+                clearImagePreview(input);
+            }
+        }
+    }
+
+    function attachImagePathHandlers(input) {
+        if (!input || input.dataset.pathHandlersAttached === '1') return;
+        input.dataset.pathHandlersAttached = '1';
+
+        input.addEventListener('focus', () => {
+            const full = input.dataset.fullPath;
+            if (full) {
+                input.value = full;
+                if (typeof input.setSelectionRange === 'function') {
+                    const len = full.length;
+                    requestAnimationFrame(() => {
+                        try {
+                            input.setSelectionRange(len, len);
+                        } catch (_) {
+                            /* ignore selection errors */
+                        }
+                    });
+                }
+            }
+        });
+
+        input.addEventListener('blur', () => {
+            const full = input.value.trim();
+            setImagePathValue(input, full, { preview: Boolean(full) });
+        });
+    }
+
     // Inicjalizacja przełącznika trybu
     initializeThemeSwitcher();
 
@@ -97,8 +236,15 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHistory();
 
     if (searchInput && table) {
-        // Cache table rows for performance
+        // Cache table rows and pre-compute search text for performance
         const tableRows = table.querySelectorAll('tbody tr');
+
+        // Pre-cache lowercased text content for each row
+        tableRows.forEach(row => {
+            if (!row.dataset.searchText) {
+                row.dataset.searchText = row.innerText.toLowerCase();
+            }
+        });
 
         searchInput.addEventListener('input', debounce(() => {
             const query = searchInput.value.trim().toLowerCase();
@@ -204,11 +350,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = cachedRows || table.querySelectorAll('tbody tr');
 
         // Batch DOM operations for better performance
-        const fragment = document.createDocumentFragment();
         const updates = [];
 
         rows.forEach((row) => {
-            const text = row.innerText.toLowerCase();
+            // Use pre-cached search text if available, otherwise compute
+            const text = row.dataset.searchText || row.innerText.toLowerCase();
             const shouldShow = text.includes(query);
 
             // Only update if visibility changes
@@ -269,6 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
             populateSubcategoryField(form, context?.category, context?.subcategory);
             resetPricing(form);
 
+            const imageInput = form.querySelector('#tool-image');
+            attachImagePathHandlers(imageInput);
+            let initialImagePath = imageInput ? imageInput.value : '';
+
             if (context) {
                 const ref = findToolRef(context);
                 if (ref) {
@@ -277,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     form.querySelector('#tool-subcategory').value = cms_slugify(ref.subcategory.name);
                     form.querySelector('#tool-name').value = ref.tool.name;
                     form.querySelector('#tool-id').value = options.clone ? `${ref.tool.id}-kopiuj` : ref.tool.id;
-                    form.querySelector('#tool-image').value = ref.tool.image;
+                    initialImagePath = ref.tool.image || '';
                     form.querySelector('#tool-description').value = ref.tool.description || '';
                     form.querySelector('input[name="enabled"]').checked = ref.tool.enabled !== false;
                     Object.entries(ref.tool.pricing || {}).forEach(([label, value]) => {
@@ -285,6 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             }
+
+            setImagePathValue(imageInput, initialImagePath, { preview: Boolean(initialImagePath) });
 
             // Jeśli to nowe narzędzie (brak context), dodaj standardowe pola cenowe
             if (!context && !form.querySelector('.pricing-row')) {
@@ -344,27 +496,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function browseImage(button) {
+    async function browseImage(button) {
         const form = button.closest('form');
         const fileInput = form.querySelector('#tool-image-file');
         const textInput = form.querySelector('#tool-image');
 
         fileInput.click();
 
-        fileInput.onchange = function(event) {
+        fileInput.onchange = async function(event) {
             const file = event.target.files[0];
-            if (file) {
-                // Sprawdź czy to obraz
-                if (file.type.startsWith('image/')) {
-                    // Utwórz ścieżkę w formacie images/nazwa_pliku
-                    const fileName = file.name.toLowerCase().replace(/\s+/g, '_');
-                    textInput.value = `images/${fileName}`;
+            if (!file) return;
 
-                    // Opcjonalnie: pokazaj podgląd
+            // Sprawdź czy to obraz
+            if (!file.type.startsWith('image/')) {
+                alert('Proszę wybrać plik obrazu (JPG, PNG, WebP, etc.)');
+                fileInput.value = '';
+                return;
+            }
+
+            // Pokaż podgląd tymczasowy (data URL) natychmiast
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fieldWrapper = textInput.closest('.form-group, .form-field, .form-row') || textInput.parentElement;
+                if (!fieldWrapper) return;
+
+                let previewContainer = fieldWrapper.querySelector('.image-preview');
+                if (!previewContainer) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.className = 'image-preview';
+                    previewContainer.style.marginTop = '0.75rem';
+                    fieldWrapper.appendChild(previewContainer);
+                }
+
+                previewContainer.innerHTML = `
+                    <img src="${e.target.result}" alt="Ładowanie..." style="max-width: 220px; max-height: 220px; border-radius: 8px; border: 1px solid var(--color-border); display: block; opacity: 0.6;">
+                    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--color-text-secondary);">Przesyłanie...</div>
+                `;
+            };
+            reader.readAsDataURL(file);
+
+            // Prześlij plik na serwer
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!csrfToken) {
+                alert('Błąd: brak tokenu CSRF');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('/admin/api/upload-image.php', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'ok' && result.path) {
+                    // Aktualizuj ścieżkę w polu tekstowym
+                    textInput.value = result.path;
+
+                    // Dodaj obraz do listy tymczasowych obrazów dla tego modala
+                    const modalBackdrop = form.closest('[data-modal-backdrop]');
+                    const modalId = modalBackdrop?.dataset.modalId;
+                    if (modalId) {
+                        cms.addTemporaryImage(modalId, result.path);
+                    }
+
+                    // Zaktualizuj podgląd z finalnym obrazem z serwera
+                    const fieldWrapper = textInput.closest('.form-group, .form-field, .form-row') || textInput.parentElement;
+                    if (fieldWrapper) {
+                        const previewContainer = fieldWrapper.querySelector('.image-preview');
+                        if (previewContainer) {
+                            previewContainer.innerHTML = `
+                                <img src="/${result.path}" alt="Podgląd" style="max-width: 220px; max-height: 220px; border-radius: 8px; border: 1px solid var(--color-border); display: block;">
+                            `;
+                        }
+                    }
                 } else {
-                    alert('Proszę wybrać plik obrazu (JPG, PNG, WebP, etc.)');
+                    alert(result.error || 'Nie udało się przesłać pliku.');
                     fileInput.value = '';
                 }
+            } catch (error) {
+                console.error('Błąd przesyłania obrazu:', error);
+                alert('Wystąpił błąd podczas przesyłania pliku.');
+                fileInput.value = '';
             }
         };
     }
@@ -390,6 +610,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (context && !options.clone) {
             formData.append('tool_id', context.toolId);
         }
+
+        // Wyczyść listę tymczasowych obrazów przed zapisem - obrazy będą używane w narzędziu
+        const modalId = form.closest('[data-modal-backdrop]')?.dataset.modalId;
+        if (modalId) {
+            cms.clearTemporaryImages(modalId);
+        }
+
         const response = await apiRequest('api/save.php', formData);
         pushHistory(`Zapisano narzędzie: ${formData.get('name')}`);
         if (response?.catalog) {
@@ -640,6 +867,3 @@ function initializeThemeSwitcher() {
         localStorage.setItem('theme', newTheme);
     });
 }
-
-// Performance optimization: Initialize resize handler
-window.addEventListener('resize', debounce(optimizePerformanceDuringResize, 100));

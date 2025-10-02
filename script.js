@@ -34,15 +34,17 @@
             filename.includes('maps') ||
             filename.includes('all.iife.js') ||
             filename.includes('cdnjs.cloudflare.com')) {
-            
-                message: message.substring(0, 100),
-                filename: filename,
-                source: 'iframe/external',
-                protocol: window.location.protocol,
-                hostname: window.location.hostname,
-                note: 'Ten błąd prawdopodobnie zniknie na hostingu HTTPS'
-            });
-            
+            if (isDevelopment) {
+                console.debug('Ignoruję błąd zewnętrznego skryptu', {
+                    message: message.substring(0, 100),
+                    filename,
+                    source: 'iframe/external',
+                    protocol: window.location.protocol,
+                    hostname: window.location.hostname,
+                    note: 'Ten błąd prawdopodobnie zniknie na hostingu HTTPS'
+                });
+            }
+
             event.preventDefault();
             event.stopPropagation();
             return false;

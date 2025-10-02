@@ -10,4 +10,9 @@ $title = 'Kategorie';
 
 include __DIR__ . '/templates/header.php';
 include __DIR__ . '/templates/categories-table.php';
+?>
+<script>
+    window.cmsCatalog = <?= json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+</script>
+<?php
 include __DIR__ . '/templates/footer.php';

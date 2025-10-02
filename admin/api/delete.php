@@ -52,6 +52,10 @@ try {
     }
 
     cms_save_catalog($catalog);
+
+    // Regeneruj statyczną stronę po usunięciu
+    cms_run_generators();
+
     cms_api_response([
         'status' => 'ok',
         'catalog' => $catalog,

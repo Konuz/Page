@@ -27,8 +27,8 @@
                 </div>
                 <div class="form-group">
                     <label for="tool-image">Ścieżka obrazu</label>
-                    <div style="display: flex; gap: 0.75rem; align-items: stretch;">
-                        <input type="text" class="form-control" name="image" id="tool-image" placeholder="images/narzedzie.webp" required style="flex: 1;">
+                    <div class="tool-image-field">
+                        <input type="text" class="form-control tool-image-input" name="image" id="tool-image" placeholder="images/narzedzie.webp" required>
                         <input type="file" id="tool-image-file" accept="image/*" style="display: none;">
                         <button type="button" class="btn btn-primary" data-action="browse-image" title="Wybierz obraz">
                             <i class="fas fa-folder-open"></i>

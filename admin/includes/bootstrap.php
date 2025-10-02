@@ -31,5 +31,26 @@ if (!defined('CMS_BOOTSTRAPPED')) {
         session_start();
     }
 
+    // Ustaw bezpieczne nagłówki HTTP
+    header("X-Frame-Options: DENY");
+    header("X-Content-Type-Options: nosniff");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
+
+    // Content Security Policy
+    $csp = [
+        "default-src 'self' blob:",
+        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
+        "img-src 'self' data: https:",
+        "connect-src 'self'",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'"
+    ];
+    header("Content-Security-Policy: " . implode("; ", $csp));
+
     require_once __DIR__ . '/helpers.php';
 }

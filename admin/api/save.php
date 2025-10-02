@@ -75,7 +75,21 @@ function cms_parse_pricing(array $data): array
     if (!empty($data['pricing_json'])) {
         $decoded = json_decode((string) $data['pricing_json'], true);
         if (is_array($decoded)) {
-            return $decoded;
+            // Walidacja i normalizacja cen z JSON
+            $normalized = [];
+            foreach ($decoded as $label => $value) {
+                $validationData = ['price' => $value];
+                $validationRules = ['price' => ['price']];
+                $errors = cms_validate($validationData, $validationRules);
+                if (!empty($errors)) {
+                    throw new InvalidArgumentException("Nieprawidłowa cena dla '$label': " . implode(' ', $errors['price']));
+                }
+
+                // Normalizuj wartość
+                $normalizedValue = str_replace([' ', ','], ['', '.'], trim((string) $value));
+                $normalized[$label] = is_numeric($normalizedValue) ? (float) $normalizedValue : trim((string) $value);
+            }
+            return $normalized;
         }
     }
 
@@ -89,7 +103,20 @@ function cms_parse_pricing(array $data): array
             if ($label === '') {
                 continue;
             }
-            $pricing[$label] = is_numeric($value) ? (float) $value : trim((string) $value);
+
+            // Walidacja każdej ceny
+            $validationData = ['price' => $value];
+            $validationRules = ['price' => ['price']];
+            $errors = cms_validate($validationData, $validationRules);
+            if (!empty($errors)) {
+                throw new InvalidArgumentException("Nieprawidłowa cena dla '$label': " . implode(' ', $errors['price']));
+            }
+
+            // Normalizuj wartość (usuń spacje i zamień przecinki na kropki)
+            $normalizedValue = str_replace([' ', ','], ['', '.'], trim((string) $value));
+
+            // Przechowuj jako float jeśli numeric, inaczej jako string (np. "Dodaj cenę")
+            $pricing[$label] = is_numeric($normalizedValue) ? (float) $normalizedValue : trim((string) $value);
         }
         return $pricing;
     }

@@ -1122,6 +1122,12 @@ input[type="checkbox"]:hover {
     margin-left: auto;
 }
 
+/* Dopasowanie wysokości przycisku filtruj do pól input */
+.toolbar .btn {
+    padding: 0.65rem 1.2rem; /* Takie samo padding vertical jak .form-control */
+    font-size: 1rem; /* Taki sam rozmiar jak .form-control */
+}
+
 /* Przełącznik trybu jasny/ciemny - zgodny z główną stroną */
 .theme-toggle-btn {
     background: none;
@@ -1201,29 +1207,6 @@ input[type="checkbox"]:hover {
     .modal-scrollable {
         padding: 0.5rem;
     }
-}
-
-/* === Performance Optimizations === */
-
-/* Disable expensive effects during resize for better performance */
-.is-resizing .admin-header {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* Reduce complexity of shadows during resize */
-.is-resizing .admin-mobile-nav a,
-.is-resizing .admin-mobile-nav .btn {
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1) !important;
-}
-
-.is-resizing .admin-mobile-nav {
-    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Simplify transitions during resize */
-.is-resizing * {
-    transition-duration: 0.05s !important;
 }
 
 /* Optimize will-change for animated elements */
@@ -1308,4 +1291,14 @@ input[type="checkbox"]:hover {
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: all !important;
+}
+.tool-image-field {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.tool-image-input {
+    width: 320px;
+    max-width: 100%;
 }

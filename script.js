@@ -75,6 +75,15 @@ if (DEV_MODE) {
     })();
 }
 
+// ===== Helper: Add media query listener with fallback =====
+function addMediaListener(query, handler) {
+    if (typeof query.addEventListener === 'function') {
+        query.addEventListener('change', handler);
+    } else if (typeof query.addListener === 'function') {
+        query.addListener(handler);
+    }
+}
+
 // ===== LIMIT VISIBLE TOOLS TO 12 WITH SCROLL (desktop) =====
 function setupGridScrollLimit() {
     const desktopQuery = window.matchMedia('(min-width: 992px)');
@@ -87,13 +96,7 @@ function setupGridScrollLimit() {
     };
 
     updateGridState();
-
-    const listener = () => updateGridState();
-    if (typeof desktopQuery.addEventListener === 'function') {
-        desktopQuery.addEventListener('change', listener);
-    } else if (typeof desktopQuery.addListener === 'function') {
-        desktopQuery.addListener(listener);
-    }
+    addMediaListener(desktopQuery, updateGridState);
 }
 
 if (document.readyState === 'loading') {
@@ -117,12 +120,7 @@ function setupSubmenuScrollLimit(visibleCount = 12) {
     recalc();
 
     const desktopQuery = window.matchMedia('(min-width: 992px)');
-    const listener = () => recalc();
-    if (typeof desktopQuery.addEventListener === 'function') {
-        desktopQuery.addEventListener('change', listener);
-    } else if (typeof desktopQuery.addListener === 'function') {
-        desktopQuery.addListener(listener);
-    }
+    addMediaListener(desktopQuery, recalc);
 }
 
 // ===== COOKIE MANAGER =====
@@ -465,19 +463,20 @@ async function validateClarityConsent() {
 // Funkcja zapobiegająca polskim sierotkom
 function fixPolishOrphans(text) {
     if (!text || typeof text !== 'string') return text;
-    
-    // Lista polskich spójników i przyimków, które nie mogą być na końcu linii
-    const orphans = ['i', 'a', 'o', 'u', 'w', 'z', 'ze', 'na', 'do', 'od', 'po', 'za', 'bez', 'pod', 'nad', 'przez', 'dla', 'lub', 'albo', 'czy', 'że', 'bo', 'ale', 'gdy', 'jak'];
-    
+
+    // Lista tylko najkrótszych polskich spójników i przyimków (1-2 litery)
+    // Ograniczamy do najpopularniejszych, aby nie zakłócać naturalnego zawijania tekstu
+    const orphans = ['i', 'a', 'o', 'u', 'w', 'z'];
+
     let result = text;
-    
+
     // Dla każdego spójnika/przyimka zastąp spację po nim na &nbsp;
     orphans.forEach(orphan => {
         // Wzorzec: początek słowa lub spacja + spójnik + spacja + następny znak (nie biały)
         const regex = new RegExp(`(^|\\s)(${orphan})\\s+(?=\\S)`, 'gi');
         result = result.replace(regex, `$1$2&nbsp;`);
     });
-    
+
     return result;
 }
 
@@ -621,6 +620,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Zastosuj zasady typografii po wszystkich inicjalizacjach
     setTimeout(() => {
         applyTypographyRules();
+        applyPolishOrphansToStaticContent();
     }, 100);
 
     // Logika przycisku przewijania do góry z użyciem GSAP
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isAnimating = false; // Flaga do blokowania animacji
 
     if (scrollToTopBtn) {
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', debounce(() => {
             if (window.scrollY > 200) {
                 if (!isButtonVisible && !isAnimating) {
                     isButtonVisible = true;
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     jumpOutEffect();
                 }
             }
-        });
+        }, 50));
 
         scrollToTopBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1657,26 +1657,23 @@ function ensureOgTwitterDefaults(defaultImageUrl) {
     upsertMetaByName('twitter:image', defaultImageUrl);
 }
 
-function upsertMetaByName(name, content) {
-    if (!name || !content) return;
-    let el = document.head.querySelector(`meta[name="${CSS.escape(name)}"]`);
+function upsertMetaTag(attrName, attrValue, content) {
+    if (!attrValue || !content) return;
+    let el = document.head.querySelector(`meta[${attrName}="${CSS.escape(attrValue)}"]`);
     if (!el) {
         el = document.createElement('meta');
-        el.setAttribute('name', name);
+        el.setAttribute(attrName, attrValue);
         document.head.appendChild(el);
     }
     el.setAttribute('content', content);
 }
 
+function upsertMetaByName(name, content) {
+    return upsertMetaTag('name', name, content);
+}
+
 function upsertMetaByProperty(property, content) {
-    if (!property || !content) return;
-    let el = document.head.querySelector(`meta[property="${CSS.escape(property)}"]`);
-    if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute('property', property);
-        document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
+    return upsertMetaTag('property', property, content);
 }
 
 function normalizeCanonicalUrl(url) {
@@ -1883,10 +1880,34 @@ function initScrollAnimations() {
 }
 
 
+// Zastosuj fixPolishOrphans do statycznych stron (Regulamin, Polityka Prywatności)
+function applyPolishOrphansToStaticContent() {
+    const privacyContent = document.querySelector('.privacy-content');
+    if (!privacyContent) return;
+
+    // Zastosuj do wszystkich akapitów i elementów listy
+    const textElements = privacyContent.querySelectorAll('p, li, h2, h3');
+    textElements.forEach(element => {
+        if (element.textContent && element.children.length === 0) {
+            // Tylko dla elementów bez zagnieżdżonych dzieci (czysty tekst)
+            element.innerHTML = fixPolishOrphans(element.textContent);
+        } else if (element.childNodes.length > 0) {
+            // Dla elementów z mieszaną treścią (tekst + linki)
+            element.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                    const span = document.createElement('span');
+                    span.innerHTML = fixPolishOrphans(node.textContent);
+                    node.replaceWith(span);
+                }
+            });
+        }
+    });
+}
+
 // Zastosuj poprawki do wszystkich tytułów po załadowaniu treści
 function applyPolishTypography() {
     const titles = document.querySelectorAll('.category-card-title h3, .tool-card-title h3, .dropdown-content a, .breadcrumb span:last-of-type, .mobile-menu-link, .mobile-menu-title');
-    
+
     titles.forEach(title => {
         if (title.textContent) {
             title.innerHTML = fixPolishOrphans(title.textContent);
@@ -2076,20 +2097,16 @@ function initializeSearch(toolCatalog) {
     });
     
     // Wyszukiwanie w czasie rzeczywistym
-    let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
+    searchInput.addEventListener('input', debounce((e) => {
         const query = e.target.value.trim();
-        
+
         if (query.length === 0) {
             showSearchHistory();
             return;
         }
-        
-        searchTimeout = setTimeout(() => {
-            performSearch(query, toolCatalog);
-        }, 150);
-    });
+
+        performSearch(query, toolCatalog);
+    }, 150));
     
     function openSearch() {
         isSearchOpen = true;

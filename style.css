@@ -4,13 +4,11 @@
     --text-light: #6B7280;
     --primary-color: #D97706;
     --primary-hover-color: #B45309;
-    --card-bg-color: #ffffff;
+    --card-bg-color: #fff;
     --border-color: #edeae6;
     --font-family: 'Poppins', sans-serif;
     --container-width: 1100px;
     --border-radius: 8px;
-    --background-color: #fdfaf6;
-    --bg-secondary: #fdfaf6;
     --hover-color: #f8f4f0;
     --table-header-bg: #f8f4f0;
     --table-row-hover: #f8f4f0;
@@ -19,8 +17,6 @@
     --tools-grid-gap: 2rem;
     --shadow-light: rgba(255, 255, 255, 0.6);
     --shadow-dark: rgba(212, 212, 212, 0.4);
-    --shadow-light-inset: rgba(255, 255, 255, 0.6);
-    --shadow-dark-inset: rgba(212, 212, 212, 0.4);
     --neumorphic-light-shadow: rgba(255, 255, 255, 0.9);
     --neumorphic-dark-shadow: rgba(203, 213, 225, 0.8);
     --footer-bg: var(--bg-color-dark, #111827); /* Używam koloru tła z motywu ciemnego */
@@ -35,19 +31,15 @@
     --text-light: #9ca3af;
     --border-color: #374151;
     --card-bg-color: #1f2937;
-    --background-color: #111827;
-    --bg-secondary: #111827;
     --hover-color: #1f2937;
     --table-header-bg: #1f2937;
     --table-row-hover: #374151;
     --shadow-light: rgba(56, 68, 94, 0.7);
     --shadow-dark: rgba(12, 17, 29, 0.7);
-    --shadow-light-inset: rgba(56, 68, 94, 0.7);
-    --shadow-dark-inset: rgba(12, 17, 29, 0.7);
     --neumorphic-light-shadow: rgba(45, 55, 72, 0.6);
     --neumorphic-dark-shadow: rgba(10, 15, 26, 0.8);
     --footer-bg: var(--bg-color-light, #fdfaf6); /* Używam koloru tła z motywu jasnego */
-    --footer-text: #000000; /* Czarny tekst dla stopki w motywie ciemnym */
+    --footer-text: #000; /* Czarny tekst dla stopki w motywie ciemnym */
 }
 
 *, *::before, *::after {
@@ -206,7 +198,7 @@ h2 {
 .nav-links {
     display: flex;
     align-items: center;
-    color: #ffffff;
+    color: #fff;
     order: 2;
     gap: 1.8rem; /* 10% mniej */
 }
@@ -303,7 +295,7 @@ h2 {
 }
 
 .hero-section .container {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero.webp') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/hero.webp') no-repeat center center/cover;
     color: white;
     padding: clamp(6rem, 10vw, 8rem) clamp(1.5rem, 4vw, 2.5rem);
     border-radius: var(--border-radius);
@@ -314,7 +306,7 @@ h2 {
 }
 
 [data-theme="dark"] .hero-section .container {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/hero.webp') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero.webp') no-repeat center center/cover;
 }
 
 .hero-section h1 {
@@ -476,7 +468,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 .card-image-wrapper {
     width: 100%;
     height: var(--tool-card-height-desktop);
-    background-color: #ffffff;
+    background-color: #fff;
     border-radius: 0;
     overflow: hidden;
     transition: transform 0.3s ease;
@@ -559,7 +551,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     width: 100%;
     border-radius: var(--border-radius);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    background-color: #ffffff; /* Gwarantuje białe tło */
+    background-color: #fff; /* Gwarantuje białe tło */
     overflow: hidden; /* Zapobiega "wylewaniu się" obrazka */
     aspect-ratio: 4 / 3; /* Utrzymuje stałe proporcje dla spójności */
 }
@@ -631,7 +623,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 #pricing-table th {
     background-color: #f4f4f4;
     font-weight: 600;
-    color: #000000;
+    color: #000;
 }
 
 #pricing-table th:last-child,
@@ -1275,7 +1267,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .zobacz-takze-card {
     flex: 0 0 225px;
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     overflow: hidden;
@@ -1318,7 +1310,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 .zobacz-takze-card:focus-within {
     filter: none !important;
     opacity: 1 !important;
-    background-color: #ffffff !important;
+    background-color: #fff !important;
     outline: none !important;
     box-shadow: 
         8px 8px 16px var(--neumorphic-dark-shadow),
@@ -1381,7 +1373,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background-color: #ffffff;
+    background-color: #fff;
     transition: transform 0.3s ease;
     padding: 8px;
     box-sizing: border-box;
@@ -1717,12 +1709,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 /* Dostosowania motywu ciemnego */
 [data-theme="dark"] .zobacz-takze-card {
-    background-color: #ffffff;
+    background-color: #fff;
     border-color: var(--border-color);
 }
 
 [data-theme="dark"] .zobacz-takze-card-image {
-    background-color: #ffffff;
+    background-color: #fff;
 }
 
 [data-theme="dark"] .carousel-nav-btn {
@@ -2139,7 +2131,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 #pricing-table thead {
     background-color: #F3F4F6; /* Gray-100, podobne do screena */
-    color: #000000;
+    color: #000;
 }
 
 #pricing-table td:last-child {
@@ -2197,12 +2189,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 [data-theme="dark"] #pricing-table thead {
     background-color: #374151;
-    color: #ffffff;
+    color: #fff;
 }
 
 [data-theme="dark"] #pricing-table th {
     background-color: #374151;
-    color: #ffffff;
+    color: #fff;
 }
 
 [data-theme="dark"] .deposit-note {
@@ -2211,7 +2203,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 [data-theme="dark"] h1,
 [data-theme="dark"] h2 {
-    color: #ffffff;
+    color: #fff;
 }
 
 /* Scroll animations */
@@ -2479,15 +2471,15 @@ body.subpage main {
 
 /* Stylowanie strony polityki prywatności */
 .privacy-content h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 4.5rem;
+    margin-bottom: 1.5rem;
     font-size: 1.8rem;
     text-align: left;
 }
 
 .privacy-content h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
     font-size: 1.4rem;
     color: var(--text-color);
 }
@@ -2497,18 +2489,40 @@ body.subpage main {
 }
 
 .privacy-content p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    text-align: left;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
 }
 
 .privacy-content ul {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     padding-left: 1.5rem;
 }
 
 .privacy-content li {
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    text-align: left;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
+}
+
+/* Większy odstęp między końcem listy/akapitu a kolejnym nagłówkiem */
+.privacy-content ul + h2,
+.privacy-content p + h2 {
+    margin-top: 5rem;
 }
 
 .privacy-content hr {
@@ -3409,7 +3423,7 @@ body.subpage main {
     font-weight: 600;
     color: var(--text-light);
     border-bottom: 1px solid var(--border-color);
-    background: var(--bg-secondary);
+    background: var(--bg-color);
 }
 
 /* --- Wydajność: lazy-render kart poza ekranem --- */

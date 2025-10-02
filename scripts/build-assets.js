@@ -39,6 +39,9 @@ async function bundleCss() {
       path.join(projectRoot, 'category.html'),
       path.join(projectRoot, 'subcategory.html'),
       path.join(projectRoot, 'tool.html'),
+      path.join(projectRoot, 'polityka-prywatnosci.html'),
+      path.join(projectRoot, 'regulamin.html'),
+      path.join(projectRoot, 'o-nas.html'),
       path.join(projectRoot, 'narzedzia/**/*.html'),
       path.join(projectRoot, 'script.js')
     ],

@@ -1,9 +1,16 @@
 {
   "scripts": {
     "generate:sitemap": "node scripts/generate-sitemap.js",
-    "prerender": "node scripts/prerender.js && node scripts/generate-sitemap.js"
+    "prerender": "node scripts/prerender.js && node scripts/generate-sitemap.js",
+    "build:assets": "node scripts/build-assets.js",
+    "build:static": "npm run build:assets && npm run prerender"
   },
   "devDependencies": {
-    "@playwright/test": "^1.54.1"
+    "@fullhuman/postcss-purgecss": "^5.0.0",
+    "@playwright/test": "^1.54.1",
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^6.1.2",
+    "esbuild": "^0.21.4",
+    "postcss": "^8.4.38"
   }
 }

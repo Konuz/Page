@@ -397,7 +397,7 @@ function generate() {
     catHtml = upsertMetaByName(catHtml, 'description', catDesc);
     catHtml = setRobots(catHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     catHtml = setCanonical(catHtml, catUrl);
-    catHtml = setHreflang(catHtml, { 'pl': catUrl, 'x-default': absoluteUrl('') });
+    catHtml = setHreflang(catHtml, { 'pl': catUrl, 'x-default': catUrl });
     catHtml = upsertMetaByProp(catHtml, 'og:type', 'CollectionPage');
     catHtml = upsertMetaByProp(catHtml, 'og:title', catTitle);
     catHtml = upsertMetaByProp(catHtml, 'og:description', catDesc);
@@ -439,7 +439,7 @@ function generate() {
       subHtml = upsertMetaByName(subHtml, 'description', subDesc);
       subHtml = setRobots(subHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
       subHtml = setCanonical(subHtml, subUrl);
-      subHtml = setHreflang(subHtml, { 'pl': subUrl, 'x-default': absoluteUrl('') });
+      subHtml = setHreflang(subHtml, { 'pl': subUrl, 'x-default': subUrl });
       subHtml = upsertMetaByProp(subHtml, 'og:type', 'CollectionPage');
       subHtml = upsertMetaByProp(subHtml, 'og:title', subTitle);
       subHtml = upsertMetaByProp(subHtml, 'og:description', subDesc);
@@ -491,7 +491,7 @@ function generate() {
           toolHtml = upsertMetaByName(toolHtml, 'description', toolDesc);
           toolHtml = setRobots(toolHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           toolHtml = setCanonical(toolHtml, toolUrl);
-          toolHtml = setHreflang(toolHtml, { 'pl': toolUrl, 'x-default': absoluteUrl('') });
+          toolHtml = setHreflang(toolHtml, { 'pl': toolUrl, 'x-default': toolUrl });
           toolHtml = upsertMetaByProp(toolHtml, 'og:type', 'product');
           toolHtml = upsertMetaByProp(toolHtml, 'og:title', toolTitle);
           toolHtml = upsertMetaByProp(toolHtml, 'og:description', toolDesc);
@@ -516,7 +516,15 @@ function generate() {
           // SSR Product + Breadcrumb JSON-LD and static nav
           try {
             const normalizedOfferPrice = normalizePrice(priceValue);
-            const fallbackPriceText = normalizedOfferPrice ?? firstStringPrice(tool.pricing);
+            const offer = {
+              '@type': 'Offer',
+              priceCurrency: 'PLN',
+              availability: 'https://schema.org/InStock',
+              url: toolUrl
+            };
+            if (normalizedOfferPrice !== null) {
+              offer.price = normalizedOfferPrice;
+            }
             const product = {
               '@context': 'https://schema.org',
               '@type': 'Product',
@@ -525,11 +533,7 @@ function generate() {
               category: `${catName} > ${subName}`,
               url: toolUrl,
               description: toolDesc,
-              offers: {
-                '@type': 'Offer', priceCurrency: 'PLN',
-                price: fallbackPriceText ?? undefined,
-                availability: 'https://schema.org/InStock', url: toolUrl
-              }
+              offers: offer
             };
             toolHtml = injectProductSchema(toolHtml, product);
             toolHtml = injectBreadcrumbSchema(toolHtml, [
@@ -613,8 +617,8 @@ function cleanupFallback(html) {
 function fixAssetPaths(html) {
   let out = html;
   // CSS/JS
-  out = out.replace(/href=\"style\.css\"/g, 'href="/style.css"');
-  out = out.replace(/src=\"script\.js\"/g, 'src="/script.js"');
+  out = out.replace(/href=\"(?:\/)?style\.css\"/g, 'href="/dist/assets/style.min.css"');
+  out = out.replace(/src=\"(?:\/)?script\.js\"/g, 'src="/dist/assets/script.min.js"');
   // Images and icons
   out = out.replace(/(src|href)=\"images\//g, '$1="/images/');
   out = out.replace(/href=\"favicon\.png/g, 'href="/favicon.png');

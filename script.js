@@ -1,40 +1,42 @@
 // Skrypt załadowany
 
+const DEV_MODE = (typeof __DEV__ !== 'undefined') ? __DEV__ : (
+    typeof window !== 'undefined' && (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname.startsWith('192.168.') ||
+        window.location.protocol === 'file:'
+    )
+);
+
 // Kompleksowa obsługa błędów CORS - głównie dla środowiska deweloperskiego
-(function() {
-    'use strict';
-    
-    // Sprawdź czy to środowisko deweloperskie
-    const isDevelopment = window.location.hostname === 'localhost' || 
-                         window.location.hostname === '127.0.0.1' ||
-                         window.location.protocol === 'file:' ||
-                         window.location.hostname.includes('192.168.');
-    
-    
-    // Lista wzorców błędów do ignorowania
-    const ignoredErrors = [
-        'cross-origin frame',
-        'SecurityError',
-        'Blocked a frame with origin',
-        'Permission denied to access property',
-        'Failed to read a named property',
-        'Script error',
-        'Non-Error promise rejection captured',
-        'ResizeObserver loop limit exceeded'
-    ];
-    
-    // Obsługa błędów globalnych
-    window.addEventListener('error', function(event) {
-        const message = event.message || '';
-        const filename = event.filename || '';
+if (DEV_MODE) {
+    (function() {
+        'use strict';
         
-        // Sprawdź czy to błąd CORS lub związany z zewnętrznymi skryptami
-        if (ignoredErrors.some(pattern => message.includes(pattern)) ||
-            filename.includes('google') ||
-            filename.includes('maps') ||
-            filename.includes('all.iife.js') ||
-            filename.includes('cdnjs.cloudflare.com')) {
-            if (isDevelopment) {
+        // Lista wzorców błędów do ignorowania
+        const ignoredErrors = [
+            'cross-origin frame',
+            'SecurityError',
+            'Blocked a frame with origin',
+            'Permission denied to access property',
+            'Failed to read a named property',
+            'Script error',
+            'Non-Error promise rejection captured',
+            'ResizeObserver loop limit exceeded'
+        ];
+        
+        // Obsługa błędów globalnych
+        window.addEventListener('error', function(event) {
+            const message = event.message || '';
+            const filename = event.filename || '';
+            
+            // Sprawdź czy to błąd CORS lub związany z zewnętrznymi skryptami
+            if (ignoredErrors.some(pattern => message.includes(pattern)) ||
+                filename.includes('google') ||
+                filename.includes('maps') ||
+                filename.includes('all.iife.js') ||
+                filename.includes('cdnjs.cloudflare.com')) {
                 console.debug('Ignoruję błąd zewnętrznego skryptu', {
                     message: message.substring(0, 100),
                     filename,
@@ -43,167 +45,84 @@
                     hostname: window.location.hostname,
                     note: 'Ten błąd prawdopodobnie zniknie na hostingu HTTPS'
                 });
-            }
 
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
-        }
-    }, true);
-    
-    // Obsługa nieprzechwyconych promise rejections
-    window.addEventListener('unhandledrejection', function(event) {
-        const reason = event.reason || '';
-        const reasonStr = reason.toString ? reason.toString() : String(reason);
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        }, true);
         
-        if (ignoredErrors.some(pattern => reasonStr.includes(pattern))) {
-            event.preventDefault();
-            return false;
-        }
-    });
-    
-    // Przywróć oryginalne console.error z filtrowaniem
-    const originalError = console.error;
-    console.error = function(...args) {
-        const message = args.join(' ');
-        if (!ignoredErrors.some(pattern => message.includes(pattern))) {
-            originalError.apply(console, args);
-        }
-    };
-    
-})();
-
-// ===== SEO: canonical and robots handling for pretty URLs =====
-(function() {
-    try {
-        var path = window.location.pathname || '';
-        // If we're on pretty URLs under /narzedzia/, ensure indexable and set canonical
-        if (path.startsWith('/narzedzia/')) {
-            // 1) robots index,follow
-            var robots = document.querySelector('meta[name="robots"]');
-            if (robots) robots.setAttribute('content', 'index,follow');
-            // 2) canonical normalized (ensure trailing slash for non-file paths)
-            var hasExt = /\.[a-z0-9]{2,5}$/i.test(path);
-            var normalized = window.location.origin + path + (hasExt || path.endsWith('/') ? '' : '/');
-            var canon = document.querySelector('link[rel="canonical"]');
-            if (!canon) {
-                canon = document.createElement('link');
-                canon.setAttribute('rel', 'canonical');
-                document.head.appendChild(canon);
+        // Obsługa nieprzechwyconych promise rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            const reason = event.reason || '';
+            const reasonStr = reason.toString ? reason.toString() : String(reason);
+            
+            if (ignoredErrors.some(pattern => reasonStr.includes(pattern))) {
+                event.preventDefault();
+                return false;
             }
-            canon.setAttribute('href', normalized);
-        }
-    } catch (_) {}
-})();
+        });
+        
+        // Przywróć oryginalne console.error z filtrowaniem
+        const originalError = console.error;
+        console.error = function(...args) {
+            const message = args.join(' ');
+            if (!ignoredErrors.some(pattern => message.includes(pattern))) {
+                originalError.apply(console, args);
+            }
+        };
+        
+    })();
+}
 
 // ===== LIMIT VISIBLE TOOLS TO 12 WITH SCROLL (desktop) =====
-function applyGridScrollLimit() {
-    try {
-        const isDesktop = window.innerWidth >= 992; // align with CSS breakpoint
-        const grids = document.querySelectorAll('.tools-grid');
-        grids.forEach(grid => {
-            // get direct child elements (cards)
-            const cards = Array.from(grid.children).filter(el => el && el.nodeType === 1 && el.offsetParent !== null);
-            if (!isDesktop || cards.length <= 12) {
-                grid.style.maxHeight = '';
-                grid.style.overflowY = '';
-                return;
-            }
-            const twelfth = cards[11]; // 12th visible item
-            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
-            const bottom = twelfth.getBoundingClientRect().bottom + window.scrollY;
-            const visibleHeight = Math.ceil(bottom - gridTop);
-            grid.style.maxHeight = visibleHeight + 'px';
-            grid.style.overflowY = 'auto';
+function setupGridScrollLimit() {
+    const desktopQuery = window.matchMedia('(min-width: 992px)');
+    const updateGridState = () => {
+        const isDesktop = desktopQuery.matches;
+        document.querySelectorAll('.tools-grid').forEach((grid) => {
+            const shouldScroll = isDesktop && grid.children.length > 12;
+            grid.classList.toggle('grid-scroll', shouldScroll);
         });
-    } catch (_) {}
+    };
+
+    updateGridState();
+
+    const listener = () => updateGridState();
+    if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', listener);
+    } else if (typeof desktopQuery.addListener === 'function') {
+        desktopQuery.addListener(listener);
+    }
 }
 
-function initGridScrollLimitObserver() {
-    try {
-        const grids = document.querySelectorAll('.tools-grid');
-        if (!grids.length) return;
-        const observer = new MutationObserver(() => {
-            // Defer to let layout settle
-            requestAnimationFrame(applyGridScrollLimit);
-        });
-        grids.forEach(grid => observer.observe(grid, { childList: true }));
-        // Initial apply
-        applyGridScrollLimit();
-        // Re-apply on resize (debounced)
-        let resizeTimer = null;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(applyGridScrollLimit, 150);
-        });
-    } catch (_) {}
-}
-
-// Kick off after DOM is ready; also safe to call multiple times
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGridScrollLimitObserver);
+    document.addEventListener('DOMContentLoaded', setupGridScrollLimit);
 } else {
-    initGridScrollLimitObserver();
+    setupGridScrollLimit();
 }
 
 // ===== Limit submenu visible items to 12 with scroll =====
-function applySubmenuVisibleLimit(contentEl, visibleCount = 12) {
-    try {
-        if (!contentEl) return;
-        const links = Array.from(contentEl.querySelectorAll('a'));
-        if (links.length <= visibleCount) {
-            contentEl.style.maxHeight = '';
-            contentEl.style.overflowY = '';
-            return;
-        }
-        const measure = () => {
-            // Ensure a stable measurement independent of prior scroll state
-            // Do NOT change scrollTop here to avoid jumpiness on click/focus.
-            const nth = links[visibleCount - 1];
-            if (!nth) return;
-            // Use offset-based calculation to avoid viewport/layout jitter
-            // Distance from the top edge of the container to the bottom edge of the Nth item
-            const h = Math.ceil((nth.offsetTop - contentEl.offsetTop) + nth.offsetHeight);
-            if (h > 0) {
-                contentEl.style.maxHeight = h + 'px';
-                contentEl.style.overflowY = 'auto';
-                contentEl.style.webkitOverflowScrolling = 'touch';
-                // Mark as initialized to avoid repeated recalculations on focus/click
-                contentEl.dataset.heightInitialized = '1';
-            }
-        };
-        // Defer to next frame to ensure styles are applied
-        requestAnimationFrame(measure);
-    } catch (_) {}
-}
+function setupSubmenuScrollLimit(visibleCount = 12) {
+    const recalc = () => {
+        document
+            .querySelectorAll('#nav-categories .sub-dropdown .sub-dropdown-content')
+            .forEach((contentEl) => {
+                if (!contentEl) return;
+                const shouldScroll = contentEl.querySelectorAll('a').length > visibleCount;
+                contentEl.classList.toggle('submenu-scrollable', shouldScroll);
+            });
+    };
 
-function initSubmenuVisibleLimit(visibleCount = 12) {
-    try {
-        const containers = document.querySelectorAll('#nav-categories .sub-dropdown');
-        if (!containers.length) return;
-        containers.forEach(sub => {
-            const content = sub.querySelector('.sub-dropdown-content');
-            if (!content) return;
-            // On open via hover or focus, apply limit once. Subsequent focus shouldn't scroll.
-            const handler = () => {
-                if (!content.dataset.heightInitialized) {
-                    applySubmenuVisibleLimit(content, visibleCount);
-                }
-            };
-            sub.addEventListener('mouseenter', handler);
-            sub.addEventListener('focusin', handler);
-        });
-        // Also recompute on resize (debounced)
-        let timer = null;
-        window.addEventListener('resize', () => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                document
-                    .querySelectorAll('#nav-categories .sub-dropdown .sub-dropdown-content')
-                    .forEach(el => applySubmenuVisibleLimit(el, visibleCount));
-            }, 150);
-        });
-    } catch (_) {}
+    recalc();
+
+    const desktopQuery = window.matchMedia('(min-width: 992px)');
+    const listener = () => recalc();
+    if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', listener);
+    } else if (typeof desktopQuery.addListener === 'function') {
+        desktopQuery.addListener(listener);
+    }
 }
 
 // ===== COOKIE MANAGER =====
@@ -1471,7 +1390,7 @@ function initializeDropdown(toolCatalog) {
     setTimeout(() => {
         applyTypographyRules();
         // Limituj widoczne elementy submenu do 12 i dodaj scroll
-        initSubmenuVisibleLimit(12);
+        setupSubmenuScrollLimit(12);
     }, 50);
 }
 
@@ -1517,8 +1436,16 @@ function initializeSeoManager(toolCatalog) {
         const isSubcategoryPage = !!document.getElementById('subcategory-title');
         const isToolPage = !!document.getElementById('tool-details-section');
         const isHomePage = !!document.getElementById('why-us');
+        const canonicalEl = document.querySelector('link[rel="canonical"]');
+        const canonicalHref = canonicalEl?.getAttribute('href') || '';
+        const normalizedPath = window.location.pathname
+            .replace(/index\.html$/, '')
+            .replace(/\/$/, '') || '/';
+        const canonicalLooksPretty = canonicalHref && !canonicalHref.endsWith('.html');
+        const canonicalMatchesPath = canonicalLooksPretty && canonicalHref.includes(normalizedPath);
+        const hydrationRequired = !canonicalMatchesPath;
 
-        if (isHomePage) {
+        if (isHomePage && hydrationRequired) {
             ensureOgTwitterDefaults('https://toolshare.com.pl/images/logo.webp');
             updateCanonical('https://toolshare.com.pl/');
             upsertMetaByProperty('og:type', 'website');
@@ -1529,7 +1456,7 @@ function initializeSeoManager(toolCatalog) {
             return;
         }
 
-        if (isCategoryPage) {
+        if (isCategoryPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
             let categoryName = new URLSearchParams(url.search).get('category');
@@ -1578,7 +1505,7 @@ function initializeSeoManager(toolCatalog) {
             injectJsonLd(itemList);
         }
 
-        if (isSubcategoryPage) {
+        if (isSubcategoryPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
             let categoryName, subcategoryName;
@@ -1641,7 +1568,7 @@ function initializeSeoManager(toolCatalog) {
             }
         }
 
-        if (isToolPage) {
+        if (isToolPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
             let toolId = new URLSearchParams(url.search).get('toolId');
@@ -1657,7 +1584,7 @@ function initializeSeoManager(toolCatalog) {
 
             const pageUrl = `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name, tool.id)}`;
             const firstPrice = getFirstNumericPrice(tool?.pricing);
-            const fallbackPrice = firstPrice ?? getFirstPriceText(tool?.pricing);
+            const schemaPrice = formatPriceForSchema(firstPrice);
             const descriptionBase = `${stripHtmlTags(tool.name)} do wypożyczenia. ${stripHtmlTags(category.category)} › ${stripHtmlTags(subcategory.name)}. Odbiór w Chrząstawie Wielkiej, elastyczne godziny.`;
             const description = firstPrice ? `${descriptionBase} Ceny od ${firstPrice} zł/dzień.` : descriptionBase;
 
@@ -1674,6 +1601,16 @@ function initializeSeoManager(toolCatalog) {
 
             // Product JSON-LD
             try {
+                const offer = {
+                    '@type': 'Offer',
+                    priceCurrency: 'PLN',
+                    availability: 'https://schema.org/InStock',
+                    url: pageUrl
+                };
+                if (schemaPrice !== null) {
+                    offer.price = schemaPrice;
+                }
+
                 const product = {
                     '@context': 'https://schema.org',
                     '@type': 'Product',
@@ -1681,13 +1618,7 @@ function initializeSeoManager(toolCatalog) {
                     image: [absoluteUrl(tool.image)],
                     category: `${stripHtmlTags(category.category)} > ${stripHtmlTags(subcategory.name)}`,
                     url: pageUrl,
-                    offers: {
-                        '@type': 'Offer',
-                        priceCurrency: 'PLN',
-                        price: fallbackPrice ?? undefined,
-                        availability: 'https://schema.org/InStock',
-                        url: pageUrl
-                    }
+                    offers: offer
                 };
                 if (!hasJsonLdType('Product')) {
                     injectJsonLd(product);
@@ -1705,6 +1636,10 @@ function initializeSeoManager(toolCatalog) {
             if (!hasJsonLdType('BreadcrumbList')) {
                 injectJsonLd(buildBreadcrumbList(breadcrumbItems));
             }
+        }
+
+        if (!hydrationRequired && canonicalEl && canonicalLooksPretty && !canonicalHref.endsWith('/')) {
+            canonicalEl.setAttribute('href', `${canonicalHref}/`);
         }
     } catch (_) {}
 }
@@ -1744,15 +1679,30 @@ function upsertMetaByProperty(property, content) {
     el.setAttribute('content', content);
 }
 
+function normalizeCanonicalUrl(url) {
+    try {
+        const canonical = new URL(url, window.location.origin);
+        const path = canonical.pathname || '';
+        const hasExtension = /\.[a-z0-9]{2,5}$/i.test(path);
+        if (path && !path.endsWith('/') && !hasExtension) {
+            canonical.pathname = `${path}/`;
+        }
+        return canonical.toString();
+    } catch (_) {
+        return url;
+    }
+}
+
 function updateCanonical(url) {
     if (!url) return;
+    const normalized = normalizeCanonicalUrl(url);
     let link = document.head.querySelector('link[rel="canonical"]');
     if (!link) {
         link = document.createElement('link');
         link.setAttribute('rel', 'canonical');
         document.head.appendChild(link);
     }
-    link.setAttribute('href', url);
+    link.setAttribute('href', normalized);
 }
 
 function buildBreadcrumbList(items) {
@@ -1826,6 +1776,11 @@ function getFirstNumericPrice(pricing) {
     return typeof val === 'number' ? val : null;
 }
 
+function formatPriceForSchema(value) {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+    return Number.isInteger(value) ? String(value) : value.toFixed(2);
+}
+
 function getFirstPriceText(pricing) {
     if (!pricing || typeof pricing !== 'object') return null;
     for (const [label, value] of Object.entries(pricing)) {
@@ -1837,82 +1792,94 @@ function getFirstPriceText(pricing) {
     return null;
 }
 
+let gsapLoaderPromise = null;
+function loadGsapLibrary() {
+    if (typeof window === 'undefined') return Promise.resolve(null);
+    if (window.gsap) return Promise.resolve(window.gsap);
+    if (gsapLoaderPromise) return gsapLoaderPromise;
+
+    const scriptUrl = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+    gsapLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = scriptUrl;
+        script.async = true;
+        script.onload = () => resolve(window.gsap || null);
+        script.onerror = () => reject(new Error('GSAP failed to load'));
+        document.head.appendChild(script);
+    }).catch(() => null);
+
+    return gsapLoaderPromise;
+}
+
 function initScrollAnimations() {
-    // Znajdź wszystkie karty na stronie, które powinny być animowane
-    const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
-    const contactSection = document.querySelector('#contact');
-    const contactItems = document.querySelectorAll('.contact-details, .contact-map');
-    const heroSection = document.querySelector('.hero-section');
+    loadGsapLibrary().then(gsapInstance => {
+        const gsapRef = gsapInstance || window.gsap;
+        if (!gsapRef) {
+            return;
+        }
 
-    // Dodaj klasę i ustaw stan początkowy (ukryty i przesunięty) dla wszystkich kart
-    allCards.forEach(card => {
-        card.classList.add('stagger-item');
-        gsap.set(card, { opacity: 0, y: 20 });
-    });
+        const allCards = document.querySelectorAll('.feature-card, .category-card, .subcategory-card, .tool-card');
+        const contactItems = document.querySelectorAll('.contact-details, .contact-map');
+        const heroSection = document.querySelector('.hero-section');
 
-    // Dodaj animacje dla elementów kontaktu
-    contactItems.forEach(item => {
-        item.classList.add('stagger-item');
-        gsap.set(item, { opacity: 0, y: 30 });
-    });
+        allCards.forEach(card => {
+            card.classList.add('stagger-item');
+            gsapRef.set(card, { opacity: 0, y: 20 });
+        });
 
-    // Intersection Observer dla animacji
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+        contactItems.forEach(item => {
+            item.classList.add('stagger-item');
+            gsapRef.set(item, { opacity: 0, y: 30 });
+        });
 
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observerRef) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+
                 const target = entry.target;
-
-                // Animacja dla kontenerów z elementami .stagger-item (w tym kontakt)
                 const items = target.querySelectorAll('.stagger-item');
                 if (items.length > 0) {
-                    gsap.to(items, {
+                    gsapRef.to(items, {
                         opacity: 1,
                         y: 0,
                         duration: 1.2,
                         ease: 'power2.out',
-                        stagger: target.id === 'contact' ? 0.3 : 0 // Stagger dla kontaktu
+                        stagger: target.id === 'contact' ? 0.3 : 0
                     });
                     items.forEach(item => item.classList.add('animate'));
                 }
-                
-                observer.unobserve(target);
-            }
-        });
-    }, observerOptions);
 
-    // Obserwuj wszystkie relevantne kontenery siatki na dowolnej stronie
-    const gridsToObserve = document.querySelectorAll('.features-grid, #tools-grid, #subcategory-grid, #contact');
-    
-    gridsToObserve.forEach(grid => {
-        if (grid) {
-            observer.observe(grid);
+                observerRef.unobserve(target);
+            });
+        }, observerOptions);
+
+        document
+            .querySelectorAll('.features-grid, #tools-grid, #subcategory-grid, #contact')
+            .forEach(grid => grid && observer.observe(grid));
+
+        if (heroSection) {
+            const heroElements = [
+                heroSection.querySelector('h1'),
+                heroSection.querySelector('p'),
+                heroSection.querySelector('.btn')
+            ].filter(Boolean);
+
+            gsapRef.fromTo(heroElements, {
+                opacity: 0
+            }, {
+                opacity: 1,
+                color: 'white',
+                duration: 1.5,
+                delay: 0.3,
+                ease: 'power2.out'
+            });
         }
     });
-
-    // Animacja hero section przy załadowaniu strony
-    if (heroSection) {
-        const heroElements = [
-            heroSection.querySelector('h1'),
-            heroSection.querySelector('p'),
-            heroSection.querySelector('.btn')
-        ].filter(el => el); // Usuń null/undefined elementy
-        
-        // Użyj fromTo, aby jawnie zdefiniować stan końcowy (w tym kolor)
-        gsap.fromTo(heroElements, {
-            opacity: 0, // Stan początkowy
-        }, {
-            opacity: 1, // Stan końcowy
-            color: 'white', // Wymuś biały kolor na koniec animacji
-            duration: 1.5,
-            delay: 0.3,
-            ease: 'power2.out'
-        });
-    }
 }
 
 
@@ -2376,7 +2343,15 @@ function getCarouselGapPx(track) {
 
 function initializeSeeAlso(toolCatalog) {
     const seeAlsoSection = document.getElementById('zobacz-takze-section');
-    if (!seeAlsoSection) return;
+    const track = document.getElementById('zobacz-takze-track');
+    if (!seeAlsoSection || !track) return;
+
+    const hasStaticCards = !!track.querySelector('.zobacz-takze-card');
+    if (hasStaticCards) {
+        setupCarouselNavigation();
+        setTimeout(() => applyTypographyRules(), 60);
+        return;
+    }
 
     const { toolId: currentToolId } = getRouteParams();
     
@@ -2402,12 +2377,9 @@ function initializeSeeAlso(toolCatalog) {
 
         // Renderuj karuzelę
         renderSeeAlsoCards(relatedTools);
-        
+
         // Skonfiguruj nawigację
         setupCarouselNavigation();
-        
-        // Skonfiguruj obsługę dotyku na urządzeniach mobilnych
-        setupMobileTouch();
         
         // Zastosuj poprawki typograficzne
         setTimeout(() => {
@@ -2556,8 +2528,6 @@ function renderSeeAlsoCards(relatedTools) {
         track.appendChild(fragment);
 
         // Skonfiguruj leniwe ładowanie obrazów
-        setupLazyLoading();
-        
         // Zaktualizuj stan nawigacji po renderowaniu
         setTimeout(() => {
             const carousel = document.getElementById('zobacz-takze-carousel');
@@ -2771,10 +2741,13 @@ function setupCarouselNavigation() {
         }
     });
 
-    // Początkowa aktualizacja stanu (kilka prób dla pewności)
-    setTimeout(updateNavigationState, 100);
-    setTimeout(updateNavigationState, 300);
-    setTimeout(updateNavigationState, 500);
+    // Początkowa aktualizacja stanu po wyrenderowaniu zawartości
+    if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(updateNavigationState);
+    } else {
+        updateNavigationState();
+    }
+    setTimeout(updateNavigationState, 250);
 
     // Zachowaj funkcję sprzątającą na przyszłość
     const resizeHandler = debounce(updateNavigationState, 200);
@@ -2785,45 +2758,6 @@ function setupCarouselNavigation() {
         window.removeEventListener('resize', resizeHandler);
         carousel.removeEventListener('scroll', handleScroll);
     };
-}
-
-function setupMobileTouch() {
-    // Oprzyj się na natywnym momentum i CSS scroll-snap na urządzeniach mobilnych,
-    // aby uniknąć zacięć powodowanych przez JS. Nie są wymagane własne handlery dotyku.
-    // Celowo pozostawione puste.
-}
-
-function setupLazyLoading() {
-    const images = document.querySelectorAll('.zobacz-takze-card img[loading="lazy"]');
-    
-    // Prosty IntersectionObserver do leniwego ładowania
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.classList.add('loading');
-                    
-                    img.addEventListener('load', () => {
-                        img.classList.remove('loading');
-                        img.classList.add('loaded');
-                    }, { once: true });
-                    
-                    img.addEventListener('error', () => {
-                        img.classList.remove('loading');
-                        img.classList.add('error');
-                        img.alt = 'Nie udało się załadować obrazu';
-                    }, { once: true });
-                    
-                    imageObserver.unobserve(img);
-                }
-            });
-        }, {
-            rootMargin: '50px'
-        });
-
-        images.forEach(img => imageObserver.observe(img));
-    }
 }
 
 // ========== PHONE MODAL FUNCTIONALITY ==========

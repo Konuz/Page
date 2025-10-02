@@ -1284,6 +1284,9 @@ function renderTools(toolCatalog) {
         img.alt = tool.name;
         img.className = 'tool-card-img';
         img.loading = 'lazy';
+        img.width = 300;
+        img.height = 200;
+        img.decoding = 'async';
 
         imageWrapper.appendChild(img);
 
@@ -1371,6 +1374,10 @@ function renderToolDetails(toolCatalog) {
     const imageElement = document.getElementById('tool-image');
     imageElement.src = toRootPath(tool.image);
     imageElement.alt = tool.name;
+    imageElement.width = 800;
+    imageElement.height = 600;
+    imageElement.loading = 'eager';
+    imageElement.decoding = 'async';
 
     // Uzupełnij tabelę z cennikiem
     const pricingTableBody = document.querySelector('#pricing-table tbody');
@@ -1650,6 +1657,7 @@ function initializeSeoManager(toolCatalog) {
 
             const pageUrl = `https://toolshare.com.pl/${buildPrettyPath(category.category, subcategory.name, tool.id)}`;
             const firstPrice = getFirstNumericPrice(tool?.pricing);
+            const fallbackPrice = firstPrice ?? getFirstPriceText(tool?.pricing);
             const descriptionBase = `${stripHtmlTags(tool.name)} do wypożyczenia. ${stripHtmlTags(category.category)} › ${stripHtmlTags(subcategory.name)}. Odbiór w Chrząstawie Wielkiej, elastyczne godziny.`;
             const description = firstPrice ? `${descriptionBase} Ceny od ${firstPrice} zł/dzień.` : descriptionBase;
 
@@ -1676,7 +1684,7 @@ function initializeSeoManager(toolCatalog) {
                     offers: {
                         '@type': 'Offer',
                         priceCurrency: 'PLN',
-                        price: firstPrice || undefined,
+                        price: fallbackPrice ?? undefined,
                         availability: 'https://schema.org/InStock',
                         url: pageUrl
                     }
@@ -1816,6 +1824,17 @@ function getFirstNumericPrice(pricing) {
     if (!pricing || typeof pricing !== 'object') return null;
     const val = Object.values(pricing).find(p => typeof p === 'number');
     return typeof val === 'number' ? val : null;
+}
+
+function getFirstPriceText(pricing) {
+    if (!pricing || typeof pricing !== 'object') return null;
+    for (const [label, value] of Object.entries(pricing)) {
+        if (typeof value === 'string' && !label.toLowerCase().includes('kaucja')) {
+            const trimmed = value.trim();
+            if (trimmed) return trimmed;
+        }
+    }
+    return null;
 }
 
 function initScrollAnimations() {
@@ -2191,7 +2210,7 @@ function initializeSearch(toolCatalog) {
             const highlightedName = highlightText(result.tool.name, query);
             return `
                 <div class="search-result-item" data-tool-id="${result.tool.id}">
-                    <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy">
+                    <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy" width="80" height="80" decoding="async">
                     <div class="search-result-info">
                         <div class="search-result-title">${highlightedName}</div>
                         <div class="search-result-category">${stripHtmlTags(result.category)} › ${stripHtmlTags(result.subcategory)}</div>
@@ -2583,7 +2602,7 @@ function createSeeAlsoCard(tool, category, subcategory) {
 
     card.innerHTML = `
         <div class="zobacz-takze-card-image">
-            <img src="${toolImage}" alt="${safeToolName}" loading="lazy" class="card-img" onerror="this.src='/images/placeholder.webp'">
+            <img src="${toolImage}" alt="${safeToolName}" loading="lazy" class="card-img" onerror="this.src='/images/placeholder.webp'" width="300" height="200" decoding="async">
             <div class="card-overlay">
                 <span class="card-price">${priceText}</span>
             </div>

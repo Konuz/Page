@@ -90,6 +90,15 @@ function replacePlaceholders(html, map) {
   return out;
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function setH1(html, id, text) {
   const re = new RegExp(`<h1[^>]*id=["']${id}["'][^>]*>[\\s\\S]*?<\\/h1>`, 'i');
   if (re.test(html)) return html.replace(re, (m) => m.replace(/>([\s\S]*?)<\/h1>/i, `>${text}<\/h1>`));
@@ -112,6 +121,17 @@ function normalizePrice(value) {
 
 function enabledTools(tools = []) {
   return tools.filter(tool => tool && tool.enabled !== false);
+}
+
+function firstStringPrice(pricing) {
+  if (!pricing || typeof pricing !== 'object') return null;
+  for (const [label, value] of Object.entries(pricing)) {
+    if (typeof value === 'string' && !label.toLowerCase().includes('kaucja')) {
+      const trimmed = value.trim();
+      if (trimmed) return trimmed;
+    }
+  }
+  return null;
 }
 
 function categoryToolStats(category) {
@@ -253,6 +273,104 @@ function injectProductSchema(html, product) {
   return html.replace(/<\/head>/i, match => `${jsonLdScript(product)}\n${match}`);
 }
 
+function injectSubcategoryGrid(html, category, catSlug) {
+  const cards = (category.subcategories || [])
+    .map((sub) => {
+      const subName = String(sub.name || '').trim();
+      if (!subName) return null;
+      const subSlug = slugify(subName);
+      const subUrl = `/narzedzia/${catSlug}/${subSlug}/`;
+      return [
+        '                    <a href="' + subUrl + '" class="subcategory-card">',
+        `                        <h3>${escapeHtml(subName)}</h3>`,
+        '                    </a>'
+      ].join('\n');
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  const emptyState = '                    <p class="empty-state">Brak podkategorii do wyświetlenia.</p>';
+  const content = cards || emptyState;
+  return html.replace('<!-- Podkategorie będą dynamicznie wstawiane tutaj -->', content);
+}
+
+function injectToolsGrid(html, category, subcategory, catSlug, subSlug) {
+  const tools = enabledTools(subcategory.tools);
+  const cards = tools.map((tool) => {
+    const toolName = String(tool.name || '').trim();
+    const toolId = encodeURIComponent(String(tool.id || '').trim());
+    const toolUrl = `/narzedzia/${catSlug}/${subSlug}/${toolId}/`;
+    const imgRelative = tool.image ? `/${tool.image.replace(/^\//, '')}` : '/images/placeholder.webp';
+    return [
+      '                    <a href="' + toolUrl + '" class="tool-card">',
+      '                        <div class="card-image-wrapper">',
+      `                            <img src="${imgRelative}" alt="${escapeHtml(toolName)}" loading="lazy" width="300" height="200" decoding="async">`,
+      '                        </div>',
+      '                        <div class="tool-card-title">',
+      `                            <h3>${escapeHtml(toolName)}</h3>`,
+      '                        </div>',
+      '                    </a>'
+    ].join('\n');
+  }).join('\n');
+
+  const emptyState = '                    <p class="empty-state">Brak narzędzi w tej podkategorii.</p>';
+  const content = cards || emptyState;
+  return html.replace('<!-- Narzędzia z podkategorii będą wstawiane tutaj -->', content);
+}
+
+function buildPricingRows(pricing, explicitDeposit) {
+  const rows = [];
+  let depositValue = explicitDeposit;
+  const entries = Object.entries(pricing || {});
+  entries.forEach(([period, value]) => {
+    const label = String(period || '').trim();
+    if (!label) return;
+    if (label.toLowerCase().includes('kaucja')) {
+      if (depositValue === undefined) depositValue = value;
+      return;
+    }
+    const priceDisplay = typeof value === 'number'
+      ? `${normalizePrice(value)} zł / dzień`
+      : escapeHtml(String(value));
+    rows.push([
+      '                                    <tr>',
+      `                                        <td>${escapeHtml(label)}</td>`,
+      `                                        <td>${priceDisplay}</td>`,
+      '                                    </tr>'
+    ].join('\n'));
+  });
+
+  if (!rows.length) {
+    rows.push('                                    <tr><td colspan="2">Cennik dostępny wkrótce.</td></tr>');
+  }
+
+  if (depositValue !== undefined) {
+    const depositDisplay = typeof depositValue === 'number'
+      ? `${normalizePrice(depositValue)} zł`
+      : escapeHtml(String(depositValue));
+    rows.push([
+      '                                    <tr>',
+      '                                        <td>Kaucja <sup>**</sup></td>',
+      `                                        <td>${depositDisplay}</td>`,
+      '                                    </tr>'
+    ].join('\n'));
+  }
+
+  return rows.join('\n');
+}
+
+function injectToolDetails(html, tool, category, subcategory, catSlug, subSlug, toolImgRelative) {
+  let out = html;
+  const toolName = String(tool.name || '').trim();
+  const imageTag = `<img id="tool-image" src="${toolImgRelative}" alt="${escapeHtml(toolName)}" width="800" height="600" loading="eager" decoding="async" fetchpriority="high">`;
+  out = out.replace(/<img id="tool-image"[^>]*>/, imageTag);
+
+  const pricingRows = buildPricingRows(tool.pricing, tool.deposit);
+  out = out.replace('                                    <!-- Cennik będzie wstawiany tutaj przez JS -->', pricingRows);
+
+  return out;
+}
+
 function generate() {
   const dataPath = path.join(projectRoot, 'data.json');
   const tmplCategory = readTemplate('category.html');
@@ -291,6 +409,7 @@ function generate() {
     catHtml = replacePlaceholders(catHtml, { 'CategoryName': catName });
     catHtml = setH1(catHtml, 'category-title', catName);
     catHtml = injectStaticNavigation(catHtml, catalog);
+    catHtml = injectSubcategoryGrid(catHtml, category, catSlug);
 
     // Breadcrumb JSON-LD (SSR)
     catHtml = injectBreadcrumbSchema(catHtml, [
@@ -334,6 +453,7 @@ function generate() {
       subHtml = subHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
       subHtml = setH1(subHtml, 'subcategory-title', subName);
       subHtml = injectStaticNavigation(subHtml, catalog);
+      subHtml = injectToolsGrid(subHtml, category, sub, catSlug, subSlug);
 
       // Inject Breadcrumb + ItemList JSON-LD (SSR)
       subHtml = injectBreadcrumbSchema(subHtml, [
@@ -360,6 +480,7 @@ function generate() {
           const toolName = String(tool.name).trim();
           const toolUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(toolId)}/`);
           const toolImg = tool.image ? absoluteUrl(tool.image) : subImg;
+          const toolImgRelative = tool.image ? `/${tool.image.replace(/^\//, '')}` : '/images/placeholder.webp';
           const priceValue = firstNumericPrice(tool.pricing);
           const normalizedPrice = normalizePrice(priceValue);
           const toolDesc = buildToolDescription(toolName, catName, subName, priceValue);
@@ -395,6 +516,7 @@ function generate() {
           // SSR Product + Breadcrumb JSON-LD and static nav
           try {
             const normalizedOfferPrice = normalizePrice(priceValue);
+            const fallbackPriceText = normalizedOfferPrice ?? firstStringPrice(tool.pricing);
             const product = {
               '@context': 'https://schema.org',
               '@type': 'Product',
@@ -405,7 +527,7 @@ function generate() {
               description: toolDesc,
               offers: {
                 '@type': 'Offer', priceCurrency: 'PLN',
-                price: normalizedOfferPrice ?? undefined,
+                price: fallbackPriceText ?? undefined,
                 availability: 'https://schema.org/InStock', url: toolUrl
               }
             };
@@ -418,6 +540,7 @@ function generate() {
             ]);
           } catch (_) {}
 
+          toolHtml = injectToolDetails(toolHtml, tool, category, sub, catSlug, subSlug, toolImgRelative);
           toolHtml = injectStaticNavigation(toolHtml, catalog);
           const toolDir = path.join(subDir, toolId);
           ensureDir(toolDir);

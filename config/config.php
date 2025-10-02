@@ -11,6 +11,8 @@ return [
         'admin_password_hash' => getenv('CMS_ADMIN_HASH') ?: '$2y$10$kdo7/bABKFt1Upt3w22Fx.65YLojyKlxoB4UCotZussBu9osvNXA2',
         'max_login_attempts' => 5,
         'login_cooldown_seconds' => 900,
+        // Lista dozwolonych adresów IP dla panelu admina (pusta lista = brak ograniczeń)
+        'allowed_ips' => array_values(array_filter(array_map('trim', explode(',', getenv('CMS_ALLOWED_IPS') ?: '')))),
     ],
     'paths' => [
         'root' => dirname(__DIR__),

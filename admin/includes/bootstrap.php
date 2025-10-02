@@ -12,6 +12,32 @@ if (!defined('CMS_BOOTSTRAPPED')) {
 
     $GLOBALS['CMS_CONFIG'] = require $configPath;
 
+    // Ograniczenie dostępu do panelu dla wskazanych adresów IP (jeśli skonfigurowano)
+    if (PHP_SAPI !== 'cli') {
+        $allowedIps = $GLOBALS['CMS_CONFIG']['security']['allowed_ips'] ?? [];
+        if (!empty($allowedIps)) {
+            $detectedIp = null;
+
+            if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+                $detectedIp = trim($_SERVER['HTTP_CF_CONNECTING_IP']);
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $forwarded = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $detectedIp = trim($forwarded[0]);
+            } elseif (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $detectedIp = trim($_SERVER['HTTP_CLIENT_IP']);
+            } else {
+                $detectedIp = $_SERVER['REMOTE_ADDR'] ?? '';
+            }
+
+            if (!in_array($detectedIp, $allowedIps, true)) {
+                http_response_code(403);
+                header('Content-Type: text/plain; charset=UTF-8');
+                echo "403 Forbidden – dostęp do panelu administracyjnego ograniczony.";
+                exit;
+            }
+        }
+    }
+
     $sessionName = $GLOBALS['CMS_CONFIG']['app']['session_name'] ?? 'toolshare_admin';
     if (session_status() === PHP_SESSION_NONE) {
         session_name($sessionName);

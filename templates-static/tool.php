@@ -24,38 +24,26 @@
     <meta property="og:image" content="https://toolshare.com.pl/images/logo.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <!-- Fallback OG tags for SSR/prerender -->
-    <meta property="og:type" content="product">
-    <meta property="og:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
-    <meta property="og:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
-    <meta property="og:url" content="https://toolshare.com.pl/narzedzia/">
-    <meta property="og:image" content="https://toolshare.com.pl/images/hero.webp">
     <meta name="twitter:card" content="summary_large_image">
-    <!-- Fallback meta description for SSR/prerender -->
-    <meta name="description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy. Sprawdź ceny i warunki wynajmu." id="meta-description-fallback">
-    <!-- Fallback Twitter tags for SSR/prerender -->
-    <meta name="twitter:title" content="Informacje o narzędziu [ToolName] – wynajem | ToolShare">
-    <meta name="twitter:description" content="Informacje o narzędziu [ToolName] dostępne w wypożyczalni ToolShare w Czernicy.">
     <meta name="twitter:title" content="Narzędzie – ToolShare" id="twitter-title">
     <meta name="twitter:description" content="Wypożycz narzędzie – ToolShare. Atrakcyjne ceny i lokalna obsługa." id="twitter-description">
     <meta name="twitter:image" content="https://toolshare.com.pl/images/logo.webp">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-    <link rel="icon" href="favicon.png?v=2" sizes="any">
-    <link rel="apple-touch-icon" href="favicon.png?v=2">
+    <link rel="icon" href="/favicon.png?v=2" sizes="any">
+    <link rel="apple-touch-icon" href="/favicon.png?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"></noscript>
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/dist/assets/style.min.css">
 </head>
 <body>
     <!-- Usunięto noscript trackingu, aby respektować zgodę -->
 
     <nav class="navbar">
         <div class="container">
-            <a href="/" class="logo" aria-label="Strona główna ToolShare"><img src="images/logo.webp" alt="ToolShare Logo"></a>
+            <a href="/" class="logo" aria-label="Strona główna ToolShare"><img src="/images/logo.webp" alt="ToolShare Logo"></a>
             <div class="nav-right">
                 <div class="nav-links">
                     <a href="/" class="nav-link" id="start-link">Strona Główna</a>
@@ -104,7 +92,7 @@
     <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
     <div class="mobile-menu-container" id="mobile-menu-container">
         <!-- Panel głównego menu -->
-        <div class="mobile-menu-panel active" id="main-menu-panel">
+        <div class="mobile-menu-panel" id="main-menu-panel">
             <div class="mobile-menu-header">
                 <div class="mobile-menu-title">Menu</div>
             </div>
@@ -265,6 +253,6 @@
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    <script src="script.js" defer></script>
+    <script src="/dist/assets/script.min.js" defer></script>
 </body>
 </html> 

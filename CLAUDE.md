@@ -19,6 +19,9 @@ npm run build:assets      # Bundle & minify JS/CSS to dist/assets/
 npm run prerender          # Generate static HTML files + sitemap
 npm run build:static       # Full production build (assets + prerender)
 npm run generate:sitemap   # Generate sitemap.xml only
+
+# Configure base URL for prerendering (default: https://toolshare.com.pl/)
+BASE_URL=https://staging.toolshare.com.pl/ npm run prerender
 ```
 
 **Build Output**:
@@ -172,11 +175,14 @@ Tools can be disabled via `"enabled": false` in `data.json`:
 ### Modifying Categories
 Edit `data.json` structure. Categories/subcategories are nested arrays. Prerendering automatically creates directory structure matching slugified category names.
 
+**Note**: The `slugify()` function handles Polish characters (ą→a, ć→c, etc.) and includes fallbacks for mojibake encoding artifacts that may appear in data.
+
 ### Styling Changes
 - Edit `style.css` directly
 - For production: `npm run build:assets` to minify with PurgeCSS
 - CSS custom properties used extensively for theming
 - Dark mode supported via `[data-theme="dark"]`
+- **PurgeCSS safelist**: Classes like `active`, `hidden`, `sliding-out`, `stagger-item`, `animate`, `highlighted` are preserved, plus patterns `/^fa-/`, `/^swiper-/`, `/^splide-/`, `/^mobile-menu-/`
 
 ### SEO Updates
 - Dynamic SEO: Edit `initializeSeoManager()` in `script.js`

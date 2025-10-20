@@ -98,7 +98,7 @@ function main() {
     const href = hasExt ? url : (url.endsWith('/') ? url : (url + '/'));
     return [
       { lang: 'pl', href },
-      { lang: 'x-default', href: absoluteUrl('') }
+      { lang: 'x-default', href }
     ];
   };
 

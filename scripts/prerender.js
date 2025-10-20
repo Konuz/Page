@@ -72,6 +72,12 @@ function setRobots(html, value) {
   return upsertMetaByName(html, 'robots', value);
 }
 
+function setThemeColors(html) {
+  let out = upsertMetaByName(html, 'theme-color', '#f4a261');
+  out = upsertMetaByName(out, 'msapplication-TileColor', '#f4a261');
+  return out;
+}
+
 // Insert hreflang alternates (removes existing alternates first)
 function setHreflang(html, map) {
   let out = html.replace(/<link[^>]+rel=["']alternate["'][^>]*>\s*/ig, '');
@@ -395,6 +401,7 @@ function generate() {
     let catHtml = cleanupFallback(tmplCategory);
     catHtml = replaceTitle(catHtml, catTitle);
     catHtml = upsertMetaByName(catHtml, 'description', catDesc);
+    catHtml = setThemeColors(catHtml);
     catHtml = setRobots(catHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     catHtml = setCanonical(catHtml, catUrl);
     catHtml = setHreflang(catHtml, { 'pl': catUrl, 'x-default': catUrl });
@@ -403,9 +410,11 @@ function generate() {
     catHtml = upsertMetaByProp(catHtml, 'og:description', catDesc);
     catHtml = upsertMetaByProp(catHtml, 'og:url', catUrl);
     catHtml = upsertMetaByProp(catHtml, 'og:image', catImg);
+    catHtml = upsertMetaByProp(catHtml, 'og:image:alt', `${catName} - wypożyczalnia narzędzi ToolShare Czernica`);
     catHtml = upsertMetaByName(catHtml, 'twitter:title', catTitle);
     catHtml = upsertMetaByName(catHtml, 'twitter:description', catDesc);
     catHtml = upsertMetaByName(catHtml, 'twitter:image', catImg);
+    catHtml = upsertMetaByName(catHtml, 'twitter:image:alt', `${catName} - wypożyczalnia narzędzi ToolShare Czernica`);
     catHtml = replacePlaceholders(catHtml, { 'CategoryName': catName });
     catHtml = setH1(catHtml, 'category-title', catName);
     catHtml = injectStaticNavigation(catHtml, catalog);
@@ -437,6 +446,7 @@ function generate() {
       let subHtml = cleanupFallback(tmplSubcategory);
       subHtml = replaceTitle(subHtml, subTitle);
       subHtml = upsertMetaByName(subHtml, 'description', subDesc);
+      subHtml = setThemeColors(subHtml);
       subHtml = setRobots(subHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
       subHtml = setCanonical(subHtml, subUrl);
       subHtml = setHreflang(subHtml, { 'pl': subUrl, 'x-default': subUrl });
@@ -445,9 +455,11 @@ function generate() {
       subHtml = upsertMetaByProp(subHtml, 'og:description', subDesc);
       subHtml = upsertMetaByProp(subHtml, 'og:url', subUrl);
       subHtml = upsertMetaByProp(subHtml, 'og:image', subImg);
+      subHtml = upsertMetaByProp(subHtml, 'og:image:alt', `${subName} - ${catName} - wypożyczalnia ToolShare Czernica`);
       subHtml = upsertMetaByName(subHtml, 'twitter:title', subTitle);
       subHtml = upsertMetaByName(subHtml, 'twitter:description', subDesc);
       subHtml = upsertMetaByName(subHtml, 'twitter:image', subImg);
+      subHtml = upsertMetaByName(subHtml, 'twitter:image:alt', `${subName} - ${catName} - wypożyczalnia ToolShare Czernica`);
       subHtml = replacePlaceholders(subHtml, { 'CategoryName': catName, 'SubcategoryName': subName });
       // Adjust breadcrumb category link to pretty URL
       subHtml = subHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
@@ -489,6 +501,7 @@ function generate() {
           const toolTitle = `${toolName} – wynajem narzędzi | ToolShare Czernica`;
           toolHtml = replaceTitle(toolHtml, toolTitle);
           toolHtml = upsertMetaByName(toolHtml, 'description', toolDesc);
+          toolHtml = setThemeColors(toolHtml);
           toolHtml = setRobots(toolHtml, 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
           toolHtml = setCanonical(toolHtml, toolUrl);
           toolHtml = setHreflang(toolHtml, { 'pl': toolUrl, 'x-default': toolUrl });
@@ -497,9 +510,11 @@ function generate() {
           toolHtml = upsertMetaByProp(toolHtml, 'og:description', toolDesc);
           toolHtml = upsertMetaByProp(toolHtml, 'og:url', toolUrl);
           toolHtml = upsertMetaByProp(toolHtml, 'og:image', toolImg);
+          toolHtml = upsertMetaByProp(toolHtml, 'og:image:alt', toolName);
           toolHtml = upsertMetaByName(toolHtml, 'twitter:title', toolTitle);
           toolHtml = upsertMetaByName(toolHtml, 'twitter:description', toolDesc);
           toolHtml = upsertMetaByName(toolHtml, 'twitter:image', toolImg);
+          toolHtml = upsertMetaByName(toolHtml, 'twitter:image:alt', toolName);
           toolHtml = replacePlaceholders(toolHtml, {
             'CategoryName': catName,
             'SubcategoryName': subName,

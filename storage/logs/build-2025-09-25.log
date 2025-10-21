@@ -1,0 +1,4 @@
+{"time":"2025-09-25T22:05:05+00:00","message":"Generator zakończony","context":{"command":"\/usr\/bin\/php8.3 \/mnt\/c\/Users\/micha\/Desktop\/Strona\/scripts\/build-static.php","status":0,"output":"Static pages generated successfully.","error":""}}
+{"time":"2025-09-25T22:05:05+00:00","message":"Generator zakończony","context":{"command":"\/usr\/bin\/php8.3 \/mnt\/c\/Users\/micha\/Desktop\/Strona\/scripts\/generate-sitemap.php","status":0,"output":"Sitemap wygenerowana.","error":""}}
+{"time":"2025-09-25T22:05:19+00:00","message":"Generator zakończony","context":{"command":"\/usr\/bin\/php8.3 \/mnt\/c\/Users\/micha\/Desktop\/Strona\/scripts\/build-static.php","status":0,"output":"Static pages generated successfully.","error":""}}
+{"time":"2025-09-25T22:05:19+00:00","message":"Generator zakończony","context":{"command":"\/usr\/bin\/php8.3 \/mnt\/c\/Users\/micha\/Desktop\/Strona\/scripts\/generate-sitemap.php","status":0,"output":"Sitemap wygenerowana.","error":""}}

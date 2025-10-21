@@ -4,20 +4,19 @@
     --text-light: #6B7280;
     --primary-color: #D97706;
     --primary-hover-color: #B45309;
-    --card-bg-color: #ffffff;
+    --card-bg-color: #fff;
     --border-color: #edeae6;
     --font-family: 'Poppins', sans-serif;
     --container-width: 1100px;
     --border-radius: 8px;
-    --background-color: #fdfaf6;
-    --bg-secondary: #fdfaf6;
     --hover-color: #f8f4f0;
     --table-header-bg: #f8f4f0;
     --table-row-hover: #f8f4f0;
+    --tool-card-height-desktop: 260px;
+    --tool-card-height-mobile: 220px;
+    --tools-grid-gap: 2rem;
     --shadow-light: rgba(255, 255, 255, 0.6);
     --shadow-dark: rgba(212, 212, 212, 0.4);
-    --shadow-light-inset: rgba(255, 255, 255, 0.6);
-    --shadow-dark-inset: rgba(212, 212, 212, 0.4);
     --neumorphic-light-shadow: rgba(255, 255, 255, 0.9);
     --neumorphic-dark-shadow: rgba(203, 213, 225, 0.8);
     --footer-bg: var(--bg-color-dark, #111827); /* Używam koloru tła z motywu ciemnego */
@@ -32,19 +31,15 @@
     --text-light: #9ca3af;
     --border-color: #374151;
     --card-bg-color: #1f2937;
-    --background-color: #111827;
-    --bg-secondary: #111827;
     --hover-color: #1f2937;
     --table-header-bg: #1f2937;
     --table-row-hover: #374151;
     --shadow-light: rgba(56, 68, 94, 0.7);
     --shadow-dark: rgba(12, 17, 29, 0.7);
-    --shadow-light-inset: rgba(56, 68, 94, 0.7);
-    --shadow-dark-inset: rgba(12, 17, 29, 0.7);
     --neumorphic-light-shadow: rgba(45, 55, 72, 0.6);
     --neumorphic-dark-shadow: rgba(10, 15, 26, 0.8);
     --footer-bg: var(--bg-color-light, #fdfaf6); /* Używam koloru tła z motywu jasnego */
-    --footer-text: #000000; /* Czarny tekst dla stopki w motywie ciemnym */
+    --footer-text: #000; /* Czarny tekst dla stopki w motywie ciemnym */
 }
 
 *, *::before, *::after {
@@ -140,7 +135,7 @@ h2 {
     background-color: var(--primary-hover-color);
 }
 
-/* Navbar */
+/* Pasek nawigacyjny (Navbar) */
 .navbar {
     background-color: rgba(253, 250, 246, 0.7);
     backdrop-filter: blur(10px);
@@ -203,7 +198,7 @@ h2 {
 .nav-links {
     display: flex;
     align-items: center;
-    color: #ffffff;
+    color: #fff;
     order: 2;
     gap: 1.8rem; /* 10% mniej */
 }
@@ -236,7 +231,7 @@ h2 {
     color: var(--text-color);
 }
 
-/* Search Toggle Button */
+/* Przycisk otwierania wyszukiwarki */
 .search-toggle-btn {
     background: none;
     border: none;
@@ -278,7 +273,7 @@ h2 {
     transform: translateY(-1px);
 }
 
-/* Hamburger Menu Icon */
+/* Ikona menu hamburger */
 .hamburger {
     display: none;
     cursor: pointer;
@@ -293,36 +288,37 @@ h2 {
     transition: all 0.3s ease-in-out;
 }
 
-/* Hero Section */
+/* Sekcja hero */
 .hero-section {
     text-align: center;
-    padding: 2rem 0;
+    padding: clamp(2rem, 5vw, 4rem) 0;
 }
 
 .hero-section .container {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero.webp') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/hero.webp') no-repeat center center/cover;
     color: white;
-    padding: 8rem 2rem;
+    padding: clamp(6rem, 10vw, 8rem) clamp(1.5rem, 4vw, 2.5rem);
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1.5rem;
 }
 
 [data-theme="dark"] .hero-section .container {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/hero.webp') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/hero.webp') no-repeat center center/cover;
 }
 
 .hero-section h1 {
     color: white;
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2.3rem, 5vw, 3.25rem);
+    margin-bottom: 0.5rem;
 }
 
 .hero-section p {
-    font-size: 1.15rem;
-    max-width: 600px;
-    margin-bottom: 2.5rem;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    max-width: min(640px, 95vw);
+    margin-bottom: clamp(1.5rem, 3.5vw, 2.75rem);
     color: white;
 }
 
@@ -411,13 +407,30 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     font-size: 1.25rem;
 }
 
-/* Tools Section */
+/* Sekcja narzędzi */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, 300px);
     justify-content: center;
-    gap: 2rem;
+    gap: var(--tools-grid-gap);
     align-items: start;
+}
+
+@media (min-width: 992px) {
+    .tools-grid.grid-scroll {
+        max-height: calc(var(--tool-card-height-desktop) * 4 + var(--tools-grid-gap) * 3);
+        overflow-y: auto;
+        padding-right: 0.35rem;
+    }
+
+    .tools-grid.grid-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .tools-grid.grid-scroll::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 999px;
+    }
 }
 
 .tool-card {
@@ -454,8 +467,8 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .card-image-wrapper {
     width: 100%;
-    height: 220px;
-    background-color: #ffffff;
+    height: var(--tool-card-height-desktop);
+    background-color: #fff;
     border-radius: 0;
     overflow: hidden;
     transition: transform 0.3s ease;
@@ -519,7 +532,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #EF4444; /* Red-500 */
 }
 
-/* == TOOL DETAILS PAGE STYLES START == */
+/* == STYLY STRONY SZCZEGÓŁÓW NARZĘDZIA – START == */
 
 .tool-details-grid {
     display: grid;
@@ -538,7 +551,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     width: 100%;
     border-radius: var(--border-radius);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    background-color: #ffffff; /* Gwarantuje białe tło */
+    background-color: #fff; /* Gwarantuje białe tło */
     overflow: hidden; /* Zapobiega "wylewaniu się" obrazka */
     aspect-ratio: 4 / 3; /* Utrzymuje stałe proporcje dla spójności */
 }
@@ -610,7 +623,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 #pricing-table th {
     background-color: #f4f4f4;
     font-weight: 600;
-    color: #000000;
+    color: #000;
 }
 
 #pricing-table th:last-child,
@@ -630,9 +643,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin-top: 1.5rem;
 }
 
-/* == TOOL DETAILS PAGE STYLES END == */
+/* == STYLY STRONY SZCZEGÓŁÓW NARZĘDZIA – KONIEC == */
 
-/* == NEW CATEGORY & SUBCATEGORY STYLES START == */
+/* == NOWE STYLE: KATEGORIE I PODKATEGORIE – START == */
 
 .category-card, .subcategory-card {
     background-color: var(--card-bg-color);
@@ -774,10 +787,10 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     background-color: #374151; /* gray-700, ciemniejszy hover dla trybu nocnego */
 }
 
-/* == NEW CATEGORY & SUBCATEGORY STYLES END == */
+/* == NOWE STYLE: KATEGORIE I PODKATEGORIE – KONIEC == */
 
 
-/* Contact Section */
+/* Sekcja kontaktowa */
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -858,7 +871,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     -ms-user-select: none;
 }
 
-/* Call to Action Section */
+/* Sekcja Call to Action (wezwanie do działania) */
 .cta-section {
     padding: 3rem 0;
     background-color: var(--bg-color);
@@ -937,7 +950,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     font-size: 1em;
 }
 
-/* Phone Selection Modal */
+/* Modal wyboru telefonu */
 .phone-modal {
     position: fixed;
     top: 0;
@@ -1096,7 +1109,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin: 0 auto;
 }
 
-/* Edge shadow overlays for extreme cards */
+/* Cienie krawędziowe dla skrajnych kart */
 .zobacz-takze-carousel-container::before,
 .zobacz-takze-carousel-container::after {
     content: '';
@@ -1135,6 +1148,9 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     /* Allow horizontal panning by default (fixes devices not matching MQ) */
     -ms-touch-action: pan-x pinch-zoom;
     touch-action: pan-x pinch-zoom;
+    /* Hide scrollbars across browsers, keep scrolling */
+    scrollbar-width: none;           /* Firefox */
+    -ms-overflow-style: none;        /* IE/Edge */
     /* Completely prevent all touch highlights */
     -webkit-tap-highlight-color: transparent !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
@@ -1160,7 +1176,13 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         rgba(0,0,0,0) 100%);
 }
 
-/* Prevent carousel container states from darkening */
+/* Ukrywanie paska przewijania dla WebKit (Chrome/Safari/Edge Chromium) */
+.zobacz-takze-carousel::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Zapobiegaj przyciemnianiu stanu kontenera karuzeli */
 .zobacz-takze-carousel:active,
 .zobacz-takze-carousel:focus,
 .zobacz-takze-carousel-container:active,
@@ -1197,7 +1219,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     pointer-events: auto;
 }
 
-/* Tighter fades on small screens */
+/* Mocniejsze wygaszenia na małych ekranach */
 @media (max-width: 768px) {
   .zobacz-takze-carousel {
     -webkit-mask-image: linear-gradient(to right,
@@ -1213,7 +1235,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
   }
 }
 
-/* Heavier feeling during drag - no transitions */
+/* Cięższe odczucie podczas przeciągania – bez przejść */
 .zobacz-takze-carousel.dragging .zobacz-takze-track {
     transition: none;
     /* Simulate mass through transform timing */
@@ -1225,7 +1247,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     user-select: none !important;
 }
 
-/* Cards feel heavier during drag */
+/* Karty sprawiają wrażenie cięższych podczas przeciągania */
 .zobacz-takze-carousel.dragging .zobacz-takze-card {
     /* Remove all visual filters to prevent darkening */
     filter: none;
@@ -1245,7 +1267,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 .zobacz-takze-card {
     flex: 0 0 225px;
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     overflow: hidden;
@@ -1288,7 +1310,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 .zobacz-takze-card:focus-within {
     filter: none !important;
     opacity: 1 !important;
-    background-color: #ffffff !important;
+    background-color: #fff !important;
     outline: none !important;
     box-shadow: 
         8px 8px 16px var(--neumorphic-dark-shadow),
@@ -1351,7 +1373,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background-color: #ffffff;
+    background-color: #fff;
     transition: transform 0.3s ease;
     padding: 8px;
     box-sizing: border-box;
@@ -1413,7 +1435,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Carousel Navigation Buttons */
+/* Przyciski nawigacji karuzeli */
 .carousel-nav-btn {
     position: absolute;
     top: 50%;
@@ -1475,7 +1497,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     pointer-events: none;
 }
 
-/* Loading State */
+/* Stan ładowania */
 .zobacz-takze-loading {
     display: flex;
     justify-content: center;
@@ -1501,7 +1523,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
+/* Projekt responsywny */
 @media (max-width: 1200px) {
     .carousel-prev {
         left: -50px;
@@ -1606,7 +1628,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* Touch Scroll Behavior */
+/* Zachowanie przewijania dotykowego */
 @media (hover: none) and (pointer: coarse) {
     .zobacz-takze-carousel {
         /* Retain same behavior under MQ; base already enables pan-x and overflow-x */
@@ -1670,7 +1692,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* Focus States for Accessibility */
+/* Stany fokusu dla dostępności */
 .zobacz-takze-card:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
@@ -1685,14 +1707,14 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     outline-offset: 2px;
 }
 
-/* Dark Theme Adjustments */
+/* Dostosowania motywu ciemnego */
 [data-theme="dark"] .zobacz-takze-card {
-    background-color: #ffffff;
+    background-color: #fff;
     border-color: var(--border-color);
 }
 
 [data-theme="dark"] .zobacz-takze-card-image {
-    background-color: #ffffff;
+    background-color: #fff;
 }
 
 [data-theme="dark"] .carousel-nav-btn {
@@ -1793,7 +1815,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer */
+/* Stopka */
 .footer {
     background-color: var(--text-color);
     color: var(--bg-color);
@@ -1802,7 +1824,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     margin-top: 2rem;
 }
 
-/* Scroll-to-top Button */
+/* Przycisk przewijania do góry */
 .scroll-to-top {
     position: fixed;
     bottom: 2rem;
@@ -1839,7 +1861,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     opacity: 0.2;
 }
 
-/* Navigation Dropdown */
+/* Rozwijane menu nawigacji */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -1858,103 +1880,11 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     gap: 0.5rem;
 }
 
-.dropdown-arrow {
-    font-size: 0.8em;
-    transition: transform 0.3s ease;
-}
+/* Deduped: removed repeated dropdown rules; canonical definitions appear earlier. */
 
-.dropdown-content {
-    display: block;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-}
+/* Deduped: removed repeated .sub-dropdown styles (kept canonical block above) */
 
-.dropdown-content a {
-    color: black;
-    padding: 10px 45px 10px 14px;
-    text-decoration: none;
-    white-space: normal;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 4px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-    /* Zasady typograficzne dla polskiego tekstu */
-    hyphens: auto;
-    overflow-wrap: break-word;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-[data-theme="dark"] .dropdown-content a:hover {
-    background-color: #374151; /* gray-700 */
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.dropdown:hover .dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.sub-dropdown {
-    position: relative;
-}
-
-.sub-dropdown .sub-dropdown-content {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -1px; /* Adjust for border */
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-}
-
-.sub-dropdown:hover .sub-dropdown-content {
-    display: block;
-}
-
-.sub-dropdown-content a {
-    color: black;
-    padding: 10px 45px 10px 14px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    margin: 4px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-}
-
-.sub-dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-/* Dropdown arrow */
-.dropdown .breadcrumb-arrow {
-    transition: transform 0.3s ease;
-}
-
-/* Breadcrumb */
+/* Okruszki nawigacyjne (breadcrumb) */
 .breadcrumb {
     padding: 0;
     background-color: transparent;
@@ -2144,14 +2074,6 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
         transform: translateY(-8px) rotate(-45deg);
     }
 
-    .hero-section {
-        padding: 2rem 0;
-    }
-    
-    .hero-section h1 {
-        font-size: 2rem;
-    }
-
     h1 {
         font-size: 2.2rem;
     }
@@ -2169,7 +2091,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     }
 }
 
-/* --- Tool Detail Page --- */
+/* --- Strona szczegółów narzędzia --- */
 .tool-detail-section {
     background: #fff;
     padding: 2rem;
@@ -2209,7 +2131,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 #pricing-table thead {
     background-color: #F3F4F6; /* Gray-100, podobne do screena */
-    color: #000000;
+    color: #000;
 }
 
 #pricing-table td:last-child {
@@ -2218,43 +2140,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
     color: var(--primary-color);
 }
 
-.sub-dropdown {
-    position: relative;
-}
-
-.sub-dropdown .sub-dropdown-content {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -1px; /* Adjust for border */
-    background-color: #f9f9f9;
-    min-width: 320px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-}
-
-.sub-dropdown:hover .sub-dropdown-content {
-    display: block;
-}
-
-.sub-dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-}
-
-.sub-dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-/* Dropdown arrow */
-.dropdown .breadcrumb-arrow {
-    transition: transform 0.3s ease;
-}
+/* Deduped: removed repeated .sub-dropdown styles (kept canonical block above) */
 
 .theme-toggle-btn {
     background: none;
@@ -2303,12 +2189,12 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 [data-theme="dark"] #pricing-table thead {
     background-color: #374151;
-    color: #ffffff;
+    color: #fff;
 }
 
 [data-theme="dark"] #pricing-table th {
     background-color: #374151;
-    color: #ffffff;
+    color: #fff;
 }
 
 [data-theme="dark"] .deposit-note {
@@ -2317,7 +2203,7 @@ h1, h2, h3, h4, h5, h6, p, .category-name, .tool-name {
 
 [data-theme="dark"] h1,
 [data-theme="dark"] h2 {
-    color: #ffffff;
+    color: #fff;
 }
 
 /* Scroll animations */
@@ -2357,8 +2243,25 @@ body.subpage main {
 }
 
 .mobile-menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dodatkowe reguły dla pewności */
+.mobile-menu-overlay:not(.active) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+}
+
+/* Ekstra bezpieczeństwo - całkowite ukrycie gdy kontener nieaktywny */
+.mobile-menu-container:not(.active) {
+    transform: translateX(100%) !important;
+    visibility: hidden !important;
+}
+
+.mobile-menu-overlay:not(.active) + .mobile-menu-container:not(.active) {
+    display: none !important;
 }
 
 .mobile-menu-container {
@@ -2386,7 +2289,12 @@ body.subpage main {
 }
 
 .mobile-menu-container.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+}
+
+/* Dodatkowe reguły dla pewności */
+.mobile-menu-container:not(.active) {
+    transform: translateX(100%) !important;
 }
 
 .mobile-menu-panel {
@@ -2405,8 +2313,14 @@ body.subpage main {
     contain: layout style paint;
 }
 
-.mobile-menu-panel.active {
-    transform: translateX(0);
+/* Panel jest widoczny TYLKO gdy kontener też jest aktywny */
+.mobile-menu-container.active .mobile-menu-panel.active {
+    transform: translateX(0) !important;
+}
+
+/* Gdy kontener nie jest aktywny, wszystkie panele są ukryte */
+.mobile-menu-container:not(.active) .mobile-menu-panel {
+    transform: translateX(100%) !important;
 }
 
 .mobile-menu-panel.sliding-out {
@@ -2557,15 +2471,15 @@ body.subpage main {
 
 /* Stylowanie strony polityki prywatności */
 .privacy-content h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 4.5rem;
+    margin-bottom: 1.5rem;
     font-size: 1.8rem;
     text-align: left;
 }
 
 .privacy-content h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
     font-size: 1.4rem;
     color: var(--text-color);
 }
@@ -2575,18 +2489,40 @@ body.subpage main {
 }
 
 .privacy-content p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    text-align: left;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
 }
 
 .privacy-content ul {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     padding-left: 1.5rem;
 }
 
 .privacy-content li {
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    text-align: left;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
+}
+
+/* Większy odstęp między końcem listy/akapitu a kolejnym nagłówkiem */
+.privacy-content ul + h2,
+.privacy-content p + h2 {
+    margin-top: 5rem;
 }
 
 .privacy-content hr {
@@ -2702,7 +2638,7 @@ body.subpage main {
     opacity: 0.2;
 }
 
-/* Navigation Dropdown */
+/* Rozwijane menu nawigacji */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -2791,6 +2727,21 @@ body.subpage main {
     z-index: 1;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
+    /* Rounded corners + smooth scrolling without visible scrollbar */
+    overflow-x: hidden;
+    overflow-y: hidden;
+    clip-path: inset(0 round var(--border-radius)); /* enforce rounded corners */
+}
+
+.sub-dropdown .sub-dropdown-content.submenu-scrollable {
+    max-height: 18rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    -ms-overflow-style: auto;
+}
+
+.sub-dropdown .sub-dropdown-content.submenu-scrollable::-webkit-scrollbar {
+    width: 6px;
 }
 
 .sub-dropdown:hover .sub-dropdown-content {
@@ -2812,12 +2763,12 @@ body.subpage main {
     background-color: #f1f1f1;
 }
 
-/* Dropdown arrow */
+/* Strzałka rozwijanego menu */
 .dropdown .breadcrumb-arrow {
     transition: transform 0.3s ease;
 }
 
-/* Breadcrumb */
+/* Okruszki nawigacyjne (breadcrumb) */
 .breadcrumb {
     padding: 0;
     background-color: transparent;
@@ -2923,7 +2874,7 @@ body.subpage main {
     display: none; /* Ukryj strzałki wewnątrz listy rozwijanej */
 }
 
-/* Responsive Design */
+/* Projekt responsywny */
 @media (max-width: 992px) {
     .nav-links {
         position: absolute;
@@ -3007,14 +2958,6 @@ body.subpage main {
         transform: translateY(-8px) rotate(-45deg);
     }
 
-    .hero-section {
-        padding: 2rem 0;
-    }
-    
-    .hero-section h1 {
-        font-size: 2rem;
-    }
-
     h1 {
         font-size: 2.2rem;
     }
@@ -3057,83 +3000,45 @@ body.subpage main {
         justify-content: center;
         justify-items: center;
     }
+}
 
+
+@media (max-width: 1200px) {
     .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-        justify-content: center;
-        gap: 1rem;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .tool-card {
-        width: 100%;
-        max-width: none;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: clamp(1.5rem, 4vw, 2rem);
     }
 
     .card-image-wrapper {
-        height: 140px;
+        height: clamp(200px, 30vw, var(--tool-card-height-desktop));
     }
 
     .tool-card-title {
-        padding: 1rem 0.75rem 0.75rem;
+        padding: clamp(1.5rem, 3vw, 2rem) clamp(1.2rem, 3vw, 1.75rem) clamp(1.1rem, 2.5vw, 1.5rem);
     }
 
     .tool-card-title h3 {
-        font-size: 1rem;
-        line-height: 1.2;
-        word-wrap: break-word;
-        hyphens: auto;
+        font-size: clamp(1.2rem, 3.2vw, 1.5rem);
     }
 }
 
-@media (max-width: 600px) and (orientation: portrait) {
-  .tools-grid {
-    grid-template-columns: 1fr !important;
-    max-width: 95vw;
-    gap: 1.5rem;
-  }
-  .tool-card {
-    width: 100%;
-    max-width: none;
-  }
-  .card-image-wrapper {
-    height: 220px;
-  }
-  .tool-card-title {
-    padding: 1.5rem 1rem 1rem;
-  }
-  .tool-card-title h3 {
-    font-size: 1.25rem;
-    line-height: 1.3;
-  }
-}
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: 1fr;
+        gap: clamp(1.25rem, 6vw, 1.75rem);
+    }
 
-@media (max-width: 800px) and (orientation: portrait) {
-  .tools-grid {
-    grid-template-columns: 1fr !important;
-    max-width: 99vw !important;
-    gap: 2rem !important;
-    justify-content: stretch !important;
-    margin: 0 auto !important;
-  }
-  .tool-card {
-    width: 100% !important;
-    max-width: 100vw !important;
-    margin: 0 auto 2rem auto !important;
-  }
-  .card-image-wrapper {
-    height: 240px !important;
-    min-height: 180px !important;
-    max-height: 320px !important;
-  }
-  .tool-card-title {
-    padding: 2rem 1.2rem 1.2rem !important;
-  }
-  .tool-card-title h3 {
-    font-size: 1.35rem !important;
-    line-height: 1.3 !important;
-  }
+    .card-image-wrapper {
+        height: clamp(200px, 52vw, 260px);
+    }
+
+    .tool-card-title {
+        padding: clamp(1.2rem, 5vw, 1.6rem) clamp(1rem, 4vw, 1.4rem) clamp(1rem, 4vw, 1.4rem);
+    }
+
+    .tool-card-title h3 {
+        font-size: clamp(1.1rem, 5vw, 1.35rem);
+    }
 }
 
 .nowrap {
@@ -3248,12 +3153,12 @@ body.subpage main {
     }
 }
 
-/* --- Breadcrumb --- */
+/* --- Okruszki nawigacyjne (breadcrumb) --- */
 .breadcrumb {
     margin-bottom: 2rem;
 }
 
-/* --- Cookie Popup --- */
+/* --- Wyskakujące okienko cookies --- */
 .cookie-popup {
     position: fixed;
     bottom: 20px;
@@ -3332,7 +3237,7 @@ body.subpage main {
     }
 }
 
-/* --- Search Bar --- */
+/* --- Pasek wyszukiwania --- */
 .search-container {
     position: fixed;
     top: 0;
@@ -3518,10 +3423,10 @@ body.subpage main {
     font-weight: 600;
     color: var(--text-light);
     border-bottom: 1px solid var(--border-color);
-    background: var(--bg-secondary);
+    background: var(--bg-color);
 }
 
-/* --- Performance: lazy-render offscreen cards --- */
+/* --- Wydajność: lazy-render kart poza ekranem --- */
 @supports (content-visibility: auto) {
     /* Reduce initial render cost for offscreen containers */
     .features-grid,
@@ -3546,7 +3451,7 @@ body.subpage main {
     .zobacz-takze-card { contain-intrinsic-size: 180px; }
 }
 
-/* Prefer reduced motion */
+/* Preferuj ograniczone animacje (reduced motion) */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
@@ -3556,7 +3461,7 @@ body.subpage main {
   }
 }
 
-/* Mobile: disable heavy blur for performance */
+/* Mobile: wyłącz silne rozmycia dla wydajności */
 @media (max-width: 768px) {
   .navbar { backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
@@ -3669,8 +3574,11 @@ body.subpage main {
   }
 }
 
-/* Mobile tap highlight/outline cleanup (touch devices only) */
+/* Czyszczenie podświetleń/obrysów dotyku (tylko urządzenia dotykowe) */
 @media (hover: none) and (pointer: coarse) {
+  *,
+  *:before,
+  *:after,
   a,
   a:link,
   a:visited,
@@ -3685,12 +3593,14 @@ body.subpage main {
   select,
   select:focus,
   [role="button"],
+  [onclick],
   .logo,
   .logo:focus,
   .navbar a,
   img {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+    -webkit-touch-callout: none !important;
     outline: none !important;
   }
 
@@ -3702,3 +3612,20 @@ body.subpage main {
     outline: none !important;
   }
 }
+
+/* Globalne usunięcie podświetlenia dotyku dla wszystkich urządzeń */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button, 
+a, 
+[role="button"], 
+[onclick],
+.btn,
+.button {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* Ukryj ewentualne pozostale akapity fallback (stare pliki) */

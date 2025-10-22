@@ -505,7 +505,7 @@ function buildPrettyPath(categoryName, subcategoryName, toolId) {
     if (categoryName) parts.push(slugify(categoryName));
     if (subcategoryName) parts.push(slugify(subcategoryName));
     if (toolId) parts.push(encodeURIComponent(toolId));
-    return parts.join('/');
+    return parts.join('/') + '/';  // Always include trailing slash for consistency with sitemap and canonical URLs
 }
 
 function resolveCategory(toolCatalog, input) {
@@ -2210,14 +2210,19 @@ function initializeSearch(toolCatalog) {
         searchResultItems.forEach((item, index) => {
             item.addEventListener('click', () => {
                 const toolId = item.getAttribute('data-tool-id');
-                
+
                 // Znajdź nazwę narzędzia i zapisz do historii
                 const toolResult = results.find(r => r.tool.id === toolId);
                 if (toolResult) {
                     saveToSearchHistory(toolResult.tool.name);
+
+                    // Use pretty URL with trailing slash if available, fallback to query params
+                    if (canUsePrettyUrls()) {
+                        window.location.href = buildPrettyPath(toolResult.category, toolResult.subcategory, toolResult.tool.id);
+                    } else {
+                        window.location.href = `/tool.html?toolId=${toolId}`;
+                    }
                 }
-                
-                window.location.href = `/tool.html?toolId=${toolId}`;
             });
             
             item.addEventListener('mouseenter', () => {

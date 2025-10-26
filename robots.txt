@@ -16,6 +16,11 @@ Disallow: /*.json$
 Disallow: /node_modules/
 Disallow: /cookie-popup.html
 
+# Blokada template files (nie powinny być indeksowane, tylko prerendered pages)
+Disallow: /category.html
+Disallow: /subcategory.html
+Disallow: /tool.html
+
 # Ograniczenia parametrów (uniknięcie duplikacji i crawl traps)
 Disallow: /*?*utm_
 Disallow: /*?*sort=

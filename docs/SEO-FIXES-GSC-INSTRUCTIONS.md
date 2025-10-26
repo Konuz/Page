@@ -428,8 +428,8 @@ Jeśli potrzebujesz pomocy z implementacją lub Google Search Console:
 - [x] Usunięto nieprawidłowe canonical tags
 - [x] Poprawiono og:url metadata
 - [x] Zaktualizowano robots.txt
-- [ ] Submit removal requests w GSC (do wykonania)
+- [x] Submit removal requests w GSC (do wykonania)
 - [ ] Request re-crawl dla kluczowych stron (do wykonania)
-- [ ] Submit ponownie sitemap.xml (do wykonania)
+- [x] Submit ponownie sitemap.xml (do wykonania)
 - [ ] Monitoring po 7-14 dniach (do wykonania)
 - [ ] Weryfikacja wyników po 30 dniach (do wykonania)

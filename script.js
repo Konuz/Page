@@ -1104,7 +1104,12 @@ function renderSubcategories(toolCatalog) {
     try {
         if (canUsePrettyUrls()) {
             const prettyPath = buildPrettyPath(category.category);
-            if (window.location.pathname !== prettyPath) {
+            // Normalizuj current path - zawsze ze slashem dla poprawnego porównania
+            const currentPath = window.location.pathname.endsWith('/')
+                ? window.location.pathname
+                : window.location.pathname + '/';
+            // Tylko nadpisz URL jeśli faktycznie się różni (zapobiega konfliktom z redirectem 301)
+            if (currentPath !== prettyPath) {
                 history.replaceState(null, '', prettyPath);
             }
         }
@@ -1158,7 +1163,12 @@ function renderTools(toolCatalog) {
     try {
         if (canUsePrettyUrls()) {
             const prettyPath = buildPrettyPath(category.category, subcategory.name);
-            if (window.location.pathname !== prettyPath) {
+            // Normalizuj current path - zawsze ze slashem dla poprawnego porównania
+            const currentPath = window.location.pathname.endsWith('/')
+                ? window.location.pathname
+                : window.location.pathname + '/';
+            // Tylko nadpisz URL jeśli faktycznie się różni (zapobiega konfliktom z redirectem 301)
+            if (currentPath !== prettyPath) {
                 history.replaceState(null, '', prettyPath);
             }
         }
@@ -1253,7 +1263,12 @@ function renderToolDetails(toolCatalog) {
     try {
         if (canUsePrettyUrls()) {
             const prettyPath = buildPrettyPath(category.category, subcategory.name, tool.id);
-            if (window.location.pathname !== prettyPath) {
+            // Normalizuj current path - zawsze ze slashem dla poprawnego porównania
+            const currentPath = window.location.pathname.endsWith('/')
+                ? window.location.pathname
+                : window.location.pathname + '/';
+            // Tylko nadpisz URL jeśli faktycznie się różni (zapobiega konfliktom z redirectem 301)
+            if (currentPath !== prettyPath) {
                 history.replaceState(null, '', prettyPath);
             }
         }

@@ -21,6 +21,11 @@ Disallow: /category.html
 Disallow: /subcategory.html
 Disallow: /tool.html
 
+# Blokada template URL z placeholderami i query params wyszukiwania
+Disallow: /*?q=*
+Disallow: /index.html?q=*
+Disallow: /*?search=*
+
 # Ograniczenia parametrów (uniknięcie duplikacji i crawl traps)
 Disallow: /*?*utm_
 Disallow: /*?*sort=

@@ -8,12 +8,12 @@
 # Note: unsafe-inline is temporary - plan to migrate to nonces in future
 Header always set Content-Security-Policy "\
     default-src 'self'; \
-    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.clarity.ms https://www.google-analytics.com; \
-    style-src 'self' 'unsafe-inline'; \
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://www.clarity.ms https://scripts.clarity.ms https://www.google-analytics.com https://analytics.google.com; \
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://www.googletagmanager.com; \
     img-src 'self' data: https: blob:; \
-    font-src 'self' data:; \
-    connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://analytics.google.com; \
-    frame-src https://www.google.com https://maps.google.com; \
+    font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; \
+    connect-src 'self' https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net https://graph.facebook.com https://www.clarity.ms https://*.clarity.ms; \
+    frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com https://www.facebook.com; \
     frame-ancestors 'self'; \
     base-uri 'self'; \
     form-action 'self';\

@@ -674,7 +674,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('why-us') ||
         document.getElementById('category-title') ||
         document.getElementById('subcategory-title') ||
-        document.getElementById('tool-details-section')
+        document.getElementById('tool-details-section') ||
+        document.getElementById('search-toggle')
     );
 
     const toolCatalog = needsCatalog ? await fetchData() : null;
@@ -2909,12 +2910,12 @@ function createSeeAlsoCard(tool, category, subcategory) {
     title.className = 'card-title';
     title.textContent = safeToolName;
 
-    const category = document.createElement('p');
-    category.className = 'card-category';
-    category.textContent = `${safeCategoryName} › ${safeSubcategoryName}`;
+    const categoryElement = document.createElement('p');
+    categoryElement.className = 'card-category';
+    categoryElement.textContent = `${safeCategoryName} › ${safeSubcategoryName}`;
 
     contentContainer.appendChild(title);
-    contentContainer.appendChild(category);
+    contentContainer.appendChild(categoryElement);
 
     // Assemble card
     card.appendChild(imageContainer);

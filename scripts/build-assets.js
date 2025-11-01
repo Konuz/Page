@@ -59,9 +59,34 @@ async function bundleCss() {
         'loaded',
         'error',
         'disabled',
-        'subpage'
+        'subpage',
+        'dropdown',
+        'dropdown-content',
+        'dropbtn',
+        'dropdown-arrow',
+        'breadcrumb-arrow',
+        'breadcrumb-dropdown',
+        'breadcrumb-dropdown-content',
+        'sub-dropdown',
+        'sub-dropdown-content'
       ],
-      deep: [/^fa-/, /^swiper-/, /^splide-/, /^mobile-menu-/]
+      deep: [
+        /^fa-/,
+        /^fa-brands/,
+        /^fa-solid/,
+        /^fa-regular/,
+        /^swiper-/,
+        /^splide-/,
+        /^mobile-menu-/,
+        /^dropdown/,
+        /^dropbtn/,
+        /^breadcrumb/
+      ],
+      greedy: [
+        /dropdown/,
+        /font-weight/,
+        /font-family/
+      ]
     },
     defaultExtractor: (content) => content.match(/[^\s"'`{}()<>:@]+/g) || []
   });

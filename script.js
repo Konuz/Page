@@ -206,13 +206,35 @@ class CookieManager {
 }
 
 // ===== ANALYTICS NAMESPACE =====
+//
+// UWAGA DOTYCZĄCA SRI (Subresource Integrity):
+// - GSAP: Używa SRI, ponieważ jest statycznym plikiem z CDN o niezmiennym hashu
+// - GTM, Facebook Pixel, Microsoft Clarity: NIE używają SRI, ponieważ:
+//   1. Są dynamicznie aktualizowane przez dostawców
+//   2. Zawierają zmienne parametry w URL (np. GTM ID)
+//   3. Hash zmieniałby się przy każdej aktualizacji usługi
+//   4. Dostawcy często aktualizują skrypty bez powiadomienia
+//
 const Analytics = {
-    // Core script loading functionality
-    loadScript(src, attrs = {}) {
+    // Core script loading functionality with optional SRI support
+    // integrity: SRI hash (e.g., 'sha512-xxxx' or 'sha384-xxxx')
+    // crossorigin: CORS setting (e.g., 'anonymous', 'use-credentials')
+    loadScript(src, attrs = {}, integrity = null, crossorigin = null) {
         const s = document.createElement('script');
         s.src = src;
         s.async = true;
+
+        // Add SRI attributes if provided
+        if (integrity) {
+            s.integrity = integrity;
+        }
+        if (crossorigin) {
+            s.crossOrigin = crossorigin;
+        }
+
+        // Add additional attributes
         Object.entries(attrs).forEach(([k, v]) => s.setAttribute(k, v));
+
         return new Promise((resolve, reject) => {
             s.onload = () => resolve(src);
             s.onerror = () => reject(new Error(`Failed to load script: ${src}`));
@@ -518,26 +540,103 @@ function resolveSubcategory(category, input) {
     return (category.subcategories || []).find(s => s.name === input || slugify(s.name) === input) || null;
 }
 
-// Odczyt parametrów trasy z query lub z 'ładnej' ścieżki
+// ===== URL Parameter Validation =====
+
+// Whitelist of allowed characters for different parameter types
+const PARAM_REGEX = {
+    category: /^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s\-]+$/,
+    subcategory: /^[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s\-]+$/,
+    toolId: /^[a-z0-9\-]+$/
+};
+
+// Maximum lengths for URL parameters
+const PARAM_MAX_LENGTH = {
+    category: 100,
+    subcategory: 100,
+    toolId: 150
+};
+
+/**
+ * Validate URL parameter against whitelist and length constraints
+ * @param {string} value - Parameter value to validate
+ * @param {string} type - Parameter type (category, subcategory, toolId)
+ * @returns {string|null} - Validated value or null if invalid
+ */
+function validateParam(value, type) {
+    if (!value || typeof value !== 'string') return null;
+
+    // Check length constraint
+    const maxLength = PARAM_MAX_LENGTH[type] || 200;
+    if (value.length > maxLength) {
+        console.warn(`Parameter ${type} too long: ${value.length} chars (max: ${maxLength})`);
+        return null;
+    }
+
+    // Check pattern constraint
+    const pattern = PARAM_REGEX[type];
+    if (pattern && !pattern.test(value)) {
+        console.warn(`Parameter ${type} contains invalid characters:`, value);
+        return null;
+    }
+
+    return value.trim();
+}
+
+/**
+ * Safely decode URI component with error handling
+ * @param {string} str - URI component to decode
+ * @returns {string|null} - Decoded string or null if malformed
+ */
+function safeDecodeURIComponent(str) {
+    try {
+        return decodeURIComponent(str);
+    } catch (e) {
+        console.warn('Invalid URI component, possible attack attempt:', str);
+        return null;
+    }
+}
+
+// ===== End URL Parameter Validation =====
+
+// Odczyt parametrów trasy z query lub z 'ładnej' ścieżki - SECURE VERSION
 function getRouteParams() {
     try {
         const params = new URLSearchParams(window.location.search);
-        let category = params.get('category');
-        let subcategory = params.get('subcategory');
-        let toolId = params.get('toolId');
 
+        // Validate query parameters
+        let category = validateParam(params.get('category'), 'category');
+        let subcategory = validateParam(params.get('subcategory'), 'subcategory');
+        let toolId = validateParam(params.get('toolId'), 'toolId');
+
+        // If no query params, try pretty URLs from pathname
         if (!category && !subcategory && !toolId) {
-            const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
-            // Obsługa prefiksu /narzedzia w ładnych URL-ach
+            // Safely decode pathname
+            const decodedPath = safeDecodeURIComponent(window.location.pathname);
+            if (!decodedPath) {
+                return { category: null, subcategory: null, toolId: null };
+            }
+
+            const parts = decodedPath.split('/').filter(Boolean);
+
+            // Handle /narzedzia prefix in pretty URLs
             const isPretty = parts[0] === 'narzedzia';
             const base = isPretty ? parts.slice(1) : parts;
-            if (base.length >= 1) category = base[0];
-            if (base.length >= 2) subcategory = base[1];
-            if (base.length >= 3) toolId = base[2];
+
+            // Validate each part from pretty URL
+            if (base.length >= 1) {
+                category = validateParam(base[0], 'category');
+            }
+            if (base.length >= 2) {
+                subcategory = validateParam(base[1], 'subcategory');
+            }
+            if (base.length >= 3) {
+                toolId = validateParam(base[2], 'toolId');
+            }
         }
 
         return { category, subcategory, toolId };
-    } catch (_) {
+    } catch (error) {
+        console.error('Route parsing error:', error);
         return { category: null, subcategory: null, toolId: null };
     }
 }
@@ -1474,11 +1573,11 @@ function initializeSeoManager(toolCatalog) {
         if (isCategoryPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
-            let categoryName = new URLSearchParams(url.search).get('category');
-            if (!categoryName) {
-                const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
-                if (parts[0] === 'narzedzia') categoryName = parts[1]; else categoryName = parts[0];
-            }
+
+            // SECURE: Use validated parameters from getRouteParams()
+            const routeParams = getRouteParams();
+            let categoryName = routeParams.category;
+
             const category = resolveCategory(toolCatalog, categoryName);
             if (!category) return;
 
@@ -1523,22 +1622,12 @@ function initializeSeoManager(toolCatalog) {
         if (isSubcategoryPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
-            let categoryName, subcategoryName;
-            {
-                const params = new URLSearchParams(url.search);
-                categoryName = params.get('category');
-                subcategoryName = params.get('subcategory');
-                if (!categoryName || !subcategoryName) {
-                    const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
-                    if (parts[0] === 'narzedzia') {
-                        if (!categoryName && parts.length >= 2) categoryName = parts[1];
-                        if (!subcategoryName && parts.length >= 3) subcategoryName = parts[2];
-                    } else {
-                        if (!categoryName && parts.length >= 1) categoryName = parts[0];
-                        if (!subcategoryName && parts.length >= 2) subcategoryName = parts[1];
-                    }
-                }
-            }
+
+            // SECURE: Use validated parameters from getRouteParams()
+            const routeParams = getRouteParams();
+            const categoryName = routeParams.category;
+            const subcategoryName = routeParams.subcategory;
+
             const category = resolveCategory(toolCatalog, categoryName);
             const subcategory = category ? resolveSubcategory(category, subcategoryName) : null;
             if (!subcategory) return;
@@ -1586,11 +1675,11 @@ function initializeSeoManager(toolCatalog) {
         if (isToolPage && hydrationRequired) {
             // Domyślnie nie indeksuj dopóki parametry niepoprawne
             setMetaRobots('noindex, follow');
-            let toolId = new URLSearchParams(url.search).get('toolId');
-            if (!toolId) {
-                const parts = decodeURIComponent(window.location.pathname).split('/').filter(Boolean);
-                if (parts.length >= 3) toolId = parts[2];
-            }
+
+            // SECURE: Use validated parameters from getRouteParams()
+            const routeParams = getRouteParams();
+            const toolId = routeParams.toolId;
+
             const toolCtx = findToolById(toolId, toolCatalog);
             const tool = toolCtx?.tool;
             const category = toolCtx?.category;
@@ -1811,10 +1900,19 @@ function loadGsapLibrary() {
     if (gsapLoaderPromise) return gsapLoaderPromise;
 
     const scriptUrl = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+
+    // SRI (Subresource Integrity) hash dla GSAP 3.12.5 z cdnjs
+    // SHA-512 hash zapewnia weryfikację integralności skryptu
+    const integrity = 'sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==';
+    const crossorigin = 'anonymous';
+
     gsapLoaderPromise = new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = scriptUrl;
         script.async = true;
+        script.integrity = integrity;
+        script.crossOrigin = crossorigin;
+        script.referrerPolicy = 'no-referrer';
         script.onload = () => resolve(window.gsap || null);
         script.onerror = () => reject(new Error('GSAP failed to load'));
         document.head.appendChild(script);
@@ -1937,13 +2035,154 @@ function addPolishTypographyToCards() {
     setTimeout(applyPolishTypography, 100);
 } 
 
-// Dodaj funkcję pomocniczą do usuwania tagów HTML z nazw kategorii
+/**
+ * SECURE: Strip HTML tags from string without executing scripts
+ * Uses <template> element which doesn't execute scripts, unlike div.innerHTML
+ * @param {string} str - String that may contain HTML
+ * @returns {string} - Plain text with HTML tags removed
+ */
 function stripHtmlTags(str) {
     if (!str) return '';
-    const div = document.createElement('div');
-    div.innerHTML = str;
-    return div.textContent || div.innerText || '';
+
+    // First, remove dangerous tags entirely (script, style, etc.)
+    let cleaned = String(str)
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+        .replace(/<!--[\s\S]*?-->/g, '');
+
+    // Use template element for safe parsing (doesn't execute scripts)
+    const template = document.createElement('template');
+    template.innerHTML = cleaned;
+
+    return (template.content.textContent || '').trim();
 }
+
+// ===== Security Helper Functions =====
+
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {string} text - Text to escape
+ * @returns {string} - Escaped text safe for HTML insertion
+ */
+function escapeHtml(text) {
+    if (typeof text !== 'string') {
+        text = String(text);
+    }
+
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;',
+        '/': '&#x2F;'
+    };
+
+    return text.replace(/[&<>"'/]/g, char => map[char]);
+}
+
+/**
+ * Normalize text for case-insensitive comparison (handles Polish characters)
+ * @param {string} text - Text to normalize
+ * @returns {string} - Normalized lowercase text
+ */
+function normalizeText(text) {
+    if (!text || typeof text !== 'string') return '';
+
+    const polishChars = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n',
+        'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'a', 'Ć': 'c', 'Ę': 'e', 'Ł': 'l', 'Ń': 'n',
+        'Ó': 'o', 'Ś': 's', 'Ź': 'z', 'Ż': 'z'
+    };
+
+    return text.toLowerCase()
+        .split('')
+        .map(char => polishChars[char] || char)
+        .join('');
+}
+
+/**
+ * Safely highlight search query in text without using innerHTML
+ * Returns array of text parts with highlight flags
+ * @param {string} text - Text to search in
+ * @param {string} query - Search query to highlight
+ * @returns {Array} - Array of {text, highlight} objects
+ */
+function highlightTextSafe(text, query) {
+    if (!query || !text) {
+        return [{ text: String(text), highlight: false }];
+    }
+
+    const normalizedText = normalizeText(text);
+    const normalizedQuery = normalizeText(query);
+
+    if (!normalizedText.includes(normalizedQuery)) {
+        return [{ text: String(text), highlight: false }];
+    }
+
+    const parts = [];
+    let lastIndex = 0;
+    const queryLen = query.length;
+
+    let searchPos = 0;
+    while (searchPos < text.length) {
+        const foundIndex = normalizedText.indexOf(normalizedQuery, searchPos);
+        if (foundIndex === -1) break;
+
+        // Add text before match
+        if (foundIndex > lastIndex) {
+            parts.push({
+                text: text.substring(lastIndex, foundIndex),
+                highlight: false
+            });
+        }
+
+        // Add matched text
+        parts.push({
+            text: text.substring(foundIndex, foundIndex + queryLen),
+            highlight: true
+        });
+
+        lastIndex = foundIndex + queryLen;
+        searchPos = lastIndex;
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+        parts.push({
+            text: text.substring(lastIndex),
+            highlight: false
+        });
+    }
+
+    return parts;
+}
+
+/**
+ * Create DOM element with highlighted text
+ * @param {Array} parts - Array from highlightTextSafe()
+ * @param {string} containerTag - Container element tag (default: 'span')
+ * @returns {HTMLElement} - DOM element with properly highlighted text
+ */
+function createHighlightedElement(parts, containerTag = 'span') {
+    const container = document.createElement(containerTag);
+
+    parts.forEach(part => {
+        if (part.highlight) {
+            const highlight = document.createElement('span');
+            highlight.className = 'search-highlight';
+            highlight.textContent = part.text;
+            container.appendChild(highlight);
+        } else {
+            container.appendChild(document.createTextNode(part.text));
+        }
+    });
+
+    return container;
+}
+
+// ===== End Security Helper Functions =====
 
 function initializeSearch(toolCatalog) {
     const searchToggle = document.getElementById('search-toggle');
@@ -2204,20 +2443,49 @@ function initializeSearch(toolCatalog) {
             const order = { 'name': 0, 'description': 1, 'category': 2 };
             return order[a.matchType] - order[b.matchType];
         });
-        
-        searchResults.innerHTML = results.map(result => {
-            const highlightedName = highlightText(result.tool.name, query);
-            return `
-                <div class="search-result-item" data-tool-id="${result.tool.id}">
-                    <img src="${result.tool.image}" alt="${result.tool.name}" class="search-result-image" loading="lazy" width="80" height="80" decoding="async">
-                    <div class="search-result-info">
-                        <div class="search-result-title">${highlightedName}</div>
-                        <div class="search-result-category">${stripHtmlTags(result.category)} › ${stripHtmlTags(result.subcategory)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
+
+        // SECURE: Use DOM API instead of innerHTML to prevent XSS
+        searchResults.innerHTML = ''; // Clear previous results
+
+        results.forEach(result => {
+            // Create result item container
+            const resultItem = document.createElement('div');
+            resultItem.className = 'search-result-item';
+            resultItem.setAttribute('data-tool-id', result.tool.id);
+
+            // Create and add image
+            const img = document.createElement('img');
+            img.src = normalizeImagePath(result.tool.image);
+            img.alt = result.tool.name;
+            img.className = 'search-result-image';
+            img.loading = 'lazy';
+            img.width = 80;
+            img.height = 80;
+            img.decoding = 'async';
+            resultItem.appendChild(img);
+
+            // Create info container
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'search-result-info';
+
+            // Create and add title with safe highlighting
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'search-result-title';
+            const highlightedParts = highlightTextSafe(result.tool.name, query);
+            const highlightedElement = createHighlightedElement(highlightedParts);
+            titleDiv.appendChild(highlightedElement);
+            infoDiv.appendChild(titleDiv);
+
+            // Create and add category (already safe via stripHtmlTags)
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'search-result-category';
+            categoryDiv.textContent = `${stripHtmlTags(result.category)} › ${stripHtmlTags(result.subcategory)}`;
+            infoDiv.appendChild(categoryDiv);
+
+            resultItem.appendChild(infoDiv);
+            searchResults.appendChild(resultItem);
+        });
+
         searchResults.classList.add('active');
         
         // Dodaj event listenery do wyników
@@ -2248,17 +2516,11 @@ function initializeSearch(toolCatalog) {
         
         selectedIndex = -1;
     }
-    
-    function highlightText(text, query) {
-        if (!query) return text;
-        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-        return text.replace(regex, '<span class="search-highlight">$1</span>');
-    }
-    
-    function escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-    
+
+    // OLD INSECURE FUNCTIONS REMOVED:
+    // - highlightText() - replaced with highlightTextSafe() + createHighlightedElement()
+    // - escapeRegex() - no longer needed with new safe implementation
+
     function updateSelection() {
         searchResultItems.forEach((item, index) => {
             if (index === selectedIndex) {
@@ -2607,18 +2869,56 @@ function createSeeAlsoCard(tool, category, subcategory) {
     const safeCategoryName = fixPolishOrphans(stripHtmlTags(categoryName));
     const safeSubcategoryName = fixPolishOrphans(stripHtmlTags(subcategoryName));
 
-    card.innerHTML = `
-        <div class="zobacz-takze-card-image">
-            <img src="${toolImage}" alt="${safeToolName}" loading="lazy" class="card-img" onerror="this.src='/images/placeholder.webp'" width="300" height="200" decoding="async">
-            <div class="card-overlay">
-                <span class="card-price">${priceText}</span>
-            </div>
-        </div>
-        <div class="zobacz-takze-card-content">
-            <h3 class="card-title">${safeToolName}</h3>
-            <p class="card-category">${safeCategoryName} › ${safeSubcategoryName}</p>
-        </div>
-    `;
+    // SECURE: Use DOM API instead of innerHTML to prevent XSS via onerror injection
+    // Previous code was vulnerable: toolImage could contain 'x" onerror="alert(1)"'
+
+    // Create image container
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'zobacz-takze-card-image';
+
+    // Create image element with secure event handler
+    const img = document.createElement('img');
+    img.src = toolImage;
+    img.alt = safeToolName;
+    img.loading = 'lazy';
+    img.className = 'card-img';
+    img.width = 300;
+    img.height = 200;
+    img.decoding = 'async';
+    // SECURE: Event handler assigned via property, not inline attribute
+    img.onerror = function() {
+        this.src = '/images/placeholder.webp';
+    };
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'card-overlay';
+    const priceSpan = document.createElement('span');
+    priceSpan.className = 'card-price';
+    priceSpan.textContent = priceText;
+    overlay.appendChild(priceSpan);
+
+    imageContainer.appendChild(img);
+    imageContainer.appendChild(overlay);
+
+    // Create content container
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'zobacz-takze-card-content';
+
+    const title = document.createElement('h3');
+    title.className = 'card-title';
+    title.textContent = safeToolName;
+
+    const category = document.createElement('p');
+    category.className = 'card-category';
+    category.textContent = `${safeCategoryName} › ${safeSubcategoryName}`;
+
+    contentContainer.appendChild(title);
+    contentContainer.appendChild(category);
+
+    // Assemble card
+    card.appendChild(imageContainer);
+    card.appendChild(contentContainer);
 
     return card;
 }

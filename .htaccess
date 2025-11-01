@@ -1,5 +1,61 @@
 ﻿RewriteEngine On
 
+# ===================================================================
+# SECURITY HEADERS
+# ===================================================================
+
+# Content Security Policy - Balanced protection with current code structure
+# Note: unsafe-inline is temporary - plan to migrate to nonces in future
+Header always set Content-Security-Policy "\
+    default-src 'self'; \
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net https://www.clarity.ms https://www.google-analytics.com; \
+    style-src 'self' 'unsafe-inline'; \
+    img-src 'self' data: https: blob:; \
+    font-src 'self' data:; \
+    connect-src 'self' https://www.google-analytics.com https://www.facebook.com https://analytics.google.com; \
+    frame-src https://www.google.com https://maps.google.com; \
+    frame-ancestors 'self'; \
+    base-uri 'self'; \
+    form-action 'self';\
+"
+
+# Prevent clickjacking attacks
+Header always set X-Frame-Options "SAMEORIGIN"
+
+# Prevent MIME-sniffing attacks
+Header always set X-Content-Type-Options "nosniff"
+
+# Enable XSS filter in older browsers (legacy support)
+Header always set X-XSS-Protection "1; mode=block"
+
+# Control information sent in Referer header
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Restrict browser features and APIs
+Header always set Permissions-Policy "\
+    geolocation=(), \
+    microphone=(), \
+    camera=(), \
+    payment=(), \
+    usb=(), \
+    magnetometer=(), \
+    gyroscope=(), \
+    accelerometer=()\
+"
+
+# HSTS - Enforce HTTPS (uncomment after verifying HTTPS works correctly)
+# IMPORTANT: Only enable after full HTTPS deployment and testing!
+# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+# Hide server information
+ServerSignature Off
+Header unset Server
+Header always unset X-Powered-By
+
+# ===================================================================
+# END SECURITY HEADERS
+# ===================================================================
+
 # Enforce HTTPS (only on canonical hosts)
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP_HOST} ^(?:www\.)?toolshare\.com\.pl$ [NC]

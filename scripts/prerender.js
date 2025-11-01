@@ -16,6 +16,67 @@ function absoluteUrl(urlPath) {
   return new URL(urlPath, base).toString();
 }
 
+// ===== Security Validation Functions =====
+
+// Validate input string with type, length, and pattern checks
+function validateString(input, maxLength = 200, paramName = 'input') {
+  if (!input || typeof input !== 'string') {
+    console.warn(`[PRERENDER SECURITY] Invalid ${paramName}: not a string`);
+    return null;
+  }
+
+  if (input.length > maxLength) {
+    console.warn(`[PRERENDER SECURITY] ${paramName} too long: ${input.length} chars (max: ${maxLength})`);
+    return null;
+  }
+
+  // Reject strings with suspicious patterns
+  const dangerousPatterns = [
+    /<script/i,
+    /javascript:/i,
+    /on\w+\s*=/i,  // event handlers like onclick=
+    /\.\.[\\/]/,    // path traversal
+  ];
+
+  for (const pattern of dangerousPatterns) {
+    if (pattern.test(input)) {
+      console.warn(`[PRERENDER SECURITY] ${paramName} contains dangerous pattern:`, pattern);
+      return null;
+    }
+  }
+
+  return input.trim();
+}
+
+// Validate slugified path (additional security after slugify)
+function validateSlug(slug, paramName = 'slug') {
+  if (!slug || typeof slug !== 'string') {
+    console.warn(`[PRERENDER SECURITY] Invalid ${paramName}: not a string`);
+    return null;
+  }
+
+  // Slug should only contain lowercase letters, numbers, and hyphens
+  const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  if (!slugPattern.test(slug)) {
+    console.warn(`[PRERENDER SECURITY] ${paramName} contains invalid characters:`, slug);
+    return null;
+  }
+
+  // Reject dangerous patterns
+  if (slug === '..' || slug === '.' || slug.includes('..')) {
+    console.warn(`[PRERENDER SECURITY] ${paramName} contains path traversal:`, slug);
+    return null;
+  }
+
+  // Length limit for file system safety
+  if (slug.length > 150) {
+    console.warn(`[PRERENDER SECURITY] ${paramName} too long:`, slug.length);
+    return null;
+  }
+
+  return slug;
+}
+
 // Slugify compatible with existing sitemap/script logic
 function slugify(input) {
   if (!input) return '';
@@ -388,9 +449,20 @@ function generate() {
   const catalog = JSON.parse(raw);
 
   catalog.forEach((category) => {
-    const catName = String(category.category).trim();
+    const catName = validateString(String(category.category).trim(), 100, 'category.name');
+    if (!catName) {
+      console.error('[PRERENDER SECURITY] Skipping invalid category:', category.category);
+      return;
+    }
+
     const catSlug = slugify(catName);
-    const catUrl = absoluteUrl(`narzedzia/${catSlug}/`);
+    const validatedCatSlug = validateSlug(catSlug, 'category.slug');
+    if (!validatedCatSlug) {
+      console.error('[PRERENDER SECURITY] Skipping category with invalid slug:', catName);
+      return;
+    }
+
+    const catUrl = absoluteUrl(`narzedzia/${validatedCatSlug}/`);
     const catImg = category.image ? absoluteUrl(category.image) : absoluteUrl('images/hero.webp');
 
     const catStats = categoryToolStats(category);
@@ -418,7 +490,7 @@ function generate() {
     catHtml = replacePlaceholders(catHtml, { 'CategoryName': catName });
     catHtml = setH1(catHtml, 'category-title', catName);
     catHtml = injectStaticNavigation(catHtml, catalog);
-    catHtml = injectSubcategoryGrid(catHtml, category, catSlug);
+    catHtml = injectSubcategoryGrid(catHtml, category, validatedCatSlug);
 
     // Breadcrumb JSON-LD (SSR)
     catHtml = injectBreadcrumbSchema(catHtml, [
@@ -426,15 +498,26 @@ function generate() {
       { name: catName, url: catUrl }
     ]);
 
-    const catDir = path.join(outRoot, catSlug);
+    const catDir = path.join(outRoot, validatedCatSlug);
     ensureDir(catDir);
     fs.writeFileSync(path.join(catDir, 'index.html'), fixAssetPaths(catHtml), 'utf8');
 
     // Subcategories
     (category.subcategories || []).forEach((sub) => {
-      const subName = String(sub.name).trim();
+      const subName = validateString(String(sub.name).trim(), 100, 'subcategory.name');
+      if (!subName) {
+        console.error('[PRERENDER SECURITY] Skipping invalid subcategory:', sub.name);
+        return;
+      }
+
       const subSlug = slugify(subName);
-      const subUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/`);
+      const validatedSubSlug = validateSlug(subSlug, 'subcategory.slug');
+      if (!validatedSubSlug) {
+        console.error('[PRERENDER SECURITY] Skipping subcategory with invalid slug:', subName);
+        return;
+      }
+
+      const subUrl = absoluteUrl(`narzedzia/${validatedCatSlug}/${validatedSubSlug}/`);
       // Prefer sub image from first tool else category
       const firstTool = (sub.tools || []).find(t => t && (t.enabled !== false));
       const subImg = firstTool?.image ? absoluteUrl(firstTool.image) : catImg;
@@ -462,10 +545,10 @@ function generate() {
       subHtml = upsertMetaByName(subHtml, 'twitter:image:alt', `${subName} - ${catName} - wypożyczalnia ToolShare Czernica`);
       subHtml = replacePlaceholders(subHtml, { 'CategoryName': catName, 'SubcategoryName': subName });
       // Adjust breadcrumb category link to pretty URL
-      subHtml = subHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
+      subHtml = subHtml.replace('href="/narzedzia/"', `href="/narzedzia/${validatedCatSlug}/"`);
       subHtml = setH1(subHtml, 'subcategory-title', subName);
       subHtml = injectStaticNavigation(subHtml, catalog);
-      subHtml = injectToolsGrid(subHtml, category, sub, catSlug, subSlug);
+      subHtml = injectToolsGrid(subHtml, category, sub, validatedCatSlug, validatedSubSlug);
 
       // Inject Breadcrumb + ItemList JSON-LD (SSR)
       subHtml = injectBreadcrumbSchema(subHtml, [
@@ -475,12 +558,12 @@ function generate() {
       ]);
       const toolsForList = (sub.tools || [])
         .filter(t => t && t.enabled !== false)
-        .map(t => ({ name: String(t.name).trim(), url: absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(String(t.id))}/`) }));
+        .map(t => ({ name: String(t.name).trim(), url: absoluteUrl(`narzedzia/${validatedCatSlug}/${validatedSubSlug}/${encodeURIComponent(String(t.id))}/`) }));
       if (toolsForList.length) {
         subHtml = injectItemListSchema(subHtml, toolsForList, subUrl);
       }
 
-      const subDir = path.join(catDir, subSlug);
+      const subDir = path.join(catDir, validatedSubSlug);
       ensureDir(subDir);
       fs.writeFileSync(path.join(subDir, 'index.html'), fixAssetPaths(subHtml), 'utf8');
 
@@ -488,9 +571,15 @@ function generate() {
       (sub.tools || [])
         .filter((t) => t && (t.enabled !== false))
         .forEach((tool) => {
-          const toolId = String(tool.id);
-          const toolName = String(tool.name).trim();
-          const toolUrl = absoluteUrl(`narzedzia/${catSlug}/${subSlug}/${encodeURIComponent(toolId)}/`);
+          const toolId = validateString(String(tool.id), 150, 'tool.id');
+          const toolName = validateString(String(tool.name).trim(), 150, 'tool.name');
+
+          if (!toolId || !toolName) {
+            console.error('[PRERENDER SECURITY] Skipping invalid tool:', tool.id, tool.name);
+            return;
+          }
+
+          const toolUrl = absoluteUrl(`narzedzia/${validatedCatSlug}/${validatedSubSlug}/${encodeURIComponent(toolId)}/`);
           const toolImg = tool.image ? absoluteUrl(tool.image) : subImg;
           const toolImgRelative = tool.image ? `/${tool.image.replace(/^\//, '')}` : '/images/placeholder.webp';
           const priceValue = firstNumericPrice(tool.pricing);
@@ -521,8 +610,9 @@ function generate() {
             'ToolName': toolName,
           });
           // Adjust breadcrumb links to pretty URLs (first: category, second: subcategory)
-          toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/"`);
-          toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${catSlug}/${subSlug}/"`);
+          toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${validatedCatSlug}/"`);
+          toolHtml = toolHtml.replace('href="/narzedzia/"', `href="/narzedzia/${validatedCatSlug}/${validatedSubSlug}/"`);
+
           const toolH1 = normalizedPrice !== null
             ? `Wynajem ${toolName} – od ${normalizedPrice} zł/dzień | ToolShare Czernica`
             : `Wynajem ${toolName} | ToolShare Czernica`;
@@ -559,7 +649,7 @@ function generate() {
             ]);
           } catch (_) {}
 
-          toolHtml = injectToolDetails(toolHtml, tool, category, sub, catSlug, subSlug, toolImgRelative);
+          toolHtml = injectToolDetails(toolHtml, tool, category, sub, validatedCatSlug, validatedSubSlug, toolImgRelative);
           toolHtml = injectStaticNavigation(toolHtml, catalog);
           const toolDir = path.join(subDir, toolId);
           ensureDir(toolDir);

@@ -86,6 +86,36 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
     <link rel="stylesheet" href="/dist/assets/style.min.css">
 
+    <!-- Organization Schema - Oficjalne logo dla Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://toolshare.com.pl/#organization",
+      "name": "ToolShare",
+      "url": "https://toolshare.com.pl/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://toolshare.com.pl/images/logo.webp",
+        "width": 1200,
+        "height": 630,
+        "caption": "ToolShare - Wypożyczalnia Narzędzi Chrząstawa Wielka"
+      },
+      "image": "https://toolshare.com.pl/images/logo.webp",
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61578827231969"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+48604481600",
+        "contactType": "customer service",
+        "areaServed": "PL",
+        "availableLanguage": "Polish"
+      }
+    }
+    </script>
+
+    <!-- LocalBusiness Schema - Lokalizacja fizyczna dla Google Maps -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -97,6 +127,9 @@
       "email": "toolshare.chrzastawa@gmail.com",
       "logo": "https://toolshare.com.pl/images/logo.webp",
       "@id": "https://toolshare.com.pl/#localbusiness",
+      "parentOrganization": {
+        "@id": "https://toolshare.com.pl/#organization"
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "ul. Sportowa 9",
@@ -261,7 +294,7 @@
             <div class="container">
                 <h2>Nasze narzędzia</h2>
                 <div id="tools-grid" class="tools-grid">
-                                                                                <!-- HOME_TOOLS_GRID:START -->
+                                                                                                                <!-- HOME_TOOLS_GRID:START -->
                 <a href="/narzedzia/elektronarzedzia/" class="category-card">
                     <div class="card-image-wrapper">
                         <img src="/images/ukosnica_metabo.webp" alt="Elektronarzędzia" loading="lazy" width="300" height="200" decoding="async">

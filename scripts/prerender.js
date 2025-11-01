@@ -340,6 +340,35 @@ function injectProductSchema(html, product) {
   return html.replace(/<\/head>/i, match => `${jsonLdScript(product)}\n${match}`);
 }
 
+function injectOrganizationSchema(html) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': absoluteUrl('#organization'),
+    name: 'ToolShare',
+    url: absoluteUrl(''),
+    logo: {
+      '@type': 'ImageObject',
+      url: absoluteUrl('images/logo.webp'),
+      width: 1200,
+      height: 630,
+      caption: 'ToolShare - Wypożyczalnia Narzędzi Chrząstawa Wielka'
+    },
+    image: absoluteUrl('images/logo.webp'),
+    sameAs: [
+      'https://www.facebook.com/profile.php?id=61578827231969'
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+48604481600',
+      contactType: 'customer service',
+      areaServed: 'PL',
+      availableLanguage: 'Polish'
+    }
+  };
+  return html.replace(/<\/head>/i, match => `${jsonLdScript(schema)}\n${match}`);
+}
+
 function injectSubcategoryGrid(html, category, catSlug) {
   const cards = (category.subcategories || [])
     .map((sub) => {
@@ -497,6 +526,7 @@ function generate() {
       { name: 'Strona główna', url: absoluteUrl('') },
       { name: catName, url: catUrl }
     ]);
+    catHtml = injectOrganizationSchema(catHtml);
 
     const catDir = path.join(outRoot, validatedCatSlug);
     ensureDir(catDir);
@@ -562,6 +592,7 @@ function generate() {
       if (toolsForList.length) {
         subHtml = injectItemListSchema(subHtml, toolsForList, subUrl);
       }
+      subHtml = injectOrganizationSchema(subHtml);
 
       const subDir = path.join(catDir, validatedSubSlug);
       ensureDir(subDir);
@@ -651,6 +682,7 @@ function generate() {
 
           toolHtml = injectToolDetails(toolHtml, tool, category, sub, validatedCatSlug, validatedSubSlug, toolImgRelative);
           toolHtml = injectStaticNavigation(toolHtml, catalog);
+          toolHtml = injectOrganizationSchema(toolHtml);
           const toolDir = path.join(subDir, toolId);
           ensureDir(toolDir);
           fs.writeFileSync(path.join(toolDir, 'index.html'), fixAssetPaths(toolHtml), 'utf8');
